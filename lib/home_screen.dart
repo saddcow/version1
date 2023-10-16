@@ -67,26 +67,12 @@ class _HomePageState extends State<HomePage> {
                 const Padding(padding: EdgeInsets.only(top: 20)),
                 const Row(
                   children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: SizedBox(
-                        width: 300,
-                        height: 300,
-                        child: Card(
-                          surfaceTintColor: Colors.black26,
-                          child: Text('hello'),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child:SizedBox(
-                        width: 300,
-                        height: 300,
-                        child: Card(
-                          color: Colors.lightBlueAccent,
-                          child: CurrentWeather(),
-                        ),
+                    SizedBox(
+                      width: 300,
+                      height: 300,
+                      child: Card(
+                        color: Colors.lightBlueAccent,
+                        child: CurrentWeather(),
                       ),
                     ),
                   ],
@@ -118,18 +104,7 @@ class _HomePageState extends State<HomePage> {
           title: const Text('Reports'),
         ),
         body: Container(
-<<<<<<< HEAD
-          color: Colors.black38,
-          child: SizedBox(
-            width: 500,
-            height: 500,
-            child: const Card(
-            child: Reports(),
-          ),
-          ),
-=======
           child: const Reports(),
->>>>>>> c6b0abbfbdd8ade8ae4df6df7161b0a5fcd9428b
         ),
       ),
       Scaffold(
