@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:try1/database_manager.dart';
 
@@ -37,14 +38,26 @@ class _ReportsState extends State<Reports> {
       itemCount: dataList.length,
       separatorBuilder: (BuildContext context, int index) => const Divider(),
       itemBuilder: (BuildContext context, int index) {
-        return ListTile(
+        return ListTile( 
+
           title: Text(
             dataList[index]["User_ID"],
           ),
+<<<<<<< HEAD
           subtitle:  Text(dataList[index]["Report_Description"]),
+=======
+
+          subtitle: Text(
+            dataList[index]["Report_Description"],
+            ),
+
+>>>>>>> c6b0abbfbdd8ade8ae4df6df7161b0a5fcd9428b
           trailing: Text(
             dataList[index]["Report_Hazard_Type"],
           ),
+
+          
+
         );
       });
 }

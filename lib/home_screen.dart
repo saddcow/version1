@@ -56,16 +56,16 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: const Text("Monitoring"),
         ),
-        body:const  SizedBox(
+        body:  SizedBox(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 500,
                   child: maps(),
                 ),  
-                Padding(padding: EdgeInsets.only(top: 20)),
-                Row(
+                const Padding(padding: EdgeInsets.only(top: 20)),
+                const Row(
                   children: [
                     Align(
                       alignment: Alignment.topLeft,
@@ -91,6 +91,14 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
+                FloatingActionButton.extended(
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const AddForm()));
+                  },
+                  label: const Text('Add Hazard Area'),
+                  icon:  const Icon(Icons.add),
+                  
+                ),
               ],
             ),
           ),
@@ -107,9 +115,10 @@ class _HomePageState extends State<HomePage> {
       ),
       Scaffold(
         appBar: AppBar(
-          title: Text('Reports'),
+          title: const Text('Reports'),
         ),
         body: Container(
+<<<<<<< HEAD
           color: Colors.black38,
           child: SizedBox(
             width: 500,
@@ -118,6 +127,9 @@ class _HomePageState extends State<HomePage> {
             child: Reports(),
           ),
           ),
+=======
+          child: const Reports(),
+>>>>>>> c6b0abbfbdd8ade8ae4df6df7161b0a5fcd9428b
         ),
       ),
       Scaffold(
@@ -214,6 +226,59 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+}
+
+class AddForm extends StatelessWidget{
+  const AddForm({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return   Scaffold(
+      body: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const Text(
+                "Contact",
+                style: TextStyle(
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: <Widget>[
+                const TextField(
+                  decoration: InputDecoration(
+                    hintText: "Name of Barangay",
+                  ),
+                ),
+                const SizedBox(height: 10,),  
+                const TextField(
+                  decoration: InputDecoration(
+                    hintText: "Name of Street",
+                  ),
+                ),
+                FloatingActionButton(
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+                  },
+                  child: const Text("Submit",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  ),
+                  ),
+              ],
+            ),
+          ),
+            ],
+          )
+      ),
+    );
+  }
 }
 
 
