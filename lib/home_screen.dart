@@ -118,18 +118,14 @@ class _HomePageState extends State<HomePage> {
           title: const Text('Reports'),
         ),
         body: Container(
-<<<<<<< HEAD
           color: Colors.black38,
-          child: SizedBox(
+          child: const SizedBox(
             width: 500,
             height: 500,
-            child: const Card(
+            child: Card(
             child: Reports(),
           ),
           ),
-=======
-          child: const Reports(),
->>>>>>> c6b0abbfbdd8ade8ae4df6df7161b0a5fcd9428b
         ),
       ),
       Scaffold(
