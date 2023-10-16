@@ -43,11 +43,15 @@ class _ReportsState extends State<Reports> {
           title: Text(
             dataList[index]["User_ID"],
           ),
+<<<<<<< HEAD
+          subtitle:  Text(dataList[index]["Report_Description"]),
+=======
 
           subtitle: Text(
             dataList[index]["Report_Description"],
             ),
 
+>>>>>>> c6b0abbfbdd8ade8ae4df6df7161b0a5fcd9428b
           trailing: Text(
             dataList[index]["Report_Hazard_Type"],
           ),
