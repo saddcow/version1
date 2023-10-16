@@ -209,46 +209,46 @@ class AddForm extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return   Scaffold(
+      appBar: AppBar(
+        title: Text("Add a Marker to Map"),
+      ),
       body: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              const Text(
-                "Add a Marker to Map",
-                style: TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.bold,
+              Padding(padding: EdgeInsets.fromLTRB(0, 30, 0, 0)),
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  children: <Widget>[
+                    const TextField(
+                      decoration: InputDecoration(
+                        hintText: "Name of Barangay",
+                      ),
+                    ),
+                    const SizedBox(height: 10,),  
+                    const TextField(
+                      decoration: InputDecoration(
+                        hintText: "Name of Street",
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 30)),
+                    SizedBox(
+                      width: 200,
+                      child: ElevatedButton(
+                        onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+                        },
+                        child: const Text("Submit",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              children: <Widget>[
-                const TextField(
-                  decoration: InputDecoration(
-                    hintText: "Name of Barangay",
-                  ),
-                ),
-                const SizedBox(height: 10,),  
-                const TextField(
-                  decoration: InputDecoration(
-                    hintText: "Name of Street",
-                  ),
-                ),
-                FloatingActionButton(
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
-                  },
-                  child: const Text("Submit",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  ),
-                  ),
-              ],
-            ),
-          ),
             ],
           )
       ),
