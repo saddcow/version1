@@ -39,11 +39,11 @@ class _ReportsState extends State<Reports> {
       itemBuilder: (BuildContext context, int index) {
         return ListTile(
           title: Text(
-            dataList[index]["Name"],
+            dataList[index]["User_ID"],
           ),
-          subtitle:  Text(dataList[index]["Dept"]),
+          subtitle:  Text(dataList[index]["Report_Description"]),
           trailing: Text(
-            dataList[index]["RollNo"],
+            dataList[index]["Report_Hazard_Type"],
           ),
         );
       });
