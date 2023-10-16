@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 class FireStoreDataBase {
   List studentsList = [];
   final CollectionReference collectionRef =
-      FirebaseFirestore.instance.collection("Students");
+      FirebaseFirestore.instance.collection("Report");
 
    Future getData() async {
     try {

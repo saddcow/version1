@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:try1/database_manager.dart';
 
@@ -14,12 +15,6 @@ class _ReportsState extends State<Reports> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-<<<<<<< HEAD
-      appBar: AppBar(
-        title: const Text("Reports"),
-      ),
-=======
->>>>>>> 2fb083c49f3e5bb39b0edb88fe75bc2ee8a98514
       body: FutureBuilder(
         future: FireStoreDataBase().getData(),
         builder: (context, snapshot) {
@@ -43,14 +38,22 @@ class _ReportsState extends State<Reports> {
       itemCount: dataList.length,
       separatorBuilder: (BuildContext context, int index) => const Divider(),
       itemBuilder: (BuildContext context, int index) {
-        return ListTile(
+        return ListTile( 
+
           title: Text(
-            dataList[index]["Name"],
+            dataList[index]["User_ID"],
           ),
-          subtitle:  Text(dataList[index]["Dept"]),
+
+          subtitle: Text(
+            dataList[index]["Report_Description"],
+            ),
+
           trailing: Text(
-            dataList[index]["RollNo"],
+            dataList[index]["Report_Hazard_Type"],
           ),
+
+          
+
         );
       });
 }
