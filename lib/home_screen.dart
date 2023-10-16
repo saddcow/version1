@@ -214,7 +214,7 @@ class AddForm extends StatelessWidget{
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               const Text(
-                "Contact",
+                "Add a Marker to Map",
                 style: TextStyle(
                   fontSize: 32.0,
                   fontWeight: FontWeight.bold,
