@@ -105,11 +105,14 @@ class _HomePageState extends State<HomePage> {
           color: Colors.white,
         ),
       ),
-
-      const Center(
-        child: Reports(),
+      Scaffold(
+        appBar: AppBar(
+          title: Text('Reports'),
+        ),
+        body: Container(
+          child: Reports(),
+        ),
       ),
-
       Scaffold(
         body: Container(
           color: Colors.white,

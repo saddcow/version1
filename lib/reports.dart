@@ -14,9 +14,12 @@ class _ReportsState extends State<Reports> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+<<<<<<< HEAD
       appBar: AppBar(
         title: const Text("Reports"),
       ),
+=======
+>>>>>>> 2fb083c49f3e5bb39b0edb88fe75bc2ee8a98514
       body: FutureBuilder(
         future: FireStoreDataBase().getData(),
         builder: (context, snapshot) {
