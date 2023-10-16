@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/auth_service.dart';
 import 'package:try1/maps.dart';
+import 'package:try1/reports.dart';
 import 'package:try1/src/features/weather/presentation/current_weather.dart';
-import 'package:try1/src/features/weather/presentation/hourly_weather.dart';
-import 'package:try1/src/features/weather/presentation/weather_page.dart';
 import 'package:try1/utils/color_utils.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -107,30 +106,10 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
 
-      Scaffold(
-        appBar: AppBar(
-          title: const Text('Reports'),
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.black38,
-        ),
-        body: Container(
-          color: Colors.white,
-          child: const SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 1000,
-                    height: 2000,
-                  
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
+      const Center(
+        child: Reports(),
       ),
+
       Scaffold(
         body: Container(
           color: Colors.white,
