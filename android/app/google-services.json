@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "911794298081",
+    "project_id": "e-alert-7510c",
+    "storage_bucket": "e-alert-7510c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911794298081:android:ed04ca1e7968a5f5516ba0",
+        "android_client_info": {
+          "package_name": "com.example.e_alert"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDunLwb-D-JNyi2-ci05E78hwTCxidqO9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911794298081:android:b18f66786c955554516ba0",
+        "android_client_info": {
+          "package_name": "com.example.try1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDunLwb-D-JNyi2-ci05E78hwTCxidqO9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
