@@ -39,7 +39,6 @@ class _ReportsState extends State<Reports> {
       separatorBuilder: (BuildContext context, int index) => const Divider(),
       itemBuilder: (BuildContext context, int index) {
         return ListTile( 
-
           title: Text(
             dataList[index]["User_ID"],
           ),
@@ -47,9 +46,6 @@ class _ReportsState extends State<Reports> {
           trailing: Text(
             dataList[index]["Report_Hazard_Type"],
           ),
-
-          
-
         );
       });
 }

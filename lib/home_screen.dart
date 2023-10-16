@@ -103,8 +103,10 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: const Text('Reports'),
         ),
-        body: Container(
-          child: const Reports(),
+        body: const SizedBox(
+          child:Card(
+            child: Reports(),
+          ),
         ),
       ),
       Scaffold(
