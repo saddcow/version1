@@ -67,26 +67,12 @@ class _HomePageState extends State<HomePage> {
                 const Padding(padding: EdgeInsets.only(top: 20)),
                 const Row(
                   children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: SizedBox(
-                        width: 300,
-                        height: 300,
-                        child: Card(
-                          surfaceTintColor: Colors.black26,
-                          child: Text('hello'),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child:SizedBox(
-                        width: 300,
-                        height: 300,
-                        child: Card(
-                          color: Colors.lightBlueAccent,
-                          child: CurrentWeather(),
-                        ),
+                    SizedBox(
+                      width: 300,
+                      height: 300,
+                      child: Card(
+                        color: Colors.lightBlueAccent,
+                        child: CurrentWeather(),
                       ),
                     ),
                   ],
@@ -117,14 +103,9 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: const Text('Reports'),
         ),
-        body: Container(
-          color: Colors.black38,
-          child: const SizedBox(
-            width: 500,
-            height: 500,
-            child: Card(
+        body: const SizedBox(
+          child:Card(
             child: Reports(),
-          ),
           ),
         ),
       ),
@@ -230,46 +211,46 @@ class AddForm extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return   Scaffold(
+      appBar: AppBar(
+        title: Text("Add a Marker to Map"),
+      ),
       body: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              const Text(
-                "Add a Marker to Map",
-                style: TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.bold,
+              Padding(padding: EdgeInsets.fromLTRB(0, 30, 0, 0)),
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  children: <Widget>[
+                    const TextField(
+                      decoration: InputDecoration(
+                        hintText: "Name of Barangay",
+                      ),
+                    ),
+                    const SizedBox(height: 10,),  
+                    const TextField(
+                      decoration: InputDecoration(
+                        hintText: "Name of Street",
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 30)),
+                    SizedBox(
+                      width: 200,
+                      child: ElevatedButton(
+                        onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+                        },
+                        child: const Text("Submit",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              children: <Widget>[
-                const TextField(
-                  decoration: InputDecoration(
-                    hintText: "Name of Barangay",
-                  ),
-                ),
-                const SizedBox(height: 10,),  
-                const TextField(
-                  decoration: InputDecoration(
-                    hintText: "Name of Street",
-                  ),
-                ),
-                FloatingActionButton(
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
-                  },
-                  child: const Text("Submit",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  ),
-                  ),
-              ],
-            ),
-          ),
             ],
           )
       ),
