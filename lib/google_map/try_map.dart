@@ -27,7 +27,7 @@ class _MapState extends State<Map> {
   }
   _handleTap(LatLng tappedPoint){
     setState((){
-      //myMarker = []; //so that we can add multiple markers without it being removed
+      myMarker = [];
       myMarker.add(
         Marker(
           markerId: MarkerId(tappedPoint.toString()),

@@ -53,6 +53,9 @@ dependencies:
   flutter_riverpod: ^2.4.3
   cached_network_image: ^3.3.0
   cloud_firestore: ^4.9.3
+  geolocator: ^10.1.0
+  geocoder2: ^1.4.0
+  flutter_geocoder: ^0.2.2-nullsafety
 
 dev_dependencies:
   flutter_test:
