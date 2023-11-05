@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/auth_service.dart';
 import 'package:try1/maps.dart';
+import 'package:try1/maps4.dart';
 import 'package:try1/reports.dart';
 import 'package:try1/src/features/weather/presentation/current_weather.dart';
 import 'package:try1/utils/color_utils.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:try1/google_map/try_map.dart';
+import 'package:try1/maps_3.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -63,7 +65,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 const SizedBox(
                   height: 500,
-                  child: Map(),
+                  child: Mapp(),
                 ),  
                 const Padding(padding: EdgeInsets.only(top: 20)),
                 const Row(
