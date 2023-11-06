@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/auth_service.dart';
-import 'package:try1/maps.dart';
-import 'package:try1/maps4.dart';
-import 'package:try1/reports.dart';
+import 'package:try1/load_markers.dart';
+import 'package:try1/manage_screen.dart';
 import 'package:try1/src/features/weather/presentation/current_weather.dart';
-import 'package:try1/utils/color_utils.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:try1/google_map/try_map.dart';
-import 'package:try1/maps_3.dart';
-
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,39 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late GoogleMapController mapController;
-  final List<Marker> _markers = [];
-
-  bool showmaps = true;
-
-  @override
-  void initState(){
-    super.initState();
-    _markers.add(const Marker(
-      markerId: MarkerId("myLocation"),
-      position: LatLng(59.948680, 11.010630),
-      
-      ),
-    );
-    if (_markers.isNotEmpty){
-    setState(() {
-      showmaps = true;
-    });
-  }
-  } 
-
-  void _onMapCreated(GoogleMapController controller){
-    mapController = controller;
-  }
-
-  double custFontSize = 20;
-
-  void changeFontSize() async{
-    setState(() {
-      custFontSize+=2;
-    });
-  }
-
+  GoogleMapController? mapController;
 
   List<Widget> buildViews(BuildContext context) {
     return  [
@@ -59,16 +22,16 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: const Text("Monitoring"),
         ),
-        body:  SizedBox(
+        body:  const SizedBox(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(
+                SizedBox(
                   height: 500,
-                  child: Mapp(),
+                  child: HomeScreenMap(),
                 ),  
-                const Padding(padding: EdgeInsets.only(top: 20)),
-                const Row(
+                Padding(padding: EdgeInsets.only(top: 20)),
+                Row(
                   children: [
                     SizedBox(
                       width: 300,
@@ -80,38 +43,34 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                FloatingActionButton.extended(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const AddForm()));
-                  },
-                  label: const Text('Add Hazard Area'),
-                  icon:  const Icon(Icons.add),
-                  
-                ),
               ],
             ),
           ),
         ),
       ),
 
-      Scaffold(
+     Scaffold(
         appBar: AppBar(
           title: const Text('Managing Risk Areas'),
         ),
-        body: Container(
-          color: Colors.white,
-        ),
-      ),
-      Scaffold(
-        appBar: AppBar(
-          title: const Text('Reports'),
-        ),
-        body: const SizedBox(
-          child:Card(
-            child: Reports(),
+        body: SizedBox(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                
+                FloatingActionButton.extended(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AddHazardArea()));
+                }, 
+                label: const Text('Add Hazard Area'),
+                icon: const Icon(Icons.add),
+              ),
+              ],
+            ),
           ),
         ),
       ),
+      
       Scaffold(
         body: Container(
           color: Colors.white,
@@ -164,7 +123,7 @@ class _HomePageState extends State<HomePage> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
-          color: hexStringToColor("023047"),
+          color: Colors.black,
         ),
         child: Row(
           children: [

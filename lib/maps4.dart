@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_geocoder/geocoder.dart';
-import 'package:geocoder2/geocoder2.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -12,18 +10,31 @@ class Mapp extends StatefulWidget {
 }
 
 class _MappState extends State<Mapp>{
-  final Set<Marker> markers = {};
+  List<Marker> myMarker = [];
   GoogleMapController? mapController;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
-        initialCameraPosition: const CameraPosition(
-          target: LatLng(13.6217753, 123.1948238),
-          zoom: 15.0,
-        ),
-      markers: markers,
-      onTap: _addMarker,      
+      body: Column(
+        children: [
+          Expanded(
+            child: GoogleMap(
+              initialCameraPosition: const CameraPosition(
+                target: LatLng(13.6217753, 123.1948238),
+                zoom: 15.0,
+              ),
+              markers: Set.from(myMarker),
+              onTap: _addMarker,
+            ),
+          ),
+          ElevatedButton(
+            onPressed: (){
+              _saveMarkerDetails();
+              Navigator.pop(context);
+            },
+            child: const Text('Save Marker'),
+          ),
+        ],
       ),
     );
   }
@@ -31,7 +42,8 @@ class _MappState extends State<Mapp>{
   void _addMarker(LatLng position) async {
     final address = await _getAddressFromLatLng(position);
     setState(() {
-      markers.add(
+      myMarker = [];
+      myMarker.add(
         Marker(
           markerId: MarkerId(position.toString()),
           position: position,
@@ -59,5 +71,25 @@ class _MappState extends State<Mapp>{
       print(e);
     }
     return "Address not found";
+  }
+  void _saveMarkerDetails() {
+    for (final marker in myMarker) {
+      final address = marker.infoWindow.snippet ?? '';
+      final position = marker.position;
+      _saveMarkerToFirestore(address, position);
+    }
+  }
+
+  Future<void> _saveMarkerToFirestore(String address, LatLng coordinates) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      await firestore.collection('markers').add({
+        'address': address,
+        'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
+      });
+      print('Marker details saved to Firestore');
+    } catch (e) {
+      print('Error saving marker details to Firestore: $e');
+    }
   }
 }
