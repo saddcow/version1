@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/auth_service.dart';
+import 'package:try1/load_markers.dart';
 import 'package:try1/manage_screen.dart';
 import 'package:try1/maps4.dart';
 import 'package:try1/reports.dart';
@@ -31,7 +32,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 SizedBox(
                   height: 500,
-                  child: Mapp(),
+                  child: HomeScreenMap(),
                 ),  
                 Padding(padding: EdgeInsets.only(top: 20)),
                 Row(
