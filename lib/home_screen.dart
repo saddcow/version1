@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/auth_service.dart';
-import 'package:try1/load_markers.dart';
 import 'package:try1/manage_screen.dart';
+import 'package:try1/maps4.dart';
+import 'package:try1/reports.dart';
 import 'package:try1/src/features/weather/presentation/current_weather.dart';
+import 'package:try1/utils/color_utils.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,7 +31,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 SizedBox(
                   height: 500,
-                  child: HomeScreenMap(),
+                  child: Mapp(),
                 ),  
                 Padding(padding: EdgeInsets.only(top: 20)),
                 Row(
@@ -49,7 +52,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
 
-     Scaffold(
+      Scaffold(
         appBar: AppBar(
           title: const Text('Managing Risk Areas'),
         ),
@@ -70,7 +73,16 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      
+      Scaffold(
+        appBar: AppBar(
+          title: const Text('Reports'),
+        ),
+        body: const SizedBox(
+          child:Card(
+            child: Reports(),
+          ),
+        ),
+      ),
       Scaffold(
         body: Container(
           color: Colors.white,
@@ -123,7 +135,7 @@ class _HomePageState extends State<HomePage> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
-          color: Colors.black,
+          color: hexStringToColor("023047"),
         ),
         child: Row(
           children: [
