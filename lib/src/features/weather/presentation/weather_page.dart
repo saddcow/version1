@@ -26,7 +26,7 @@ class WeatherPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Spacer(),
-              
+              CitySearchBox(),
               Spacer(),
               CurrentWeather(),
               Spacer(),

@@ -6,6 +6,7 @@ import 'package:try1/manage_screen.dart';
 import 'package:try1/maps4.dart';
 import 'package:try1/reports.dart';
 import 'package:try1/src/features/weather/presentation/current_weather.dart';
+import 'package:try1/src/features/weather/presentation/hourly_weather.dart';
 import 'package:try1/utils/color_utils.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -37,14 +38,27 @@ class _HomePageState extends State<HomePage> {
                 Padding(padding: EdgeInsets.only(top: 20)),
                 Row(
                   children: [
-                    SizedBox(
-                      width: 300,
-                      height: 300,
-                      child: Card(
-                        color: Colors.lightBlueAccent,
-                        child: CurrentWeather(),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            height: 200,
+                              child: Padding(padding: EdgeInsets.all(16),
+                                child: Card(
+                                  color: Colors.lightBlueAccent,
+                                  child: Padding(padding: EdgeInsetsDirectional.only(top: 30),
+                                    child: HourlyWeather(),
+                                  ),
+                                  
+                                ),
+                              ),
+                          ),
+                        ],
                       ),
-                    ),
+                    )
                   ],
                 ),
               ],
@@ -135,8 +149,8 @@ class _HomePageState extends State<HomePage> {
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          color: hexStringToColor("023047"),
+        decoration: const BoxDecoration(
+          color: Colors.black,
         ),
         child: Row(
           children: [

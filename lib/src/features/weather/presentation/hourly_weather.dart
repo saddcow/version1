@@ -6,7 +6,7 @@ import 'package:try1/src/features/weather/domain/weather/weather_data.dart';
 import 'package:try1/src/features/weather/presentation/weather_icon_image.dart';
 
 class HourlyWeather extends ConsumerWidget {
-  const HourlyWeather({Key? key}) : super(key: key);
+  const HourlyWeather({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
