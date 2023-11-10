@@ -83,22 +83,6 @@ class _HomeState extends State<Home>{
                               child: Precipitation(),
                             ),
                           ),
-                          SizedBox(
-                            width: 300,
-                            height: 300,
-                            child: Card(
-                              color: Colors.lightBlueAccent,
-                              child: Precipitation(),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 300,
-                            height: 300,
-                            child: Card(
-                              color: Colors.lightBlueAccent,
-                              child: Precipitation(),
-                            ),
-                          ),
                         ],
                       ),
                     )

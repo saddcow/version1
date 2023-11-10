@@ -56,13 +56,13 @@ dependencies:
   geolocator: ^10.1.0
   geocoder_plus: ^0.0.1
   geocoder2: ^1.4.0
-  flutter_geocoder: ^0.2.2-nullsafety
   geocoder_buddy: ^1.0.1
   geocode: ^1.0.3
   google_geocoder_krutus: ^1.1.0
   flutter_geocoder_alternative: ^1.0.3
   geocoding: ^2.1.1
   google_geocoding_api: ^1.4.1
+  custom_info_window: ^1.0.1
 
 dev_dependencies:
   flutter_test:

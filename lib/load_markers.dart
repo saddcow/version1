@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-
 class HomeScreenMap extends StatefulWidget {
   const HomeScreenMap({super.key});
   @override
@@ -11,6 +10,7 @@ class HomeScreenMap extends StatefulWidget {
 
 class _HomeScreenMapState extends State<HomeScreenMap> {
   List<Marker> myMarker = [];
+  
   
   @override
   void initState() {
@@ -22,7 +22,7 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
   Widget build(BuildContext context){
     return Scaffold(
       body: GoogleMap(
-        initialCameraPosition: CameraPosition(
+        initialCameraPosition:const  CameraPosition(
           target: LatLng(13.6217753, 123.1948238),
           zoom: 15.0,
         ),
@@ -41,15 +41,18 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
       final data = document.data() as Map<String, dynamic>;
       final address = data['address'] as String;
       final coordinates = data['coordinates'] as GeoPoint;
+      final risk_level = data['risk_level'] as String;
 
       markers.add(
         Marker(
           markerId: MarkerId(address),
           position: LatLng(coordinates.latitude, coordinates.longitude),
           infoWindow: InfoWindow(
-            title: 'Location',
+            title: 'Hazard Level of Location: $risk_level',
             snippet: address,
+            
           ),
+
         ),
       );
     }

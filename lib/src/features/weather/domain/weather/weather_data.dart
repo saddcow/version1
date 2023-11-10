@@ -10,6 +10,7 @@ class WeatherData {
     required this.description,
     required this.date,
     required this.icon,
+
   });
 
   factory WeatherData.from(Weather weather) {

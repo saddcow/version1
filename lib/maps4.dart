@@ -31,63 +31,87 @@ class _MappState extends State<Mapp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
-        child: Column(
-          children: [
-            Expanded(
-              child: GoogleMap(
-                initialCameraPosition: const CameraPosition(
-                  target: LatLng(13.6217753, 123.1948238),
-                  zoom: 15.0,
-                ),
-                markers: Set.from(myMarker),
-                onTap: _addMarker,
-              ),
-            ),
-            const Padding(padding: EdgeInsets.only(top: 20.0)),
-            TextField(
-              controller: barangayController,
-              decoration: InputDecoration(
-                labelText: 'Barangay',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const Padding(padding: EdgeInsets.only(top: 20.0)),
-            TextField(
-              controller: streetController,
-              decoration: InputDecoration(
-                labelText: 'Street',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const Padding(padding: EdgeInsets.only(top: 20.0)),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: DropdownButton<String>(
-                value: selectedValue,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedValue = newValue!;
-                  });
-                },
-                items: options.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _saveMarkerDetails();
-                Navigator.pop(context);
-              },
-              child: const Text('Save Marker'),
-            ),
-          ],
-        ),
+      appBar: AppBar(
+        title: const Text('Add Hazard Area'),
       ),
+      body: SizedBox(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 600,
+                width: double.infinity,
+                child: GoogleMap(
+                  initialCameraPosition: const CameraPosition(
+                    target: LatLng(13.6217753, 123.1948238),
+                    zoom: 15.0,
+                  ),
+                  markers: Set.from(myMarker),
+                  onTap: _addMarker,
+                ),
+              ),
+              const Padding(padding: EdgeInsets.only(top: 20.0)),
+              Column(
+                children: [
+                  SizedBox(
+                    child: Padding(padding: const EdgeInsets.all(20.0),
+                      child: TextField(
+                        controller: barangayController,
+                        decoration: const InputDecoration(
+                          labelText: 'Barangay',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 20.0)),
+                  SizedBox(
+                    child: Padding(padding: const EdgeInsets.all(20.0),
+                      child: TextField(
+                        controller: streetController,
+                        decoration: const InputDecoration(
+                          labelText: 'Street',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 20.0)),
+                  SizedBox(
+                    child: Padding(padding: const EdgeInsets.only(left: 20.0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: DropdownButton<String>(
+                          value: selectedValue,
+                          onChanged: (newValue) {
+                            setState(() {
+                              selectedValue = newValue!;
+                            });
+                          },
+                          items: options.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _saveMarkerDetails();
+                  Navigator.pop(context);
+                },
+                child: const Text('Save Marker'),
+              ),
+              const Padding(padding: EdgeInsets.only(top: 50)),
+            ],
+          ),
+        ),
+      )
     );
   }
 
