@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -5,36 +7,86 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class Mapp extends StatefulWidget {
-  const Mapp({super.key});
+  const Mapp({Key? key}) : super(key: key);
   _MappState createState() => _MappState();
 }
 
-class _MappState extends State<Mapp>{
+class _MappState extends State<Mapp> {
   List<Marker> myMarker = [];
   GoogleMapController? mapController;
+
+  String selectedValue = 'Low';
+  List<String> options = ['Low', 'Medium', 'High'];
+
+  TextEditingController barangayController = TextEditingController();
+  TextEditingController streetController = TextEditingController();
+
+  @override
+  void dispose() {
+    barangayController.dispose();
+    streetController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: GoogleMap(
-              initialCameraPosition: const CameraPosition(
-                target: LatLng(13.6217753, 123.1948238),
-                zoom: 15.0,
+      body: SizedBox(
+        child: Column(
+          children: [
+            Expanded(
+              child: GoogleMap(
+                initialCameraPosition: const CameraPosition(
+                  target: LatLng(13.6217753, 123.1948238),
+                  zoom: 15.0,
+                ),
+                markers: Set.from(myMarker),
+                onTap: _addMarker,
               ),
-              markers: Set.from(myMarker),
-              onTap: _addMarker,
             ),
-          ),
-          ElevatedButton(
-            onPressed: (){
-              _saveMarkerDetails();
-              Navigator.pop(context);
-            },
-            child: const Text('Save Marker'),
-          ),
-        ],
+            const Padding(padding: EdgeInsets.only(top: 20.0)),
+            TextField(
+              controller: barangayController,
+              decoration: InputDecoration(
+                labelText: 'Barangay',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const Padding(padding: EdgeInsets.only(top: 20.0)),
+            TextField(
+              controller: streetController,
+              decoration: InputDecoration(
+                labelText: 'Street',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const Padding(padding: EdgeInsets.only(top: 20.0)),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: DropdownButton<String>(
+                value: selectedValue,
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedValue = newValue!;
+                  });
+                },
+                items: options.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _saveMarkerDetails();
+                Navigator.pop(context);
+              },
+              child: const Text('Save Marker'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -47,6 +99,7 @@ class _MappState extends State<Mapp>{
         Marker(
           markerId: MarkerId(position.toString()),
           position: position,
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           infoWindow: InfoWindow(
             title: 'Location',
             snippet: address,
@@ -72,20 +125,39 @@ class _MappState extends State<Mapp>{
     }
     return "Address not found";
   }
+
   void _saveMarkerDetails() {
+    final String barangay = barangayController.text;
+    final String street = streetController.text;
+
+    if (barangay.isEmpty || street.isEmpty) {
+      print('Please enter Barangay and Street');
+      return;
+    }
+
     for (final marker in myMarker) {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
-      _saveMarkerToFirestore(address, position);
+      final selectedOption = selectedValue;
+      _saveMarkerToFirestore(barangay, street, address, position, selectedOption);
     }
   }
 
-  Future<void> _saveMarkerToFirestore(String address, LatLng coordinates) async {
+  Future<void> _saveMarkerToFirestore(String barangay, String street, String address, LatLng coordinates, String selectedOption) async {
+    String first = "HA";
+    var rng = Random();
+    var code = rng.nextInt(90000) + 10000;
+    String uniqueID = first + code.toString();
+
     try {
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
-      await firestore.collection('markers').add({
+      await firestore.collection('markers').doc(uniqueID).set({
+        'uniqueID': uniqueID,
+        'barangay': barangay,
+        'street': street,
         'address': address,
         'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
+        'risk_level': selectedOption,
       });
       print('Marker details saved to Firestore');
     } catch (e) {
