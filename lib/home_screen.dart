@@ -71,23 +71,44 @@ class _HomeState extends State<Home>{
                                   child: Padding(padding: EdgeInsetsDirectional.only(top: 30),
                                     child: HourlyWeather(),
                                   ),
-                                  
                                 ),
                               ),
                           ),
-                          SizedBox(
-                            width: 300,
-                            height: 300,
-                            child: Card(
-                              color: Colors.lightBlueAccent,
-                              child: Precipitation(),
-                            ),
-                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              SizedBox(
+                                width: 300,
+                                height: 300,
+                                child: Card(
+                                  color: Colors.lightBlueAccent,
+                                  child: Precipitation(),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 300,
+                                height: 300,
+                                child: Card(
+                                  color: Colors.lightBlueAccent,
+                                  child: Precipitation(),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 300,
+                                height: 300,
+                                child: Card(
+                                  color: Colors.lightBlueAccent,
+                                  child: Precipitation(),
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     )
                   ],
                 ),
+                Padding(padding: EdgeInsets.only(bottom: 50))
               ],
             ),
           ),
