@@ -5,7 +5,6 @@ import 'package:try1/load_markers.dart';
 import 'package:try1/manage_screen.dart';
 import 'package:try1/maps4.dart';
 import 'package:try1/reports.dart';
-import 'package:try1/src/features/weather/presentation/current_weather.dart';
 import 'package:try1/src/features/weather/presentation/hourly_weather.dart';
 import 'package:try1/utils/color_utils.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
