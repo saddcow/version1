@@ -7,10 +7,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class MappUpdate extends StatefulWidget {
-   final String myString;
+  final String myString;
 
   const MappUpdate({Key? key, required this.myString}) : super(key: key);
-  
+
   @override
   _MappUpdateState createState() => _MappUpdateState();
 }
@@ -21,34 +21,106 @@ class _MappUpdateState extends State<MappUpdate> {
   List<Marker> myMarker = [];
   GoogleMapController? mapController;
 
+  String selectedValue = "Low";
+  List<String> options = ['Low', 'Medium', 'High'];
+
+  TextEditingController barangayController = TextEditingController();
+  TextEditingController streetController = TextEditingController();
+
+  @override
+  void dispose() {
+    barangayController.dispose();
+    streetController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     id = widget.myString;
     return Scaffold(
-      body: SizedBox(
-        child: Column(
-        children: [
-          Expanded(
-            child: GoogleMap(
-              initialCameraPosition: const CameraPosition(
-                target: LatLng(13.6217753, 123.1948238),
-                zoom: 15.0,
-              ),
-              markers: Set.from(myMarker),
-              onTap: _addMarker,
-            ),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 20.0)),
-          ElevatedButton(
-            onPressed: (){
-              _saveMarkerDetails(id);
-              Navigator.pop(context);
-            },
-            child: const Text('Save Marker'),
-          ),
-        ],
+      appBar: AppBar(
+        title: const Text('Edit Hazard Area'),
       ),
+      body: SizedBox(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 600,
+                child: GoogleMap(
+                  initialCameraPosition: const CameraPosition(
+                    target: LatLng(13.6217753, 123.1948238),
+                    zoom: 15.0,
+                  ),
+                  markers: Set.from(myMarker),
+                  onTap: _addMarker,
+                ),
+              ),
+              const Padding(padding: EdgeInsets.only(top: 20.0)),
+              Column(
+                children: [
+                  SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: TextField(
+                        controller: barangayController,
+                        decoration: const InputDecoration(
+                          labelText: 'Barangay',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 20.0)),
+                  SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: TextField(
+                        controller: streetController,
+                        decoration: const InputDecoration(
+                          labelText: 'Street',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 20.0)),
+                  SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: DropdownButton<String>(
+                          value: selectedValue,
+                          onChanged: (newValue) {
+                            setState(() {
+                              selectedValue = newValue!;
+                            });
+                          },
+                          items: options.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _saveMarkerDetails(id);
+                  Navigator.pop(context);
+                },
+                child: const Text('Save Marker'),
+              ),
+              const Padding(padding: EdgeInsets.only(top: 50)),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -61,9 +133,7 @@ class _MappUpdateState extends State<MappUpdate> {
         Marker(
           markerId: MarkerId(position.toString()),
           position: position,
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueRed
-          ),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           infoWindow: InfoWindow(
             title: 'Location',
             snippet: address,
@@ -98,14 +168,16 @@ class _MappUpdateState extends State<MappUpdate> {
     }
   }
 
-  Future<void> updateDocument(String documentId, Map<String, dynamic> data) async {
-  await FirebaseFirestore.instance
-      .collection('your_collection') // Replace with your collection name
-      .doc(documentId)
-      .update(data);
+  Future<void> updateDocument(
+      String documentId, Map<String, dynamic> data) async {
+    await FirebaseFirestore.instance
+        .collection('your_collection') // Replace with your collection name
+        .doc(documentId)
+        .update(data);
   }
 
-  Future<void> _saveMarkerToFirestore(String id, String address, LatLng coordinates) async {
+  Future<void> _saveMarkerToFirestore(
+      String id, String address, LatLng coordinates) async {
     try {
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       await firestore.collection('markers').doc(id).update({
