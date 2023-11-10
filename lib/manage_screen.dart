@@ -49,8 +49,7 @@ class _ManageState extends State<Manage> {
                     DataColumn(label: Text("Barangay")),
                     DataColumn(label: Text("Street")),
                     DataColumn(label: Text("Coordinates")),
-                    DataColumn(label: Text("Options"),),
-                    DataColumn(label: Text(''))                    
+                    DataColumn(label: Text("Options"),),                   
                   ], 
                   rows: _dataList
                       .map(
@@ -63,16 +62,19 @@ class _ManageState extends State<Manage> {
                             DataCell(Text(document["street"])),
                             DataCell(Text(formatGeoPoint(document["coordinates"] as GeoPoint))),
                             DataCell(
-                                TextButton(onPressed: (){
+                              Column(
+                                children: [
+                                  TextButton(onPressed: (){
                                   deleteDocument(uuid);
-                                }, child: const Text("Delete")),
-                              ),
-                            DataCell(
-                              TextButton(onPressed: (){
+                                }, child: const Text("Delete")
+                                ),
+                                TextButton(onPressed: (){
                                 pass = document["uniqueID"];
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => MappUpdate(myString: pass,)));
                               }, child: const Text("Edit"))
-                            ),  
+                                ],
+                              )                                                                                 
+                              ),
                           ],
                         ),
                       )

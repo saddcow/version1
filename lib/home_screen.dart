@@ -3,6 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:side_navigation/side_navigation.dart';
+import 'package:try1/aisiah/precipitation.dart';
+import 'package:try1/auth_service.dart';
 import 'package:try1/load_markers.dart';
 import 'package:try1/manage_screen.dart';
 import 'package:try1/reports.dart';
@@ -73,6 +75,30 @@ class _HomeState extends State<Home>{
                                 ),
                               ),
                           ),
+                          SizedBox(
+                            width: 300,
+                            height: 300,
+                            child: Card(
+                              color: Colors.lightBlueAccent,
+                              child: Precipitation(),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 300,
+                            height: 300,
+                            child: Card(
+                              color: Colors.lightBlueAccent,
+                              child: Precipitation(),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 300,
+                            height: 300,
+                            child: Card(
+                              color: Colors.lightBlueAccent,
+                              child: Precipitation(),
+                            ),
+                          ),
                         ],
                       ),
                     )
@@ -95,12 +121,44 @@ class _HomeState extends State<Home>{
         ),
         body: const Reports(),
       ),
-      Scaffold(
-        appBar: AppBar(
-          title: const Text('Settings'),
-        ),
+            Scaffold(
         body: Container(
           color: Colors.white,
+          child: Center(
+            child: Card(
+              elevation: 50,
+              shadowColor: Colors.black26,
+              color: Colors.white,
+              child: SizedBox(
+                width: 500,
+                height: 300,
+                child: Column(
+                  children: [
+                    const Padding(padding: EdgeInsets.all(8.0)),
+                    const Text(
+                      'Settings',
+                      style: TextStyle(
+                        fontSize: 50,
+                      ),
+                    ),
+                    const Divider(),
+                    const Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0)),
+                    SizedBox(
+                      width: 200,
+                      child: Center(
+                        child: 
+                          ElevatedButton(onPressed: () {
+                            AuthService().signout();
+                          }, 
+                        child: const Center(child: Text('Sign Out'),),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     ];
