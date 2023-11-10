@@ -32,66 +32,6 @@ class _ManageState extends State<Manage> {
     return Scaffold(
       body: Column(
         children: [
-<<<<<<< HEAD
-                DataTable(
-                  headingTextStyle: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white
-                  ),
-                  headingRowColor: MaterialStateProperty.resolveWith(
-                    (states) => Colors.black
-                  ),
-                  showBottomBorder: true,
-                  dividerThickness: 3,
-                  columns: const[
-                    DataColumn(label: Text("ID")),
-                    DataColumn(label: Text("Risk Level")),
-                    DataColumn(label: Text("Address")),
-                    DataColumn(label: Text("Barangay")),
-                    DataColumn(label: Text("Street")),
-                    DataColumn(label: Text("Coordinates")),
-                    DataColumn(label: Text("Options"),),                   
-                  ], 
-                  rows: _dataList
-                      .map(
-                        (DocumentSnapshot document) => DataRow(
-                          cells: [
-                            DataCell(Text(uuid = document["uniqueID"]),),
-                            DataCell(Text(document["risk_level"], style: const TextStyle(color: Colors.red),)),
-                            DataCell(Text(document["address"] ?? 'N/A')),
-                            DataCell(Text(document["barangay"])),
-                            DataCell(Text(document["street"])),
-                            DataCell(Text(formatGeoPoint(document["coordinates"] as GeoPoint))),
-                            DataCell(
-                              Column(
-                                children: [
-                                  TextButton(onPressed: (){
-                                  deleteDocument(uuid);
-                                }, child: const Text("Delete")
-                                ),
-                                TextButton(onPressed: (){
-                                pass = document["uniqueID"];
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => MappUpdate(myString: pass,)));
-                              }, child: const Text("Edit"))
-                                ],
-                              )                                                                                 
-                              ),
-                          ],
-                        ),
-                      )
-                      .toList(),
-                ),
-
-
-                const Padding(padding: EdgeInsets.only(top: 30.0)),
-
-                FloatingActionButton.extended(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AddHazardArea()));
-                }, 
-                label: const Text('Add Hazard Area'),
-                icon: const Icon(Icons.add),
-=======
           SizedBox(
             width: double.infinity,
             child: DataTable(
@@ -99,7 +39,6 @@ class _ManageState extends State<Manage> {
               headingTextStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white
->>>>>>> c6dfe5e1aea11a99ee43660a0a6aeadbfec0284f
               ),
               headingRowColor: MaterialStateProperty.resolveWith(
                 (states) => Colors.black
@@ -177,34 +116,3 @@ class _ManageState extends State<Manage> {
     return 'Lat: ${geoPoint.latitude.toString()}, Lng: ${geoPoint.longitude.toString()}';
   }
 }
-
-
-
-
-
-// pwede na alisin. nilipat ko na lang na mapp yung e call. 
-// then dun na rin lang nag lagay ng sized box para sa map
-
-// class AddHazardArea extends StatelessWidget {
-//   const AddHazardArea({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text("Add Hazard Area Marker"),
-//       ),
-//       body: const SizedBox(
-//         child: SingleChildScrollView(
-//           child: Column(
-//             children: [
-//               SizedBox(
-//                 child: Mapp(),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
