@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/aisiah/check_risk.dart';
 import 'package:try1/aisiah/precipitation.dart';
+import 'package:try1/aisiah/risk_level.dart';
 import 'package:try1/auth_service.dart';
 import 'package:try1/load_markers.dart';
 import 'package:try1/manage_screen.dart';
@@ -35,7 +36,7 @@ class _HomeState extends State<Home>{
       _dataList = querySnapshot.docs;
     });
   }
-  
+
   String formatGeoPoint(GeoPoint geoPoint) {
     return 'Lat: ${geoPoint.latitude.toString()}, Lng: ${geoPoint.longitude.toString()}';
   }
@@ -119,6 +120,7 @@ class _HomeState extends State<Home>{
                                 width: 500,
                                 height: 350,
                                 child: Card(
+                                  color: Colors.lightBlueAccent,
                                   child: Column(
                                     children: [
                                       Padding(
@@ -144,6 +146,7 @@ class _HomeState extends State<Home>{
                                 width: 500,
                                 height: 350,
                                 child: Card(
+                                  color: Colors.lightBlueAccent,
                                   child: Column(
                                     children: <Widget> [
                                       Padding(
