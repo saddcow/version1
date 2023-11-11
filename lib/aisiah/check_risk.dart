@@ -102,7 +102,7 @@ class FirestoreCheck extends StatelessWidget {
                 String add = document['address'];
 
                 if (searchString == 'High' ) {
-                  matchingDocumentIds.add(add);
+                  matchingDocumentIds.add(add); 
                 } else if (searchString == 'Medium' && fieldValue == 'Medium') {
                   matchingDocumentIds.add(add);
                 } else if (searchString == 'Low' && fieldValue == 'High') {
