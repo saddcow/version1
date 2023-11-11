@@ -24,7 +24,7 @@ class _ReportsState extends State<Reports> {
           }
           if (snapshot.connectionState == ConnectionState.done) {
             dataList = snapshot.data as List;
-            return buildItems(dataList);
+            return buildDataTable(dataList);
           }
           return const Center(child: CircularProgressIndicator());
         },
@@ -32,21 +32,26 @@ class _ReportsState extends State<Reports> {
     );
   }
 
-  Widget buildItems(dataList) => ListView.separated(
-      padding: const EdgeInsets.all(8),
-      itemCount: dataList.length,
-      separatorBuilder: (BuildContext context, int index) => const Divider(),
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile( 
-          leading: Column(
-            children: [
-              Text(dataList[index]["Baranggay"]),
-              Text(dataList[index]["Street"]),
-            ],
-          ),
-          title: Text(dataList[index]["User_ID"]),
-          subtitle:  Text(dataList[index]["Report_Description"]),
-          trailing: Text(dataList[index]["Report_Hazard_Type"]),
+  Widget buildDataTable(List dataList) {
+    return DataTable(
+      columns: const [
+        DataColumn(label: Text('Baranggay')),
+        DataColumn(label: Text('Street')),
+        DataColumn(label: Text('User ID')),
+        DataColumn(label: Text('Report Description')),
+        DataColumn(label: Text('Report Hazard Type')),
+      ],
+      rows: dataList.map((data){
+        return DataRow(
+          cells: [
+            DataCell(Text(data['Baranggay'])),
+            DataCell(Text(data['Street'])),
+            DataCell(Text(data['User_ID'])),
+            DataCell(Text(data['Report_Description'])),
+            DataCell(Text(data['Report_Hazard_Type'])),
+          ],
         );
-      });
+      }).toList(),
+    );
+  }
 }
