@@ -1,8 +1,8 @@
 // ignore_for_file: unused_field
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:side_navigation/side_navigation.dart';
+import 'package:try1/aisiah/check_risk.dart';
 import 'package:try1/aisiah/precipitation.dart';
 import 'package:try1/auth_service.dart';
 import 'package:try1/load_markers.dart';
@@ -46,15 +46,15 @@ class _HomeState extends State<Home>{
         appBar: AppBar(
           title: const Text("Monitoring"),
         ),
-        body:  const SizedBox(
+        body:  SizedBox(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 500,
                   child: HomeScreenMap(),
                 ),  
-                Padding(padding: EdgeInsets.only(top: 20)),
+                const Padding(padding: EdgeInsets.only(top: 20)),
                 Row(
                   children: [
                     Expanded(
@@ -62,7 +62,7 @@ class _HomeState extends State<Home>{
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             width: double.infinity,
                             height: 200,
                               child: Padding(padding: EdgeInsets.all(16),
@@ -77,30 +77,95 @@ class _HomeState extends State<Home>{
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              SizedBox(
-                                width: 300,
-                                height: 300,
+                              const SizedBox(
+                                width: 500,
+                                height: 350,
                                 child: Card(
                                   color: Colors.lightBlueAccent,
-                                  child: Precipitation(),
+                                  child: Column(
+                                    children: <Widget> [
+                                      Padding(
+                                      padding: EdgeInsets.all(16.0),
+                                        child: Text(
+                                          'Risk Level Description',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0,
+                                          ),
+                                        ),
+                                      ),
+                                      Divider(),
+                                      ListTile(
+                                        title: Text(
+                                          'Red Marker',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                        subtitle: (Text('If More than 30 mm rain observed in 1 hour and expected to continue in the next 2 hours then serious flooding is expected in these low-lying areas.')),
+                                      ),
+                                      Divider(),
+                                      ListTile(
+                                        title: Text('Yellow Marker', style: TextStyle(color: Colors.yellow),),
+                                        subtitle: (Text('15-30 mm rain observed in 1 hour and expected to continue in the next 2hours. Flooding is threatening.')),
+                                      ),
+                                      Divider(),
+                                      ListTile(
+                                        title: Text('Green Marker', style: TextStyle(color: Colors.green),),
+                                        subtitle: Text('6.5-15 mm of rain observed in 1 hour and expected to continue in the next 2 hours. Flooding is possible '),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              SizedBox(
-                                width: 300,
-                                height: 300,
+                              const SizedBox(
+                                width: 500,
+                                height: 350,
                                 child: Card(
-                                  color: Colors.lightBlueAccent,
-                                  child: Precipitation(),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                      padding: EdgeInsets.all(16.0),
+                                        child: Text(
+                                          'Rain Precipitation',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0,
+                                          ),
+                                        ),
+                                      ),
+                                      Divider(),
+                                      SizedBox(
+                                        height: 270,
+                                        width: 500,
+                                        child: Precipitation(),
+                                      )
+                                    ],
                                 ),
-                              ),
+                              )),
                               SizedBox(
-                                width: 300,
-                                height: 300,
+                                width: 500,
+                                height: 350,
                                 child: Card(
-                                  color: Colors.lightBlueAccent,
-                                  child: Precipitation(),
+                                  child: Column(
+                                    children: <Widget> [
+                                      const Padding(
+                                      padding: EdgeInsets.all(16.0),
+                                        child: Text(
+                                          'Flood Possible Places',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0,
+                                          ),
+                                        ),
+                                      ),
+                                      const Divider(),
+                                      SizedBox(
+                                        height: 270,
+                                        width: 500,
+                                        child: FirestoreCheck(),
+                                      )
+                                    ],
                                 ),
-                              ),
+                              )),
                             ],
                           )
                         ],
@@ -108,7 +173,7 @@ class _HomeState extends State<Home>{
                     )
                   ],
                 ),
-                Padding(padding: EdgeInsets.only(bottom: 50))
+                const Padding(padding: EdgeInsets.only(bottom: 50))
               ],
             ),
           ),

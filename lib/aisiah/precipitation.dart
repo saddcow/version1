@@ -15,7 +15,7 @@ Future<Map<String, dynamic>> getWeatherData(String city, String apiKey) async {
 
 class Precipitation extends StatelessWidget {
   final String apiKey = '6378430bc45061aaccd4a566a86c25df';
-  final String cityName = ' Naga';
+  final String cityName = 'Naga';
 
   const Precipitation({super.key});
 
@@ -36,13 +36,13 @@ class Precipitation extends StatelessWidget {
                 final weatherData = snapshot.data;
                 if (weatherData != null) {
                   final rainData = weatherData['rain'];
-                  final rainVolume = rainData != null ? rainData['1h'] : 0.0;
+                  final rainVolume = rainData != null ? rainData['3h'] : 0.0;
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text('Hourly Precipitation Information'),
                       Text('City: $cityName'),
-                      Text('Precipitation (last 1h): $rainVolume mm'),
+                      Text('Precipitation (last 3h): $rainVolume mm'),
                     ],
                   );
                 } else {

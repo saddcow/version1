@@ -161,10 +161,14 @@ class _MappUpdateState extends State<MappUpdate> {
   }
 
   void _saveMarkerDetails(String id) {
+    final String barangay = barangayController.text;
+    final String street = streetController.text;
+
     for (final marker in myMarker) {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
-      _saveMarkerToFirestore(id, address, position);
+      final selectedOption = selectedValue;
+      _saveMarkerToFirestore(barangay, street, address, position, selectedOption);
     }
   }
 
@@ -177,12 +181,16 @@ class _MappUpdateState extends State<MappUpdate> {
   }
 
   Future<void> _saveMarkerToFirestore(
-      String id, String address, LatLng coordinates) async {
+      String barangay, String street, String address, LatLng coordinates, String selectedOption) async {
     try {
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       await firestore.collection('markers').doc(id).update({
+        'uniqueID': id,
+        'barangay': barangay,
+        'street': street,
         'address': address,
         'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
+        'risk_level': selectedOption,
       });
       print('Marker details saved to Firestore');
     } catch (e) {
