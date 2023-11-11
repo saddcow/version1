@@ -21,7 +21,7 @@ class _RiskMarkersState extends State<RiskMarkers> {
   }
 
   Future<void> getRainVolume() async {
-    final String apiKey = 'YOUR_OPENWEATHERMAP_API_KEY';
+    final String apiKey = '6378430bc45061aaccd4a566a86c25df';
     final double latitude = 13.6217753;
     final double longitude = 123.1948238;
 
@@ -59,7 +59,7 @@ class _RiskMarkersState extends State<RiskMarkers> {
     } else if (rainVolume >= 6.5 && rainVolume <= 15) {
       searchString = 'Low';
     } else {
-      searchString = 'High';
+      searchString = '';
     }
 
     final QuerySnapshot querySnapshot =
