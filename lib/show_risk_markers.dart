@@ -4,13 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class WeatherMap extends StatefulWidget {
-  const WeatherMap({super.key});
+class RiskMarkers extends StatefulWidget {
+  const RiskMarkers({super.key});
   @override
-  _WeatherMapState createState() => _WeatherMapState();
+  _RiskMarkersState createState() => _RiskMarkersState();
 }
 
-class _WeatherMapState extends State<WeatherMap> {
+class _RiskMarkersState extends State<RiskMarkers> {
   List<Marker> markers = [];
   double rainVolume = 0.00;
 

@@ -53,7 +53,7 @@ class _HomeState extends State<Home>{
               children: [
                 SizedBox(
                   height: 500,
-                  child: WeatherMap(),
+                  child: RiskMarkers(),
                 ),  
                 Padding(padding: EdgeInsets.only(top: 20)),
                 Row(
