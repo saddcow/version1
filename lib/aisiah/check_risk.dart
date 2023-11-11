@@ -86,7 +86,7 @@ class FirestoreCheck extends StatelessWidget {
             } else if (rainVolume >= 6.5 && rainVolume <= 15.00  ){
               searchString = 'Low';
             } else {
-              searchString = 'High';
+              searchString = '';
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {

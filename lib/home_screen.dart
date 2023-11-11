@@ -82,6 +82,7 @@ class _HomeState extends State<Home>{
                                 width: 500,
                                 height: 350,
                                 child: Card(
+                                  elevation: 4,
                                   child: Column(
                                     children: <Widget> [
                                       Padding(
@@ -120,6 +121,7 @@ class _HomeState extends State<Home>{
                                 width: 500,
                                 height: 350,
                                 child: Card(
+                                  elevation: 4,
                                   color: Colors.lightBlueAccent,
                                   child: Column(
                                     children: [
@@ -146,6 +148,7 @@ class _HomeState extends State<Home>{
                                 width: 500,
                                 height: 350,
                                 child: Card(
+                                  elevation: 4,
                                   color: Colors.lightBlueAccent,
                                   child: Column(
                                     children: <Widget> [

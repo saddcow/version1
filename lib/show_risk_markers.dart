@@ -59,7 +59,7 @@ class _RiskMarkersState extends State<RiskMarkers> {
     } else if (rainVolume >= 6.5 && rainVolume <= 15) {
       searchString = 'Low';
     } else {
-      searchString = 'High';
+      searchString = '';
     }
 
     final QuerySnapshot querySnapshot =
