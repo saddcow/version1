@@ -8,6 +8,7 @@ import 'package:try1/auth_service.dart';
 import 'package:try1/load_markers.dart';
 import 'package:try1/manage_screen.dart';
 import 'package:try1/reports.dart';
+import 'package:try1/show_risk_markers.dart';
 import 'package:try1/src/features/weather/presentation/hourly_weather.dart';
 
 class Home extends StatefulWidget {
@@ -51,7 +52,7 @@ class _HomeState extends State<Home>{
               children: [
                 SizedBox(
                   height: 500,
-                  child: HomeScreenMap(),
+                  child: WeatherMap(),
                 ),  
                 Padding(padding: EdgeInsets.only(top: 20)),
                 Row(
@@ -80,7 +81,6 @@ class _HomeState extends State<Home>{
                                 width: 500,
                                 height: 350,
                                 child: Card(
-                                  color: Colors.lightBlueAccent,
                                   child: Column(
                                     children: <Widget> [
                                       Padding(
@@ -103,12 +103,12 @@ class _HomeState extends State<Home>{
                                       ),
                                       Divider(),
                                       ListTile(
-                                        title: Text('Yellow Marker', style: TextStyle(color: Colors.yellow),),
+                                        title: Text('Orange Marker', style: TextStyle(color: Colors.orange),),
                                         subtitle: (Text('15-30 mm rain observed in 1 hour and expected to continue in the next 2hours. Flooding is threatening.')),
                                       ),
                                       Divider(),
                                       ListTile(
-                                        title: Text('Green Marker', style: TextStyle(color: Colors.green),),
+                                        title: Text('Yellow Marker', style: TextStyle(color: Colors.yellow),),
                                         subtitle: Text('6.5-15 mm of rain observed in 1 hour and expected to continue in the next 2 hours. Flooding is possible '),
                                       ),
                                     ],

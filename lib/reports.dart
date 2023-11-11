@@ -24,7 +24,10 @@ class _ReportsState extends State<Reports> {
           }
           if (snapshot.connectionState == ConnectionState.done) {
             dataList = snapshot.data as List;
-            return buildDataTable(dataList);
+            return SizedBox(
+              width: double.infinity,
+              child: buildDataTable(dataList),
+            );
           }
           return const Center(child: CircularProgressIndicator());
         },
@@ -34,6 +37,16 @@ class _ReportsState extends State<Reports> {
 
   Widget buildDataTable(List dataList) {
     return DataTable(
+      columnSpacing: 30,
+      headingTextStyle: const TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.white
+      ),
+      headingRowColor: MaterialStateProperty.resolveWith(
+        (states) => Colors.black
+      ),
+      showBottomBorder: true,
+      dividerThickness: 3,
       columns: const [
         DataColumn(label: Text('Baranggay')),
         DataColumn(label: Text('Street')),

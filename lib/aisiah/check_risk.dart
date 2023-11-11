@@ -17,8 +17,8 @@ class _WarningState extends State<Warning> {
   final String apiKey = '6378430bc45061aaccd4a566a86c25df';
   final String cityName = 'Naga';
   double rainVolume = 0.00;
-  final double latitude = 13.5; 
-  final double longitude = 123.2; 
+  final double latitude = 13.6217753; 
+  final double longitude = 123.1948238; 
 
   @override
   void initState() {
@@ -86,7 +86,7 @@ class FirestoreCheck extends StatelessWidget {
             } else if (rainVolume >= 6.5 && rainVolume <= 15  ){
               searchString = 'Low';
             } else {
-              searchString = '';
+              searchString = 'High';
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
