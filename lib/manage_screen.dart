@@ -59,7 +59,7 @@ class _ManageState extends State<Manage> {
                   .map(
                     (DocumentSnapshot document) => DataRow(
                       cells: [
-                        DataCell(Text(uuid = document["uniqueID"]),),
+                        DataCell(Text(document["uniqueID"]),),
                         DataCell(Text(document["risk_level"], style: const TextStyle(color: Colors.red),)),
                         DataCell(Text(document["address"] ?? 'N/A')),
                         DataCell(Text(document["barangay"])),
@@ -67,8 +67,9 @@ class _ManageState extends State<Manage> {
                         DataCell(Text(formatGeoPoint(document["coordinates"] as GeoPoint))),
                         DataCell(
                             TextButton(onPressed: (){
-                                deleteDocument(uuid);
+                                deleteDocument(document["uniqueID"]);
                             }, child: const Text("Delete")),
+                            
                           ),
                         DataCell(
                           TextButton(onPressed: (){
