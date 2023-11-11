@@ -67,7 +67,7 @@ class _ManageState extends State<Manage> {
                         DataCell(Text(formatGeoPoint(document["coordinates"] as GeoPoint))),
                         DataCell(
                             TextButton(onPressed: (){
-                              deleteDocument(uuid);
+                                deleteDocument(uuid);
                             }, child: const Text("Delete")),
                           ),
                         DataCell(
