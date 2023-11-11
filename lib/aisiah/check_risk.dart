@@ -59,7 +59,7 @@ class _WarningState extends State<Warning> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: FirestoreCheck(rainVolume: rainVolume),
+        body: FirestoreCheck(rainVolume: rainVolume,),
       ),
     );
   }
@@ -81,9 +81,9 @@ class FirestoreCheck extends StatelessWidget {
           builder: (context, snapshot) {
             if(rainVolume > 30.00 ){
               searchString = 'High';
-            } else if (rainVolume >= 15 && rainVolume <= 30){
+            } else if (rainVolume >= 15.00 && rainVolume <= 30.00){
               searchString = 'Medium';
-            } else if (rainVolume >= 6.5 && rainVolume <= 15  ){
+            } else if (rainVolume >= 6.5 && rainVolume <= 15.00  ){
               searchString = 'Low';
             } else {
               searchString = '';
@@ -111,21 +111,29 @@ class FirestoreCheck extends StatelessWidget {
               }
 
               if (matchingDocumentIds.isNotEmpty) {
-                // Print or display the matching document IDs
-                return Center(
+                return SizedBox(
+                  height: 270, 
+                  width: 500,
+                  child: Card(
+                  color: Colors.lightBlueAccent,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       for (String docInfo in matchingDocumentIds)
                         Text(docInfo),
                     ],
-                    
+                    ),
                   ),
                 );
               } else {
-                // If no matches found
-                return const Center(
-                  child: Text('All Goods! Nothing to worry!'),
+                return const SizedBox(
+                   height: 270,
+                   width: 500,
+                  child: Card(
+                    color: Colors.lightBlueAccent,
+                    child: Center(
+                      child: Text('All Goods! Nothing to worry!')),
+                  )
                 );
               }
             }

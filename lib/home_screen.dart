@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/aisiah/check_risk.dart';
 import 'package:try1/aisiah/precipitation.dart';
+import 'package:try1/aisiah/risk_level.dart';
 import 'package:try1/auth_service.dart';
 import 'package:try1/load_markers.dart';
 import 'package:try1/manage_screen.dart';
@@ -34,7 +35,7 @@ class _HomeState extends State<Home>{
       _dataList = querySnapshot.docs;
     });
   }
-  
+
   String formatGeoPoint(GeoPoint geoPoint) {
     return 'Lat: ${geoPoint.latitude.toString()}, Lng: ${geoPoint.longitude.toString()}';
   }
@@ -94,23 +95,11 @@ class _HomeState extends State<Home>{
                                         ),
                                       ),
                                       Divider(),
-                                      ListTile(
-                                        title: Text(
-                                          'Red Marker',
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                        subtitle: (Text('If More than 30 mm rain observed in 1 hour and expected to continue in the next 2 hours then serious flooding is expected in these low-lying areas.')),
-                                      ),
-                                      Divider(),
-                                      ListTile(
-                                        title: Text('Yellow Marker', style: TextStyle(color: Colors.yellow),),
-                                        subtitle: (Text('15-30 mm rain observed in 1 hour and expected to continue in the next 2hours. Flooding is threatening.')),
-                                      ),
-                                      Divider(),
-                                      ListTile(
-                                        title: Text('Green Marker', style: TextStyle(color: Colors.green),),
-                                        subtitle: Text('6.5-15 mm of rain observed in 1 hour and expected to continue in the next 2 hours. Flooding is possible '),
-                                      ),
+                                      SizedBox(
+                                        height: 270.0,
+                                        width: 500,
+                                        child: Risklevel(),
+                                      )
                                     ],
                                   ),
                                 ),
@@ -119,6 +108,7 @@ class _HomeState extends State<Home>{
                                 width: 500,
                                 height: 350,
                                 child: Card(
+                                  color: Colors.lightBlueAccent,
                                   child: Column(
                                     children: [
                                       Padding(
@@ -144,6 +134,7 @@ class _HomeState extends State<Home>{
                                 width: 500,
                                 height: 350,
                                 child: Card(
+                                  color: Colors.lightBlueAccent,
                                   child: Column(
                                     children: <Widget> [
                                       Padding(

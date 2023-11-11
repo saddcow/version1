@@ -15,7 +15,7 @@ class _PrecipitationState extends State<Precipitation> {
   final String apiKey = '6378430bc45061aaccd4a566a86c25df';
   final double latitude = 13.5; 
   final double longitude = 123.2; 
-  double rainVolume = 0.00;
+  double rainVolume = 10.00;
 
   @override
   void initState() {
@@ -41,8 +41,6 @@ class _PrecipitationState extends State<Precipitation> {
           return;
         }
       }
-
-      // If no rain data is found in the next 3 hours
       setState(() {
         rainVolume = 0.00;
       });
@@ -56,18 +54,20 @@ class _PrecipitationState extends State<Precipitation> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: Center(
-          child: Column(
+        body: SizedBox(
+          width: 500,
+          height: 350,
+          child: Card(
+            color: Colors.lightBlueAccent,
+            child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Rain Volume for the Next 3 Hours: $rainVolume mm'),
-              // Add your other widgets here
-            ],
+              children: [
+                Text('Rain Volume for the Next 3 Hours: $rainVolume mm'),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
-
-// The FirestoreCheck widget remains unchanged
