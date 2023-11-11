@@ -10,11 +10,11 @@ class MyDropDownMenu extends StatefulWidget {
 }
 
 class _MyDropDownMenuState extends State<MyDropDownMenu> {
-  String selectedValue = 'Yellow - Low chance of getting flooded. Aroung 30mm of rain per hour for 10 hours';
+  String selectedValue = 'Yellow - Low chance of getting flooded. Greater than 30mm of rain per hour lasting for 3 hours';
   List<String> options = [
-    'Yellow - Low chance of getting flooded. Aroung 30mm of rain per hour for 10 hours', 
-    'Orange - Medium chance of getting flooded. Around 14mm of rain per hour for 10 hours.', 
-    'Red - High chance of getting flooded. Around 5mm of rain per hour for 2 hours',];
+    'Green - Low chance of getting flooded. Greater than 30mm of rain per hour lasting for 3 hours', 
+    'Yellowange - Medium chance of getting flooded. Around 15-30mm of rain per hour last for 3 hours.', 
+    'Red - High chance of getting flooded. Around 6.5-15mm of rain per hour lasting for 3 hours',];
 
   @override
   Widget build(BuildContext context) {
