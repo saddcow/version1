@@ -34,8 +34,7 @@ class _HomeState extends State<Home>{
       _dataList = querySnapshot.docs;
     });
   }
-
-  //convert geopoint to latlng.toString
+  
   String formatGeoPoint(GeoPoint geoPoint) {
     return 'Lat: ${geoPoint.latitude.toString()}, Lng: ${geoPoint.longitude.toString()}';
   }
@@ -46,15 +45,15 @@ class _HomeState extends State<Home>{
         appBar: AppBar(
           title: const Text("Monitoring"),
         ),
-        body:  SizedBox(
+        body:   const SizedBox(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(
+                SizedBox(
                   height: 500,
                   child: HomeScreenMap(),
                 ),  
-                const Padding(padding: EdgeInsets.only(top: 20)),
+                Padding(padding: EdgeInsets.only(top: 20)),
                 Row(
                   children: [
                     Expanded(
@@ -62,7 +61,7 @@ class _HomeState extends State<Home>{
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const SizedBox(
+                          SizedBox(
                             width: double.infinity,
                             height: 200,
                               child: Padding(padding: EdgeInsets.all(16),
@@ -77,7 +76,7 @@ class _HomeState extends State<Home>{
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              const SizedBox(
+                              SizedBox(
                                 width: 500,
                                 height: 350,
                                 child: Card(
@@ -116,7 +115,7 @@ class _HomeState extends State<Home>{
                                   ),
                                 ),
                               ),
-                              const SizedBox(
+                              SizedBox(
                                 width: 500,
                                 height: 350,
                                 child: Card(
@@ -147,7 +146,7 @@ class _HomeState extends State<Home>{
                                 child: Card(
                                   child: Column(
                                     children: <Widget> [
-                                      const Padding(
+                                      Padding(
                                       padding: EdgeInsets.all(16.0),
                                         child: Text(
                                           'Flood Possible Places',
@@ -157,11 +156,11 @@ class _HomeState extends State<Home>{
                                           ),
                                         ),
                                       ),
-                                      const Divider(),
+                                      Divider(),
                                       SizedBox(
                                         height: 270,
                                         width: 500,
-                                        child: FirestoreCheck(),
+                                        child: Warning(),
                                       )
                                     ],
                                 ),
@@ -173,7 +172,7 @@ class _HomeState extends State<Home>{
                     )
                   ],
                 ),
-                const Padding(padding: EdgeInsets.only(bottom: 50))
+                Padding(padding: EdgeInsets.only(bottom: 50))
               ],
             ),
           ),

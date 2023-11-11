@@ -1,23 +1,55 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future<Map<String, dynamic>> getWeatherData(String city, String apiKey) async {
-  const apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
-  final response = await http.get(Uri.parse('$apiUrl?q=$city&appid=$apiKey'));
+class Precipitation extends StatefulWidget {
+  const Precipitation({super.key});
 
-  if (response.statusCode == 200) {
-    return json.decode(response.body);
-  } else {
-    throw Exception('Failed to load weather data');
-  }
+  @override
+  _PrecipitationState createState() => _PrecipitationState();
 }
 
-class Precipitation extends StatelessWidget {
+class _PrecipitationState extends State<Precipitation> {
   final String apiKey = '6378430bc45061aaccd4a566a86c25df';
-  final String cityName = 'Naga';
+  final double latitude = 13.5; 
+  final double longitude = 123.2; 
+  double rainVolume = 0.00;
 
-  const Precipitation({super.key});
+  @override
+  void initState() {
+    super.initState();
+    getRainVolume();
+  }
+
+  Future<void> getRainVolume() async {
+    final apiUrl = 'https://api.openweathermap.org/data/2.5/forecast';
+    final response = await http.get(Uri.parse('$apiUrl?lat=$latitude&lon=$longitude&appid=$apiKey'));
+
+    if (response.statusCode == 200) {
+      final forecastData = json.decode(response.body);
+      final List<dynamic> hourlyForecast = forecastData['list'];
+
+      // Find the rain volume for the next 3 hours
+      for (int i = 0; i < 3; i++) {
+        final rainData = hourlyForecast[i]['rain'];
+        if (rainData != null && rainData['3h'] != null) {
+          setState(() {
+            rainVolume = rainData['3h'].toDouble();
+          });
+          return;
+        }
+      }
+
+      // If no rain data is found in the next 3 hours
+      setState(() {
+        rainVolume = 0.00;
+      });
+    } else {
+      print('Failed to load weather data. Status code: ${response.statusCode}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,34 +57,17 @@ class Precipitation extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Center(
-          child: FutureBuilder(
-            future: getWeatherData(cityName, apiKey),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                final weatherData = snapshot.data;
-                if (weatherData != null) {
-                  final rainData = weatherData['rain'];
-                  final rainVolume = rainData != null ? rainData['3h'] : 0.0;
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Hourly Precipitation Information'),
-                      Text('City: $cityName'),
-                      Text('Precipitation (last 3h): $rainVolume mm'),
-                    ],
-                  );
-                } else {
-                  return const Text('No weather data available');
-                }
-              }
-            },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Rain Volume for the Next 3 Hours: $rainVolume mm'),
+              // Add your other widgets here
+            ],
           ),
         ),
       ),
     );
   }
 }
+
+// The FirestoreCheck widget remains unchanged

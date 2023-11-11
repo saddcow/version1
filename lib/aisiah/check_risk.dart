@@ -1,9 +1,76 @@
+// ignore_for_file: library_private_types_in_public_api, must_be_immutable
+
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as http;
+
+class Warning extends StatefulWidget {
+  const Warning({super.key});
+
+  @override
+  _WarningState createState() => _WarningState();
+}
+
+class _WarningState extends State<Warning> {
+  final String apiKey = '6378430bc45061aaccd4a566a86c25df';
+  final String cityName = 'Naga';
+  double rainVolume = 0.00;
+  final double latitude = 13.5; 
+  final double longitude = 123.2; 
+
+  @override
+  void initState() {
+    super.initState();
+    getRainVolume();
+  }
+
+  Future<void> getRainVolume() async {
+    final apiUrl = 'https://api.openweathermap.org/data/2.5/forecast';
+    final response = await http.get(Uri.parse('$apiUrl?lat=$latitude&lon=$longitude&appid=$apiKey'));
+
+    if (response.statusCode == 200) {
+      final forecastData = json.decode(response.body);
+      final List<dynamic> hourlyForecast = forecastData['list'];
+
+      // Find the rain volume for the next 3 hours
+      for (int i = 0; i < 3; i++) {
+        final rainData = hourlyForecast[i]['rain'];
+        if (rainData != null && rainData['3h'] != null) {
+          setState(() {
+            rainVolume = rainData['3h'].toDouble();
+          });
+          return;
+        }
+      }
+
+      // If no rain data is found in the next 3 hours
+      setState(() {
+        rainVolume = 0.00;
+      });
+    } else {
+      print('Failed to load weather data. Status code: ${response.statusCode}');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: FirestoreCheck(rainVolume: rainVolume),
+      ),
+    );
+  }
+}
 
 class FirestoreCheck extends StatelessWidget {
-  final String searchString = 'High'; // Set the search string here
-
+  FirestoreCheck({super.key, required this.rainVolume}); 
+  
+  String searchString = '';
+  final double rainVolume;
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,8 +79,18 @@ class FirestoreCheck extends StatelessWidget {
         body: StreamBuilder(
           stream: FirebaseFirestore.instance.collection('markers').snapshots(),
           builder: (context, snapshot) {
+            if(rainVolume > 30.00 ){
+              searchString = 'High';
+            } else if (rainVolume >= 15 && rainVolume <= 30){
+              searchString = 'Medium';
+            } else if (rainVolume >= 6.5 && rainVolume <= 15  ){
+              searchString = 'Low';
+            } else {
+              searchString = '';
+            }
+
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else {
@@ -22,13 +99,14 @@ class FirestoreCheck extends StatelessWidget {
 
               for (QueryDocumentSnapshot document in querySnapshot.docs) {
                 String fieldValue = document['risk_level'];
+                String add = document['address'];
 
                 if (searchString == 'High' ) {
-                  matchingDocumentIds.add(document.id);
+                  matchingDocumentIds.add(add);
                 } else if (searchString == 'Medium' && fieldValue == 'Medium') {
-                  matchingDocumentIds.add('${document.id}: $fieldValue');
+                  matchingDocumentIds.add(add);
                 } else if (searchString == 'Low' && fieldValue == 'High') {
-                  matchingDocumentIds.add('${document.id}: $fieldValue');
+                  matchingDocumentIds.add(add);
                 }
               }
 
@@ -38,16 +116,16 @@ class FirestoreCheck extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Matching documents for $searchString:'),
                       for (String docInfo in matchingDocumentIds)
                         Text(docInfo),
                     ],
+                    
                   ),
                 );
               } else {
                 // If no matches found
-                return Center(
-                  child: Text('No matching documents found'),
+                return const Center(
+                  child: Text('All Goods! Nothing to worry!'),
                 );
               }
             }
@@ -58,6 +136,3 @@ class FirestoreCheck extends StatelessWidget {
   }
 }
 
-void main() {
-  runApp(FirestoreCheck());
-}

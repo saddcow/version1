@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:try1/aisiah/check_risk.dart';
 import 'package:try1/auth_service.dart';
 import 'package:try1/firebase_options.dart';
 
