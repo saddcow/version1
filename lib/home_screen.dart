@@ -154,7 +154,7 @@ class _HomeState extends State<Home>{
                                       Padding(
                                       padding: EdgeInsets.all(16.0),
                                         child: Text(
-                                          'Flood Possible Places',
+                                          'Possible Flood Places',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 18.0,

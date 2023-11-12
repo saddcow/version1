@@ -132,7 +132,7 @@ class FirestoreCheck extends StatelessWidget {
                   child: Card(
                     color: Colors.lightBlueAccent,
                     child: Center(
-                      child: Text('All Goods! Nothing to worry!')),
+                      child: Text('All Good! Nothing to worry!')),
                   )
                 );
               }
