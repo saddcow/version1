@@ -53,7 +53,7 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
             title: 'Report location status: $Hazard_Status',
             snippet: 'Location:  $Barangay' ' $Street ',
           ),
-          
+
         ),
       );
     }
