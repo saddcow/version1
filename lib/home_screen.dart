@@ -5,6 +5,7 @@ import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/aisiah/check_risk.dart';
 import 'package:try1/aisiah/precipitation.dart';
 import 'package:try1/auth_service.dart';
+import 'package:try1/load_markers.dart';
 import 'package:try1/manage_screen.dart';
 import 'package:try1/reports.dart';
 import 'package:try1/show_risk_markers.dart';
@@ -51,7 +52,7 @@ class _HomeState extends State<Home>{
               children: [
                 SizedBox(
                   height: 500,
-                  child: RiskMarkers(),
+                  child: HomeScreenMap(),
                 ),  
                 Padding(padding: EdgeInsets.only(top: 20)),
                 Row(

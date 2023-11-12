@@ -33,26 +33,27 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
 
   Future<void> _retrieveMarkersFromFirestore() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final QuerySnapshot snapshot = await firestore.collection('markers').get();
+    final QuerySnapshot snapshot = await firestore.collection('Report').get();
 
     final List<Marker> markers = [];
 
     for (final DocumentSnapshot document in snapshot.docs) {
       final data = document.data() as Map<String, dynamic>;
-      final address = data['address'] as String;
-      final coordinates = data['coordinates'] as GeoPoint;
-      final risk_level = data['risk_level'] as String;
+      final Barangay = data['Barangay'] as String;
+      final Street = data['Street'] as String;
+      final Coordinates = data['Coordinates'] as GeoPoint;
+      final Hazard_Status = data['Hazard_Status'] as String;
+      final Report_ID = data['Report_ID'] as String;
 
       markers.add(
         Marker(
-          markerId: MarkerId(address),
-          position: LatLng(coordinates.latitude, coordinates.longitude),
+          markerId: MarkerId(Report_ID),
+          position: LatLng(Coordinates.latitude, Coordinates.longitude),
           infoWindow: InfoWindow(
-            title: 'Hazard Level of Location: $risk_level',
-            snippet: address,
-            
+            title: 'Report location status: $Hazard_Status',
+            snippet: 'Location:  $Barangay' ' $Street ',
           ),
-
+          
         ),
       );
     }

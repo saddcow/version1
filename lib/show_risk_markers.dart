@@ -71,11 +71,12 @@ class _RiskMarkersState extends State<RiskMarkers> {
       final riskLevel = document['risk_level'] as String;
       final address = document['address'] as String;
       final coordinates = document['coordinates'] as GeoPoint;
+      final uniqeID = document['uniqueID'] as String;
 
       if (searchString == 'High') {
         matchingMarkers.add(
           Marker(
-            markerId: MarkerId(address),
+            markerId: MarkerId(uniqeID),
             position: LatLng(coordinates.latitude, coordinates.longitude),
             infoWindow: InfoWindow(
               title: 'Risk Level: $riskLevel',
@@ -105,6 +106,8 @@ class _RiskMarkersState extends State<RiskMarkers> {
             )
           )
         );
+      } else {
+
       }
     }
 
