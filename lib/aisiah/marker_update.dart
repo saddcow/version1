@@ -183,8 +183,7 @@ class _MappUpdateState extends State<MappUpdate> {
   Future<void> _saveMarkerToFirestore(
       String barangay, String street, String address, LatLng coordinates, String selectedOption) async {
     try {
-      final FirebaseFirestore firestore = FirebaseFirestore.instance;
-      await firestore.collection('markers').doc(id).update({
+      await FirebaseFirestore.instance.collection('markers').doc(id).update({
         'uniqueID': id,
         'barangay': barangay,
         'street': street,

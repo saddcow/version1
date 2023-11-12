@@ -104,6 +104,7 @@ class _MappState extends State<Mapp> {
                 onPressed: () {
                   _saveMarkerDetails();
                   Navigator.pop(context);
+                  setState(() { });
                 },
                 child: const Text('Save Marker'),
               ),

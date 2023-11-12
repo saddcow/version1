@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/aisiah/check_risk.dart';
 import 'package:try1/aisiah/precipitation.dart';
-import 'package:try1/aisiah/risk_level.dart';
 import 'package:try1/auth_service.dart';
-import 'package:try1/load_markers.dart';
 import 'package:try1/manage_screen.dart';
 import 'package:try1/reports.dart';
 import 'package:try1/show_risk_markers.dart';
@@ -19,7 +17,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home>{
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance; 
   List<DocumentSnapshot> _dataList = [];
 
   @override
