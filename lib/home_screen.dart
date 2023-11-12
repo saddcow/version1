@@ -80,6 +80,7 @@ class _HomeState extends State<Home>{
                                 width: 500,
                                 height: 350,
                                 child: Card(
+                                  color: Colors.lightBlueAccent,
                                   elevation: 4,
                                   child: Column(
                                     children: <Widget> [

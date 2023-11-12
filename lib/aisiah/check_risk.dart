@@ -86,7 +86,7 @@ class FirestoreCheck extends StatelessWidget {
             } else if (rainVolume >= 6.5 && rainVolume <= 15.00  ){
               searchString = 'Low';
             } else {
-              searchString = '';
+              searchString = 'High';
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -111,16 +111,16 @@ class FirestoreCheck extends StatelessWidget {
               }
 
               if (matchingDocumentIds.isNotEmpty) {
-                return SizedBox(
-                  height: 270, 
-                  width: 500,
+                return SingleChildScrollView(
                   child: Card(
                   color: Colors.lightBlueAccent,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       for (String docInfo in matchingDocumentIds)
-                        Text(docInfo),
+                        ListTile(
+                          subtitle: Text(docInfo),
+                        ),
                     ],
                     ),
                   ),
