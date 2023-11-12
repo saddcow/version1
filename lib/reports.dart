@@ -62,7 +62,7 @@ class _ReportsState extends State<Reports> {
       rows: dataList.map((data) {
         return DataRow(
           cells: [
-            DataCell(Text(data['Baranggay'])),
+            DataCell(Text(data['Barangay'])),
             DataCell(Text(data['Street'])),
             DataCell(
               FutureBuilder<String>(
@@ -80,9 +80,9 @@ class _ReportsState extends State<Reports> {
             ),
             DataCell(Text(data['Report_Description'])),
             DataCell(Text(data['Report_Hazard_Type'])),
-            DataCell(Text(data['Report_Status'])),
+            DataCell(Text(data['Hazard_Status'])),
             DataCell(
-              DropdownCell(user_ID: data['Document_ID']),
+              DropdownCell(user_ID: data['Report_ID']),
             )
           ],
         );
@@ -156,7 +156,7 @@ class _DropdownCellState extends State<DropdownCell> {
   Future<void> updateUser(String selectedValue) async {
     String user = widget.user_ID;
     try {
-      FirebaseFirestore.instance.collection('Report').doc(user).update({'Report_Status': selectedValue});
+      FirebaseFirestore.instance.collection('Report').doc(user).update({'Hazard_Status': selectedValue});
       print('Document updated successfully.');
     } catch (error) {
       print('Error updating document: $error');
