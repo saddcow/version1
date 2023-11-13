@@ -56,7 +56,7 @@ class _ReportsState extends State<Reports> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Filter Options'),
+          title: const Text('Report Hazard Type Filter'),
           content: DropdownButton<String>(
             value: filterType,
             onChanged: (String? newValue) {
@@ -65,7 +65,7 @@ class _ReportsState extends State<Reports> {
               });
               Navigator.of(context).pop();
             },
-            items: ['All', 'Flood', 'Road Accident', 'Ongoing', 'Resolved', 'Spam']
+            items: ['All', 'Flood', 'Road Accident']
                 .map<DropdownMenuItem<String>>(
                   (String value) => DropdownMenuItem<String>(
                     value: value,

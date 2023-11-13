@@ -160,18 +160,21 @@ class _ManageState extends State<Manage> {
                 },
                 child: const Text('All'),
               ),
+              const Divider(),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context, 'High');
                 },
                 child: const Text('High'),
               ),
+              const Divider(),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context, 'Medium');
                 },
                 child: const Text('Medium'),
               ),
+              const Divider(),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context, 'Low');
@@ -179,7 +182,7 @@ class _ManageState extends State<Manage> {
                 child: const Text('Low'),
               ),
             ],
-          ),
+          ),          
         );
       },
     );
