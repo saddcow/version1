@@ -7,11 +7,11 @@ Future<List<Marker>> getRiskMarkers() async {
   List<Marker> markers = [];
   double rainVolume = 0.00;
 
-  final String apiKey = '6378430bc45061aaccd4a566a86c25df';
-  final double latitude = 13.6217753;
-  final double longitude = 123.1948238;
+  const String apiKey = '6378430bc45061aaccd4a566a86c25df';
+  const double latitude = 13.6217753;
+  const double longitude = 123.1948238;
 
-  final apiUrl = 'https://api.openweathermap.org/data/2.5/forecast';
+  const apiUrl = 'https://api.openweathermap.org/data/2.5/forecast';
   final response = await http.get(Uri.parse(
       '$apiUrl?lat=$latitude&lon=$longitude&appid=$apiKey'));
 

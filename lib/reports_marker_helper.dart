@@ -9,26 +9,28 @@ Future<List<Marker>> retrieveMarkersFromFirestore() async {
 
   for (final DocumentSnapshot document in snapshot.docs) {
     final data = document.data() as Map<String, dynamic>;
-    final Barangay = data['Barangay'] as String;
-    final Street = data['Street'] as String;
-    final Coordinates = data['Coordinates'] as GeoPoint;
-    final Hazard_Status = data['Hazard_Status'] as String;
-    final Report_ID = data['Report_ID'] as String;
+    final barangay = data['Barangay'] as String?;
+    final street = data['Street'] as String?;
+    final coordinates = data['Coordinates'] as GeoPoint?;
+    final hazardStatus = data['Hazard_Status'] as String?;
+    final reportID = data['Report_ID'] as String?;
 
-    // Use a custom marker icon
-    final BitmapDescriptor customIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+    if(barangay != null && street != null && coordinates != null && hazardStatus != null && reportID != null) {
+     
+      final BitmapDescriptor customIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
 
-    markers.add(
-      Marker(
-        markerId: MarkerId(Report_ID),
-        position: LatLng(Coordinates.latitude, Coordinates.longitude),
-        icon: customIcon,
-        infoWindow: InfoWindow(
-          title: 'Report location status: $Hazard_Status',
-          snippet: 'Location:  $Barangay' ' $Street ',
+      markers.add(
+        Marker(
+          markerId: MarkerId(reportID),
+          position: LatLng(coordinates.latitude, coordinates.longitude),
+          icon: customIcon,
+          infoWindow: InfoWindow(
+            title: 'Report location status: $hazardStatus',
+            snippet: 'Location:  $barangay, ' ' $street ',
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   return markers;
