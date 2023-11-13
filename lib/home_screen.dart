@@ -185,17 +185,11 @@ class _HomeState extends State<Home>{
           ),
         ),
       ),
-      Scaffold(
-        appBar: AppBar(
-          title: const Text('Managing Risk Areas'),
-        ),
-        body: const Manage(),
+      const Scaffold(
+        body: Manage(),
       ),
-      Scaffold(
-        appBar: AppBar(
-          title: const Text('Reports'),
-        ),
-        body: const Reports(),
+      const Scaffold(
+        body: Reports(),
       ),
             Scaffold(
         body: Container(

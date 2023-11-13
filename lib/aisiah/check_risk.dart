@@ -27,7 +27,7 @@ class _WarningState extends State<Warning> {
   }
 
   Future<void> getRainVolume() async {
-    final apiUrl = 'https://api.openweathermap.org/data/2.5/forecast';
+    const apiUrl = 'https://api.openweathermap.org/data/2.5/forecast';
     final response = await http.get(Uri.parse('$apiUrl?lat=$latitude&lon=$longitude&appid=$apiKey'));
 
     if (response.statusCode == 200) {

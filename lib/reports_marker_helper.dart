@@ -15,10 +15,14 @@ Future<List<Marker>> retrieveMarkersFromFirestore() async {
     final Hazard_Status = data['Hazard_Status'] as String;
     final Report_ID = data['Report_ID'] as String;
 
+    // Use a custom marker icon
+    final BitmapDescriptor customIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+
     markers.add(
       Marker(
         markerId: MarkerId(Report_ID),
         position: LatLng(Coordinates.latitude, Coordinates.longitude),
+        icon: customIcon,
         infoWindow: InfoWindow(
           title: 'Report location status: $Hazard_Status',
           snippet: 'Location:  $Barangay' ' $Street ',

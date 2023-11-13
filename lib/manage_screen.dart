@@ -19,17 +19,29 @@ class _ManageState extends State<Manage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Marker> myMarker = [];
   List<DocumentSnapshot> _dataList = [];
+  String filterRiskLevel = 'All';
 
   Future<void> deleteDocument(String documentId) async {
-  await FirebaseFirestore.instance
-      .collection('markers') // Replace with your collection name
-      .doc(documentId)
-      .delete();
-}
+    await FirebaseFirestore.instance
+        .collection('markers')
+        .doc(documentId)
+        .delete();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Managing Risk Area'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.filter_list),
+            onPressed: () {
+              _showFilterDialog();
+            },
+          ),
+        ],
+      ),
       body: Column(
         children: [
           SizedBox(
@@ -37,46 +49,61 @@ class _ManageState extends State<Manage> {
             child: DataTable(
               columnSpacing: 30,
               headingTextStyle: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white
-              ),
+                  fontWeight: FontWeight.bold, color: Colors.white),
               headingRowColor: MaterialStateProperty.resolveWith(
-                (states) => Colors.black
-              ),
+                  (states) => Colors.black),
               showBottomBorder: true,
               dividerThickness: 3,
-              columns: const[
+              columns: const [
                 DataColumn(label: Text("ID")),
                 DataColumn(label: Text("Risk Level")),
                 DataColumn(label: Text("Address")),
                 DataColumn(label: Text("Barangay")),
                 DataColumn(label: Text("Street")),
                 DataColumn(label: Text("Coordinates")),
-                DataColumn(label: Text("Options"),),
-                DataColumn(label: Text(''))                    
-              ], 
+                DataColumn(label: Text("Options")),
+                DataColumn(label: Text('')),
+              ],
               rows: _dataList
+                  .where((document) =>
+                      filterRiskLevel == 'All' ||
+                      document['risk_level'] == filterRiskLevel)
                   .map(
                     (DocumentSnapshot document) => DataRow(
                       cells: [
-                        DataCell(Text(document["uniqueID"]),),
-                        DataCell(Text(document["risk_level"], style: const TextStyle(color: Colors.red),)),
+                        DataCell(
+                          Text(document["uniqueID"]),
+                        ),
+                        DataCell(
+                          Text(
+                            document["risk_level"],
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
                         DataCell(Text(document["address"] ?? 'N/A')),
                         DataCell(Text(document["barangay"])),
                         DataCell(Text(document["street"])),
-                        DataCell(Text(formatGeoPoint(document["coordinates"] as GeoPoint))),
                         DataCell(
-                            TextButton(onPressed: (){
+                            Text(formatGeoPoint(
+                                document["coordinates"] as GeoPoint))),
+                        DataCell(
+                          TextButton(
+                              onPressed: () {
                                 deleteDocument(document["uniqueID"]);
-                            }, child: const Text("Delete")),
-                            
-                          ),
+                              },
+                              child: const Text("Delete")),
+                        ),
                         DataCell(
-                          TextButton(onPressed: (){
-                            pass = document["uniqueID"];
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => MappUpdate(myString: pass,)));
-                          }, child: const Text("Edit"))
-                        ),  
+                            TextButton(
+                                onPressed: () {
+                                  pass = document["uniqueID"];
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              MappUpdate(myString: pass)));
+                                },
+                                child: const Text("Edit"))),
                       ],
                     ),
                   )
@@ -88,8 +115,9 @@ class _ManageState extends State<Manage> {
 
           FloatingActionButton.extended(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const Mapp()));
-            }, 
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => const Mapp()));
+            },
             label: const Text('Add Hazard Area'),
             icon: const Icon(Icons.add),
           ),
@@ -97,7 +125,7 @@ class _ManageState extends State<Manage> {
       ),
     );
   }
-  
+
   @override
   void initState() {
     super.initState();
@@ -115,5 +143,51 @@ class _ManageState extends State<Manage> {
 
   String formatGeoPoint(GeoPoint geoPoint) {
     return 'Lat: ${geoPoint.latitude.toString()}, Lng: ${geoPoint.longitude.toString()}';
+  }
+
+  // Function to show the filter dialog
+  Future<void> _showFilterDialog() async {
+    String? newFilter = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Filter Risk Level'),
+          content: Column(
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, 'All');
+                },
+                child: const Text('All'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, 'High');
+                },
+                child: const Text('High'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, 'Medium');
+                },
+                child: const Text('Medium'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, 'Low');
+                },
+                child: const Text('Low'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (newFilter != null) {
+      setState(() {
+        filterRiskLevel = newFilter;
+      });
+    }
   }
 }

@@ -13,10 +13,22 @@ class Reports extends StatefulWidget {
 class _ReportsState extends State<Reports> {
   List dataList = [];
   String userID = '';
+  String filterType = 'All';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Reports'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.filter_list),
+            onPressed: () {
+              _showFilterDialog();
+            },
+          ),
+        ],
+      ),
       body: FutureBuilder(
         future: FireStoreDataBase().getData(),
         builder: (context, snapshot) {
@@ -27,15 +39,52 @@ class _ReportsState extends State<Reports> {
           }
           if (snapshot.connectionState == ConnectionState.done) {
             dataList = snapshot.data as List;
+            List filteredData = applyFilter(dataList);
             return SizedBox(
               width: double.infinity,
-              child: buildDataTable(dataList),
+              child: buildDataTable(filteredData),
             );
           }
           return const Center(child: CircularProgressIndicator());
         },
       ),
     );
+  }
+
+  Future<void> _showFilterDialog() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Filter Options'),
+          content: DropdownButton<String>(
+            value: filterType,
+            onChanged: (String? newValue) {
+              setState(() {
+                filterType = newValue!;
+              });
+              Navigator.of(context).pop();
+            },
+            items: ['All', 'Flood', 'Road Accident', 'Ongoing', 'Resolved', 'Spam']
+                .map<DropdownMenuItem<String>>(
+                  (String value) => DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  ),
+                )
+                .toList(),
+          ),
+        );
+      },
+    );
+  }
+
+  List applyFilter(List data) {
+    if (filterType == 'All') {
+      return data;
+    } else {
+      return   data.where((item) => item['Report_Hazard_Type'] == filterType).toList();
+    }
   }
 
   Widget buildDataTable(List dataList) {
@@ -110,6 +159,7 @@ class _ReportsState extends State<Reports> {
     }
   }
 }
+
 
 class DropdownCell extends StatefulWidget {
   const DropdownCell({Key? key, required this.user_ID}) : super(key: key);
