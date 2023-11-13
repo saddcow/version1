@@ -47,7 +47,7 @@ class _ManageState extends State<Manage> {
           SizedBox(
             width: double.infinity,
             child: DataTable(
-              columnSpacing: 30,
+              columnSpacing: 10,
               headingTextStyle: const TextStyle(
                   fontWeight: FontWeight.bold, color: Colors.white),
               headingRowColor: MaterialStateProperty.resolveWith(
