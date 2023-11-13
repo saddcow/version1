@@ -13,8 +13,8 @@ class Precipitation extends StatefulWidget {
 
 class _PrecipitationState extends State<Precipitation> {
   final String apiKey = '6378430bc45061aaccd4a566a86c25df';
-  final double latitude = 13.5; 
-  final double longitude = 123.2; 
+  final double latitude = 13.617; 
+  final double longitude = 123.183; 
   double rainVolume = 10.00;
 
   @override

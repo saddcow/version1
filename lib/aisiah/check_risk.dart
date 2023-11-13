@@ -17,8 +17,8 @@ class _WarningState extends State<Warning> {
   final String apiKey = '6378430bc45061aaccd4a566a86c25df';
   final String cityName = 'Naga';
   double rainVolume = 0.00;
-  final double latitude = 13.6217753; 
-  final double longitude = 123.1948238; 
+  final double latitude = 13.617; 
+  final double longitude = 123.183; 
 
   @override
   void initState() {
