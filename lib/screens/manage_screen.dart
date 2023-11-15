@@ -45,63 +45,76 @@ class _ManageState extends State<Manage> {
       body: Column(
         children: [
           Expanded(
-            child: SingleChildScrollView(
-              child: SizedBox(
-                width: double.infinity,
-                child: DataTable(
-                  columnSpacing: 10,
-                  headingTextStyle: const TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white),
-                  headingRowColor: MaterialStateProperty.resolveWith(
-                      (states) => Colors.black),
-                  showBottomBorder: true,
-                  dividerThickness: 3,
-                  columns: const [
-                    DataColumn(label: Text("Risk Level")),
-                    DataColumn(label: Text("Address")),
-                    DataColumn(label: Text("Barangay")),
-                    DataColumn(label: Text("Street")),
-                    DataColumn(label: Text("Options")),
-                  ],
-                  rows: _dataList
-                      .where((document) =>
-                          filterRiskLevel == 'All' ||
-                          document['risk_level'] == filterRiskLevel)
-                      .map(
-                        (DocumentSnapshot document) => DataRow(
-                          cells: [
-                            DataCell(
-                              Text(
-                                document["risk_level"],
-                                style: const TextStyle(color: Colors.red),
-                              ),
+            child: StreamBuilder<QuerySnapshot>(
+              stream: _firestore.collection('markers').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text('Something went wrong');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                _dataList = snapshot.data!.docs;
+
+                return SingleChildScrollView(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: DataTable(
+                      columnSpacing: 10,
+                      headingTextStyle: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                      headingRowColor: MaterialStateProperty.resolveWith(
+                          (states) => Colors.black),
+                      showBottomBorder: true,
+                      dividerThickness: 3,
+                      columns: const [
+                        DataColumn(label: Text("Risk Level")),
+                        DataColumn(label: Text("Address")),
+                        DataColumn(label: Text("Barangay")),
+                        DataColumn(label: Text("Street")),
+                        DataColumn(label: Text("Options")),
+                      ],
+                      rows: _dataList
+                          .where((document) =>
+                              filterRiskLevel == 'All' ||
+                              document['risk_level'] == filterRiskLevel)
+                          .map(
+                            (DocumentSnapshot document) => DataRow(
+                              cells: [
+                                DataCell(
+                                  Text(
+                                    document["risk_level"],
+                                    style: const TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                                DataCell(Text(document["address"] ?? 'N/A')),
+                                DataCell(Text(document["barangay"])),
+                                DataCell(Text(document["street"])),
+                                // DataCell(
+                                //   TextButton(
+                                //       onPressed: () {
+                                //         deleteDocument(document["uniqueID"]);
+                                //       },
+                                //       child: const Text("Delete")),
+                                // ),
+                                DataCell(TextButton(
+                                    onPressed: () {
+                                      pass = document["uniqueID"];
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MappUpdate(myString: pass)));
+                                    },
+                                    child: const Text("Edit"))),
+                              ],
                             ),
-                            DataCell(Text(document["address"] ?? 'N/A')),
-                            DataCell(Text(document["barangay"])),
-                            DataCell(Text(document["street"])),
-                            // DataCell(
-                            //   TextButton(
-                            //       onPressed: () {
-                            //         deleteDocument(document["uniqueID"]);
-                            //       },
-                            //       child: const Text("Delete")),
-                            // ),
-                            DataCell(TextButton(
-                                onPressed: () {
-                                  pass = document["uniqueID"];
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              MappUpdate(myString: pass)));
-                                },
-                                child: const Text("Edit"))),
-                          ],
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
           Padding(

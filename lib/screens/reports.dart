@@ -1,4 +1,3 @@
-// ignore_for_file: non_constant_identifier_names, library_private_types_in_public_api
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:try1/database_manager.dart';
@@ -12,9 +11,14 @@ class Reports extends StatefulWidget {
 }
 
 class _ReportsState extends State<Reports> {
-  List dataList = [];
-  String userID = '';
+  late Stream<QuerySnapshot> reportsStream;
   String filterType = 'All';
+
+  @override
+  void initState() {
+    super.initState();
+    reportsStream = FirebaseFirestore.instance.collection('Report').snapshots();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,23 +34,23 @@ class _ReportsState extends State<Reports> {
           ),
         ],
       ),
-      body: FutureBuilder(
-        future: FireStoreDataBase().getData(),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: reportsStream,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const Text(
-              "Something went wrong",
-            );
+            return const Text('Something went wrong');
           }
-          if (snapshot.connectionState == ConnectionState.done) {
-            dataList = snapshot.data as List;
-            List filteredData = applyFilter(dataList);
-            return SizedBox(
-              width: double.infinity,
-              child: buildDataTable(filteredData),
-            );
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
           }
-          return const Center(child: CircularProgressIndicator());
+
+          List dataList = snapshot.data!.docs;
+          List filteredData = applyFilter(dataList);
+
+          return SizedBox(
+            width: double.infinity,
+            child: buildDataTable(filteredData),
+          );
         },
       ),
     );
@@ -84,7 +88,7 @@ class _ReportsState extends State<Reports> {
     if (filterType == 'All') {
       return data;
     } else {
-      return   data.where((item) => item['Report_Hazard_Type'] == filterType).toList();
+      return data.where((item) => item['Report_Hazard_Type'] == filterType).toList();
     }
   }
 
@@ -102,7 +106,7 @@ class _ReportsState extends State<Reports> {
       dividerThickness: 3,
       columns: const [
         DataColumn(label: Text('Date and Time')),
-        DataColumn(label: Text('Baranggay')),
+        DataColumn(label: Text('Barangay')),
         DataColumn(label: Text('Street')),
         DataColumn(label: Text('User')),
         DataColumn(label: Text('Report Description')),
@@ -145,7 +149,7 @@ class _ReportsState extends State<Reports> {
       }).toList(),
     );
   }
-  
+
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
     return DateFormat('MM-dd-yyyy HH:mm').format(dateTime);
@@ -171,7 +175,6 @@ class _ReportsState extends State<Reports> {
     }
   }
 }
-
 
 class DropdownCell extends StatefulWidget {
   const DropdownCell({Key? key, required this.user_ID}) : super(key: key);
