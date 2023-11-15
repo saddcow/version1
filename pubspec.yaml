@@ -63,6 +63,7 @@ dependencies:
   geocoding: ^2.1.1
   google_geocoding_api: ^1.4.1
   custom_info_window: ^1.0.1
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

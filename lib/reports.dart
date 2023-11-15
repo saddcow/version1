@@ -14,6 +14,7 @@ class _ReportsState extends State<Reports> {
   List dataList = [];
   String userID = '';
   String filterType = 'All';
+  String Timestamp = '';
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +108,7 @@ class _ReportsState extends State<Reports> {
         DataColumn(label: Text('Report Hazard Type')),
         DataColumn(label: Text('Report Status')),
         DataColumn(label: Text('Verification Options')),
+        DataColumn(label: Text('Time and Date'))
       ],
       rows: dataList.map((data) {
         return DataRow(
@@ -130,9 +132,8 @@ class _ReportsState extends State<Reports> {
             DataCell(Text(data['Report_Description'])),
             DataCell(Text(data['Report_Hazard_Type'])),
             DataCell(Text(data['Hazard_Status'])),
-            DataCell(
-              DropdownCell(user_ID: data['Report_ID']),
-            )
+            DataCell(DropdownCell(user_ID: data['Report_ID'])),
+            DataCell(Text(Timestamp)),
           ],
         );
       }).toList(),

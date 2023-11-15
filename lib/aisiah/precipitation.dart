@@ -1,4 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -13,36 +12,26 @@ class Precipitation extends StatefulWidget {
 
 class _PrecipitationState extends State<Precipitation> {
   final String apiKey = '6378430bc45061aaccd4a566a86c25df';
-  final double latitude = 13.5; 
-  final double longitude = 123.2; 
-  double rainVolume = 10.00;
+  final double latitude = 13.617;
+  final double longitude = 123.183;
+
+  Map<String, dynamic> weatherData = {};
 
   @override
   void initState() {
     super.initState();
-    getRainVolume();
+    getWeatherData();
   }
 
-  Future<void> getRainVolume() async {
-    final apiUrl = 'https://api.openweathermap.org/data/2.5/forecast';
-    final response = await http.get(Uri.parse('$apiUrl?lat=$latitude&lon=$longitude&appid=$apiKey'));
+  Future<void> getWeatherData() async {
+    final apiUrl =
+        'https://api.openweathermap.org/data/2.5/forecast?lat=$latitude&lon=$longitude&appid=$apiKey';
+    final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {
-      final forecastData = json.decode(response.body);
-      final List<dynamic> hourlyForecast = forecastData['list'];
-
-      // Find the rain volume for the next 3 hours
-      for (int i = 0; i < 3; i++) {
-        final rainData = hourlyForecast[i]['rain'];
-        if (rainData != null && rainData['3h'] != null) {
-          setState(() {
-            rainVolume = rainData['3h'].toDouble();
-          });
-          return;
-        }
-      }
+      final Map<String, dynamic> data = json.decode(response.body);
       setState(() {
-        rainVolume = 0.00;
+        weatherData = data;
       });
     } else {
       print('Failed to load weather data. Status code: ${response.statusCode}');
@@ -51,22 +40,28 @@ class _PrecipitationState extends State<Precipitation> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: SizedBox(
-          width: 500,
-          height: 350,
-          child: Card(
-            color: Colors.lightBlueAccent,
-            child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Rain Volume for the Next 3 Hours: $rainVolume mm'),
-              ],
-            ),
-          ),
+    return Scaffold(
+      body: SizedBox( 
+        width: 500,
+        height: 350,
+      child: Card(
+        color: Colors.lightBlueAccent,
+        
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (weatherData.isNotEmpty)
+              Text('City: ${weatherData['city']['name']}'),
+            if (weatherData.isNotEmpty &&
+                weatherData['list'] != null &&
+                weatherData['list'].length >= 3) ...[
+              Text('Rain Volume (1st hour): ${weatherData['list'][0]['rain']['3h'] ?? 0} mm'),
+              Text('Rain Volume (2nd hour): ${weatherData['list'][1]['rain']['3h'] ?? 0} mm'),
+              Text('Rain Volume (3rd hour): ${weatherData['list'][2]['rain']['3h'] ?? 0} mm'),
+            ],
+          ],
         ),
+      ),
       ),
     );
   }

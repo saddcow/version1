@@ -16,38 +16,25 @@ class Warning extends StatefulWidget {
 class _WarningState extends State<Warning> {
   final String apiKey = '6378430bc45061aaccd4a566a86c25df';
   final String cityName = 'Naga';
-  double rainVolume = 0.00;
   final double latitude = 13.6217753; 
-  final double longitude = 123.1948238; 
+  final double longitude = 123.1948238;
+  Map<String, dynamic> weatherData = {}; 
 
-  @override
+   @override
   void initState() {
     super.initState();
-    getRainVolume();
+    getWeatherData();
   }
 
-  Future<void> getRainVolume() async {
-    const apiUrl = 'https://api.openweathermap.org/data/2.5/forecast';
-    final response = await http.get(Uri.parse('$apiUrl?lat=$latitude&lon=$longitude&appid=$apiKey'));
+  Future<void> getWeatherData() async {
+    final apiUrl =
+        'https://api.openweathermap.org/data/2.5/forecast?lat=$latitude&lon=$longitude&appid=$apiKey';
+    final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {
-      final forecastData = json.decode(response.body);
-      final List<dynamic> hourlyForecast = forecastData['list'];
-
-      // Find the rain volume for the next 3 hours
-      for (int i = 0; i < 3; i++) {
-        final rainData = hourlyForecast[i]['rain'];
-        if (rainData != null && rainData['3h'] != null) {
-          setState(() {
-            rainVolume = rainData['3h'].toDouble();
-          });
-          return;
-        }
-      }
-
-      // If no rain data is found in the next 3 hours
+      final Map<String, dynamic> data = json.decode(response.body);
       setState(() {
-        rainVolume = 0.00;
+        weatherData = data;
       });
     } else {
       print('Failed to load weather data. Status code: ${response.statusCode}');
@@ -59,17 +46,21 @@ class _WarningState extends State<Warning> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: FirestoreCheck(rainVolume: rainVolume,),
+        body: FirestoreCheck(weatherData: weatherData),
       ),
     );
   }
 }
 
 class FirestoreCheck extends StatelessWidget {
-  FirestoreCheck({super.key, required this.rainVolume}); 
-  
+    final Map<String, dynamic> weatherData;
+    
+
+  FirestoreCheck({Key? key, required this.weatherData}) : super(key: key);
   String searchString = '';
-  final double rainVolume;
+  double hour1 = 0.00;
+  double hour2 = 0.00;
+  double hour3 = 0.00;
   
   @override
   Widget build(BuildContext context) {
@@ -79,15 +70,6 @@ class FirestoreCheck extends StatelessWidget {
         body: StreamBuilder(
           stream: FirebaseFirestore.instance.collection('markers').snapshots(),
           builder: (context, snapshot) {
-            if(rainVolume > 30.00 ){
-              searchString = 'High';
-            } else if (rainVolume >= 15.00 && rainVolume <= 30.00){
-              searchString = 'Medium';
-            } else if (rainVolume >= 6.5 && rainVolume <= 15.00  ){
-              searchString = 'Low';
-            } else {
-              searchString = '';
-            }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
@@ -100,6 +82,37 @@ class FirestoreCheck extends StatelessWidget {
               for (QueryDocumentSnapshot document in querySnapshot.docs) {
                 String fieldValue = document['risk_level'];
                 String add = document['address'];
+
+              if (weatherData['list'][0]['rain']['3h'] >= 6.5 && weatherData['list'][0]['rain']['3h'] <= 15.0){
+              if (weatherData['list'][1]['rain']['3h'] >= 6.5 && weatherData['list'][1]['rain']['3h'] <= 15.0){
+                if (weatherData['list'][2]['rain']['3h'] >= 6.5 && weatherData['list'][2]['rain']['3h'] <= 15.0){
+                  searchString = 'Low';
+                } else {searchString = '';}
+              } else {
+                searchString = '';
+              }
+            }
+            else if (weatherData['list'][0]['rain']['3h'] >= 15.0 && weatherData['list'][0]['rain']['3h'] <= 30.0){
+              if (weatherData['list'][1]['rain']['3h'] >= 15.0 && weatherData['list'][1]['rain']['3h'] <= 30.0){
+                if (weatherData['list'][2]['rain']['3h'] >= 15.0 && weatherData['list'][2]['rain']['3h'] <= 30.0){
+                  searchString = 'Medium';
+                } else {searchString = '';}
+              } else {
+                searchString = '';
+              }
+            }
+            else if (weatherData['list'][0]['rain']['3h'] > 30.0){
+              if (weatherData['list'][1]['rain']['3h'] > 30.0 ){
+                if (weatherData['list'][2]['rain']['3h'] > 30){
+                  searchString = 'High';
+                } else {searchString = '';}
+              } else {
+                searchString = '';
+              }
+            }
+            else {
+              searchString = '';
+            }
 
                 if (searchString == 'High' ) {
                   matchingDocumentIds.add(add); 
@@ -120,6 +133,7 @@ class FirestoreCheck extends StatelessWidget {
                       for (String docInfo in matchingDocumentIds)
                         ListTile(
                           subtitle: Text(docInfo),
+                          title: const Divider(),
                         ),
                     ],
                     ),

@@ -118,13 +118,12 @@ class _MappState extends State<Mapp> {
 
   void _addMarker(LatLng position) async {
     final address = await _getAddressFromLatLng(position);
-    setState(() {
+    setState(()  {
       myMarker = [];
       myMarker.add(
         Marker(
           markerId: MarkerId(position.toString()),
           position: position,
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           infoWindow: InfoWindow(
             title: 'Location',
             snippet: address,

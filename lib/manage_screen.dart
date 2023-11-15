@@ -20,6 +20,7 @@ class _ManageState extends State<Manage> {
   List<Marker> myMarker = [];
   List<DocumentSnapshot> _dataList = [];
   String filterRiskLevel = 'All';
+  String status = '';
 
   Future<void> deleteDocument(String documentId) async {
     await FirebaseFirestore.instance
@@ -77,7 +78,9 @@ class _ManageState extends State<Manage> {
                         DataCell(
                           Text(
                             document["risk_level"],
-                            style: const TextStyle(color: Colors.red),
+                            style: TextStyle(
+                              color: getColorForRiskLevel(document["risk_level"]),
+                            ),
                           ),
                         ),
                         DataCell(Text(document["address"] ?? 'N/A')),
@@ -124,6 +127,19 @@ class _ManageState extends State<Manage> {
         ],
       ),
     );
+  }
+
+  Color getColorForRiskLevel(String riskLevel) {
+    switch (riskLevel.toLowerCase()) {
+      case 'high':
+        return Colors.red;
+      case 'medium':
+        return Colors.yellow;
+      case 'low':
+        return Colors.green;
+      default:
+        return Colors.black; 
+    }
   }
 
   @override

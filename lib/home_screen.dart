@@ -5,11 +5,9 @@ import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/aisiah/check_risk.dart';
 import 'package:try1/aisiah/precipitation.dart';
 import 'package:try1/auth_service.dart';
-import 'package:try1/load_markers.dart';
 import 'package:try1/main_map.dart';
 import 'package:try1/manage_screen.dart';
 import 'package:try1/reports.dart';
-import 'package:try1/show_risk_markers.dart';
 import 'package:try1/src/features/weather/presentation/hourly_weather.dart';
 
 class Home extends StatefulWidget {
@@ -129,7 +127,7 @@ class _HomeState extends State<Home>{
                                       Padding(
                                       padding: EdgeInsets.all(16.0),
                                         child: Text(
-                                          'Rain Precipitation',
+                                          'Rain Volume for 3 hours',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 18.0,

@@ -8,6 +8,7 @@ Future<List<Marker>> retrieveMarkersFromFirestore() async {
   final List<Marker> markers = [];
 
   for (final DocumentSnapshot document in snapshot.docs) {
+
     final data = document.data() as Map<String, dynamic>;
     final barangay = data['Barangay'] as String?;
     final street = data['Street'] as String?;
@@ -20,7 +21,6 @@ Future<List<Marker>> retrieveMarkersFromFirestore() async {
         Marker(
           markerId: MarkerId(reportID),
           position: LatLng(coordinates.latitude, coordinates.longitude),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
           infoWindow: InfoWindow(
             title: 'Report location status: $hazardStatus',
             snippet: 'Location:  $barangay, ' ' $street ',
