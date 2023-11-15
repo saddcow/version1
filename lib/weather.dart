@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class WeatherForecastWidget extends StatefulWidget {
-  const WeatherForecastWidget({super.key});
+  const WeatherForecastWidget({Key? key}) : super(key: key);
+
   @override
   _WeatherForecastWidgetState createState() => _WeatherForecastWidgetState();
 }
@@ -23,8 +24,7 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
     final String baseUrl = 'https://api.openweathermap.org/data/2.5/forecast';
     final String city = 'Naga';
 
-    final response = await http.get(Uri.parse(
-        '$baseUrl?q=$city&appid=$apiKey'));
+    final response = await http.get(Uri.parse('$baseUrl?q=$city&appid=$apiKey'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
@@ -49,12 +49,16 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
       future: weatherDataFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
+          // Display a loading indicator while data is being fetched
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
+          // Display an error message if there's an error in fetching data
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          // Display a message if no data is available
           return Center(child: Text('No data available'));
         } else {
+          // Display the weather forecast data
           return Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -63,6 +67,7 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
                   children: [
                     Column(
                       children: [
+                        // Display date, weather icon, temperature, and description
                         Text(weatherData.date),
                         SizedBox(height: 5),
                         Image.network(weatherData.iconUrl),
@@ -95,6 +100,7 @@ class WeatherData {
     required this.iconUrl,
   });
 
+  // Factory method to create a WeatherData instance from JSON
   factory WeatherData.fromJson(Map<String, dynamic> json) {
     final DateTime dateTime = DateTime.parse(json['dt_txt']);
     final String formattedDate = DateFormat('yyyy-MM-dd HH:mm').format(dateTime);

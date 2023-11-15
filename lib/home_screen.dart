@@ -12,12 +12,13 @@ import 'package:try1/weather.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
+  
   @override
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home>{
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance; 
+class _HomeState extends State<Home> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<DocumentSnapshot> _dataList = [];
 
   @override
@@ -26,48 +27,49 @@ class _HomeState extends State<Home>{
     _fetchDataFromFirestore();
   }
 
+  // Fetch data from Firestore
   Future<void> _fetchDataFromFirestore() async {
-    QuerySnapshot querySnapshot =
-        await _firestore.collection('markers').get();
+    QuerySnapshot querySnapshot = await _firestore.collection('markers').get();
 
     setState(() {
       _dataList = querySnapshot.docs;
     });
   }
 
+  // Format GeoPoint as a string
   String formatGeoPoint(GeoPoint geoPoint) {
     return 'Lat: ${geoPoint.latitude.toString()}, Lng: ${geoPoint.longitude.toString()}';
   }
-  
+
+  // Build views for different sections
   List<Widget> buildViews(BuildContext context) {
     return [
-       Scaffold(
+      // Monitoring View
+      Scaffold(
         appBar: AppBar(
           title: const Text("Monitoring"),
         ),
-        body:   const SizedBox(
+        body: const SizedBox(
           child: SingleChildScrollView(
             child: Column(
               children: [
+                // Map and Sidebar
                 Row(
                   children: [
                     SizedBox(
                       width: 200,
                       height: 500,
-                      child: Card(
-
-                      ),
+                      child: Card(),
                     ),
                     Expanded(
                       child: SizedBox(
                         height: 500,
                         width: 1000,
-                          child: MainMap(),
+                        child: MainMap(),
                       ),
-                    )
+                    ),
                   ],
                 ),
-                  
                 Padding(padding: EdgeInsets.only(top: 20)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -199,13 +201,16 @@ class _HomeState extends State<Home>{
           ),
         ),
       ),
+              
+      // Manage View
       const Scaffold(
         body: Manage(),
       ),
+      // Reports View
       const Scaffold(
         body: Reports(),
       ),
-      
+      // Settings View
       Scaffold(
         body: Container(
           color: Colors.white,
@@ -231,11 +236,11 @@ class _HomeState extends State<Home>{
                     SizedBox(
                       width: 200,
                       child: Center(
-                        child: 
-                          ElevatedButton(onPressed: () {
+                        child: ElevatedButton(
+                          onPressed: () {
                             AuthService().signout();
-                          }, 
-                        child: const Center(child: Text('Sign Out'),),
+                          },
+                          child: const Center(child: Text('Sign Out')),
                         ),
                       ),
                     ),
@@ -250,7 +255,7 @@ class _HomeState extends State<Home>{
   }
 
   int selectedIndex = 0;
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -262,12 +267,13 @@ class _HomeState extends State<Home>{
         ),
         child: Row(
           children: [
+            // Side Navigation Bar
             SideNavigationBar(
               selectedIndex: selectedIndex,
               items: const [
                 SideNavigationBarItem(
-                  icon: Icons.legend_toggle, 
-                  label: 'Monitoring'
+                  icon: Icons.legend_toggle,
+                  label: 'Monitoring',
                 ),
                 SideNavigationBarItem(
                   icon: Icons.edit_location_alt,
@@ -286,14 +292,15 @@ class _HomeState extends State<Home>{
                 setState(() {
                   selectedIndex = index;
                 });
-              }
+              },
             ),
+            // Expanded View for the Selected Index
             Expanded(
-              child: buildViews(context).elementAt(selectedIndex) 
+              child: buildViews(context).elementAt(selectedIndex),
             ),
           ],
         ),
-      )
+      ),
     );
   }
 }
