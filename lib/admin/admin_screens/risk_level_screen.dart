@@ -11,14 +11,6 @@ class RiskLevelScreen extends StatefulWidget {
 
 class _RiskLevelScreenState extends State<RiskLevelScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<DocumentSnapshot> dataList = [];
-
-  Future<void> deleteDocument(String documentId) async {
-    await FirebaseFirestore.instance
-        .collection('Risk_Level')
-        .doc(documentId)
-        .delete();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,44 +18,56 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
       appBar: AppBar(
         title: const Text('List of Risk Level'),
       ),
-      body: SingleChildScrollView(
-        child: SizedBox(
-          width: double.infinity,
-          child: DataTable(
-            columnSpacing: 30,
-            headingTextStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-            headingRowColor: MaterialStateProperty.resolveWith(
-              (states) => Colors.black,
-            ),
-            showBottomBorder: true,
-            dividerThickness: 3,
-            columns: const [
-              DataColumn(label: Text('Risk Level')),
-              DataColumn(label: Text('Options')),
-            ],
-            rows: dataList.map((data) {
-              return DataRow(
-                cells: [
-                  DataCell(Text(data['risk_level'])),
-                  DataCell(
-                      TextButton(
-                        onPressed: () {
-                          deleteDocument(data['risk_level']);
-                        },
-                        child: const Text(
-                          'Delete',
-                          style: TextStyle(color: Colors.red),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _firestore.collection('Risk_Level').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Something went wrong');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          List<DocumentSnapshot> dataList = snapshot.data!.docs;
+          return SingleChildScrollView(
+            child: SizedBox(
+              width: double.infinity,
+              child: DataTable(
+                columnSpacing: 30,
+                headingTextStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+                headingRowColor: MaterialStateProperty.resolveWith(
+                  (states) => Colors.black,
+                ),
+                showBottomBorder: true,
+                dividerThickness: 3,
+                columns: const [
+                  DataColumn(label: Text('Risk Level')),
+                  DataColumn(label: Text('Options')),
+                ],
+                rows: dataList.map((data) {
+                  return DataRow(
+                    cells: [
+                      DataCell(Text(data['risk_level'])),
+                      DataCell(
+                        TextButton(
+                          onPressed: () {
+                            deleteDocument(data.id); // Use 'id' instead of 'risk_level'
+                          },
+                          child: const Text(
+                            'Delete',
+                            style: TextStyle(color: Colors.red),
+                          ),
                         ),
-                      )
-                  )
-                ]
-              );
-            }).toList(),
-          ),
-        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
+              ),
+            ),
+          );
+        },
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(16),
@@ -84,23 +88,7 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    dataList = [];
-    _fetchDataFromFirestore();
-  }
-
-  Future<void> _fetchDataFromFirestore() async {
-    try {
-      QuerySnapshot querySnapshot =
-      await _firestore.collection('Risk_Level').get();
-
-      setState(() {
-        dataList = querySnapshot.docs;
-      });
-    } catch (c) {
-      print('Error fetching data: $c');
-    }
+  Future<void> deleteDocument(String documentId) async {
+    await _firestore.collection('Risk_Level').doc(documentId).delete();
   }
 }

@@ -11,14 +11,6 @@ class BarangayScreen extends StatefulWidget {
 
 class _BarangayScreenState extends State<BarangayScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<DocumentSnapshot> dataList = [];
-
-  Future<void> deleteDocument(String documentId) async {
-    await FirebaseFirestore.instance
-        .collection('Barangay')
-        .doc(documentId)
-        .delete();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,44 +21,58 @@ class _BarangayScreenState extends State<BarangayScreen> {
       body: Column(
         children: [
           Expanded(
-            child: SingleChildScrollView(
-              child: SizedBox(
-                width: double.infinity,
-                child: DataTable(
-                  columnSpacing: 30,
-                  headingTextStyle: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  headingRowColor: MaterialStateProperty.resolveWith(
-                    (states) => Colors.black,
-                  ),
-                  showBottomBorder: true,
-                  dividerThickness: 3,
-                  columns: const [
-                    DataColumn(label: Text('Barangay')),
-                    DataColumn(label: Text('Options')),
-                  ],
-                  rows: dataList.map((data) {
-                    return DataRow(
-                      cells: [
-                        DataCell(Text(data['name'])),
-                        DataCell(
-                          TextButton(
-                            onPressed: () {
-                              deleteDocument(data['name']);
-                            },
-                            child: const Text(
-                              'Delete',
-                              style: TextStyle(color: Colors.red),
-                            ),
-                          ),
-                        ),
+            child: StreamBuilder<QuerySnapshot>(
+              stream: _firestore.collection('Barangay').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text('Something went wrong');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                List<DocumentSnapshot> dataList = snapshot.data!.docs;
+
+                return SingleChildScrollView(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: DataTable(
+                      columnSpacing: 30,
+                      headingTextStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      headingRowColor: MaterialStateProperty.resolveWith(
+                        (states) => Colors.black,
+                      ),
+                      showBottomBorder: true,
+                      dividerThickness: 3,
+                      columns: const [
+                        DataColumn(label: Text('Barangay')),
+                        DataColumn(label: Text('Options')),
                       ],
-                    );
-                  }).toList(),
-                ),
-              ),
+                      rows: dataList.map((data) {
+                        return DataRow(
+                          cells: [
+                            DataCell(Text(data['name'])),
+                            DataCell(
+                              TextButton(
+                                onPressed: () {
+                                  deleteDocument(data.id);
+                                },
+                                child: const Text(
+                                  'Delete',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
           Padding(
@@ -85,30 +91,14 @@ class _BarangayScreenState extends State<BarangayScreen> {
                 label: const Text('Add Barangay'),
                 icon: const Icon(Icons.add),
               ),
-            )
+            ),
           ),
         ],
       ),
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    dataList = [];
-    _fetchDataFromFirestore();
-  }
-
-  Future<void> _fetchDataFromFirestore() async {
-    try {
-      QuerySnapshot querySnapshot =
-          await _firestore.collection('Barangay').get();
-
-      setState(() {
-        dataList = querySnapshot.docs;
-      });
-    } catch (e) {
-      print('Error fetching data: $e');
-    }
+  Future<void> deleteDocument(String documentId) async {
+    await _firestore.collection('Barangay').doc(documentId).delete();
   }
 }
