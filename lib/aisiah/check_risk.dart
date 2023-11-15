@@ -56,7 +56,6 @@ class _WarningState extends State<Warning> {
 class FirestoreCheck extends StatelessWidget {
     final Map<String, dynamic> weatherData;
     
-
   FirestoreCheck({Key? key, required this.weatherData}) : super(key: key);
   String searchString = '';
   double hour1 = 0.00;
