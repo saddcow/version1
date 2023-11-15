@@ -21,12 +21,12 @@ class _ManageState extends State<Manage> {
   List<DocumentSnapshot> _dataList = [];
   String filterRiskLevel = 'All';
 
-  Future<void> deleteDocument(String documentId) async {
-    await FirebaseFirestore.instance
-        .collection('markers')
-        .doc(documentId)
-        .delete();
-  }
+  // Future<void> deleteDocument(String documentId) async {
+  //   await FirebaseFirestore.instance
+  //       .collection('markers')
+  //       .doc(documentId)
+  //       .delete();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -44,57 +44,49 @@ class _ManageState extends State<Manage> {
       ),
       body: Column(
         children: [
-          SizedBox(
-            width: double.infinity,
-            child: DataTable(
-              columnSpacing: 10,
-              headingTextStyle: const TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.white),
-              headingRowColor: MaterialStateProperty.resolveWith(
-                  (states) => Colors.black),
-              showBottomBorder: true,
-              dividerThickness: 3,
-              columns: const [
-                DataColumn(label: Text("ID")),
-                DataColumn(label: Text("Risk Level")),
-                DataColumn(label: Text("Address")),
-                DataColumn(label: Text("Barangay")),
-                DataColumn(label: Text("Street")),
-                DataColumn(label: Text("Coordinates")),
-                DataColumn(label: Text("Options")),
-                DataColumn(label: Text('')),
-              ],
-              rows: _dataList
-                  .where((document) =>
-                      filterRiskLevel == 'All' ||
-                      document['risk_level'] == filterRiskLevel)
-                  .map(
-                    (DocumentSnapshot document) => DataRow(
-                      cells: [
-                        DataCell(
-                          Text(document["uniqueID"]),
-                        ),
-                        DataCell(
-                          Text(
-                            document["risk_level"],
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                        ),
-                        DataCell(Text(document["address"] ?? 'N/A')),
-                        DataCell(Text(document["barangay"])),
-                        DataCell(Text(document["street"])),
-                        DataCell(
-                            Text(formatGeoPoint(
-                                document["coordinates"] as GeoPoint))),
-                        DataCell(
-                          TextButton(
-                              onPressed: () {
-                                deleteDocument(document["uniqueID"]);
-                              },
-                              child: const Text("Delete")),
-                        ),
-                        DataCell(
-                            TextButton(
+          Expanded(
+            child: SingleChildScrollView(
+              child: SizedBox(
+                width: double.infinity,
+                child: DataTable(
+                  columnSpacing: 10,
+                  headingTextStyle: const TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                  headingRowColor: MaterialStateProperty.resolveWith(
+                      (states) => Colors.black),
+                  showBottomBorder: true,
+                  dividerThickness: 3,
+                  columns: const [
+                    DataColumn(label: Text("Risk Level")),
+                    DataColumn(label: Text("Address")),
+                    DataColumn(label: Text("Barangay")),
+                    DataColumn(label: Text("Street")),
+                    DataColumn(label: Text("Options")),
+                  ],
+                  rows: _dataList
+                      .where((document) =>
+                          filterRiskLevel == 'All' ||
+                          document['risk_level'] == filterRiskLevel)
+                      .map(
+                        (DocumentSnapshot document) => DataRow(
+                          cells: [
+                            DataCell(
+                              Text(
+                                document["risk_level"],
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                            ),
+                            DataCell(Text(document["address"] ?? 'N/A')),
+                            DataCell(Text(document["barangay"])),
+                            DataCell(Text(document["street"])),
+                            // DataCell(
+                            //   TextButton(
+                            //       onPressed: () {
+                            //         deleteDocument(document["uniqueID"]);
+                            //       },
+                            //       child: const Text("Delete")),
+                            // ),
+                            DataCell(TextButton(
                                 onPressed: () {
                                   pass = document["uniqueID"];
                                   Navigator.push(
@@ -104,22 +96,27 @@ class _ManageState extends State<Manage> {
                                               MappUpdate(myString: pass)));
                                 },
                                 child: const Text("Edit"))),
-                      ],
-                    ),
-                  )
-                  .toList(),
+                          ],
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
             ),
           ),
-
-          const Padding(padding: EdgeInsets.only(top: 30.0)),
-
-          FloatingActionButton.extended(
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => const Mapp()));
-            },
-            label: const Text('Add Hazard Area'),
-            icon: const Icon(Icons.add),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: FloatingActionButton.extended(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Mapp()));
+                },
+                label: const Text('Add Hazard Area'),
+                icon: const Icon(Icons.add),
+              ),
+            ),
           ),
         ],
       ),
@@ -133,8 +130,7 @@ class _ManageState extends State<Manage> {
   }
 
   Future<void> _fetchDataFromFirestore() async {
-    QuerySnapshot querySnapshot =
-        await _firestore.collection('markers').get();
+    QuerySnapshot querySnapshot = await _firestore.collection('markers').get();
 
     setState(() {
       _dataList = querySnapshot.docs;
@@ -182,7 +178,7 @@ class _ManageState extends State<Manage> {
                 child: const Text('Low'),
               ),
             ],
-          ),          
+          ),
         );
       },
     );

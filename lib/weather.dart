@@ -98,7 +98,7 @@ class WeatherData {
   factory WeatherData.fromJson(Map<String, dynamic> json) {
     final DateTime dateTime = DateTime.parse(json['dt_txt']);
     final String formattedDate = DateFormat('yyyy-MM-dd HH:mm').format(dateTime);
-    final int temperature = json['main']['temp'].toInt();
+    final int temperature = (json['main']['temp'] - 273.15).toInt();
     final String weatherDescription = json['weather'][0]['description'];
     final String iconCode = json['weather'][0]['icon'];
     final String iconUrl = 'https://openweathermap.org/img/w/$iconCode.png';
