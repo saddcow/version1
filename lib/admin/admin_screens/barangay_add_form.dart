@@ -1,8 +1,11 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BarangayForm extends StatefulWidget{
   const BarangayForm({Key? key}) : super(key: key);
+  @override
   _BarangayFormState createState() => _BarangayFormState();
 }
 
@@ -23,7 +26,7 @@ class _BarangayFormState extends State<BarangayForm> {
         _barangayController.clear();
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Barangay saved to Firestore!'),
             duration: Duration(seconds: 2),
           )
@@ -33,7 +36,7 @@ class _BarangayFormState extends State<BarangayForm> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Please enter a Barangay name.'),
           duration: Duration(seconds: 3),
         )
@@ -53,7 +56,7 @@ class _BarangayFormState extends State<BarangayForm> {
           children: [
             TextField(
               controller: _barangayController,
-              decoration: InputDecoration(labelText: 'Barangay Name'),
+              decoration: const InputDecoration(labelText: 'Barangay Name'),
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(

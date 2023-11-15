@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:try1/database_manager.dart';
 import 'package:intl/intl.dart';
 
 class Reports extends StatefulWidget {
@@ -13,7 +12,6 @@ class Reports extends StatefulWidget {
 class _ReportsState extends State<Reports> {
   late Stream<QuerySnapshot> reportsStream;
   String filterType = 'All';
-  String Timestamp = '';
 
   @override
   void initState() {
@@ -114,7 +112,6 @@ class _ReportsState extends State<Reports> {
         DataColumn(label: Text('Report Hazard Type')),
         DataColumn(label: Text('Report Status')),
         DataColumn(label: Text('Verification Options')),
-        DataColumn(label: Text('Time and Date'))
       ],
       rows: dataList.map((data) {
         return DataRow(
@@ -143,8 +140,9 @@ class _ReportsState extends State<Reports> {
             DataCell(Text(data['Report_Description'])),
             DataCell(Text(data['Report_Hazard_Type'])),
             DataCell(Text(data['Hazard_Status'])),
-            DataCell(DropdownCell(user_ID: data['Report_ID'])),
-            DataCell(Text(Timestamp)),
+            DataCell(
+              DropdownCell(user_ID: data['Report_ID']),
+            )
           ],
         );
       }).toList(),
