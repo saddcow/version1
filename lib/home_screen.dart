@@ -49,10 +49,25 @@ class _HomeState extends State<Home>{
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(
-                  height: 500,
-                  child: MainMap(),
-                ),  
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 200,
+                      height: 500,
+                      child: Card(
+
+                      ),
+                    ),
+                    Expanded(
+                      child: SizedBox(
+                        height: 500,
+                        width: 1000,
+                          child: MainMap(),
+                      ),
+                    )
+                  ],
+                ),
+                  
                 Padding(padding: EdgeInsets.only(top: 20)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
