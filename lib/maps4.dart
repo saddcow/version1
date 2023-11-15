@@ -53,6 +53,12 @@ class _MappState extends State<Mapp> {
               const Padding(padding: EdgeInsets.only(top: 20.0)),
               Column(
                 children: [
+                  const Padding(padding: EdgeInsets.only(left: 25),
+                    child: Align(
+                    alignment: Alignment.topLeft,
+                      child: Text('Barangay Name'),
+                    ),
+                  ),
                   SizedBox(
                     child: Padding(padding: const EdgeInsets.all(20.0),
                       child: TextField(
@@ -65,6 +71,12 @@ class _MappState extends State<Mapp> {
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 20.0)),
+                  const Padding(padding: EdgeInsets.only(left: 25),
+                    child: Align(
+                    alignment: Alignment.topLeft,
+                      child: Text('Street Name'),
+                    ),
+                  ),
                   SizedBox(
                     child: Padding(padding: const EdgeInsets.all(20.0),
                       child: TextField(
@@ -77,8 +89,14 @@ class _MappState extends State<Mapp> {
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 20.0)),
+                  const Padding(padding: EdgeInsets.only(left: 25),
+                    child: Align(
+                    alignment: Alignment.topLeft,
+                      child: Text('Risk Level'),
+                    ),
+                  ),
                   SizedBox(
-                    child: Padding(padding: const EdgeInsets.only(left: 20.0),
+                    child: Padding(padding: const EdgeInsets.only(left: 25.0),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: DropdownButton<String>(

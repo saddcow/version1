@@ -5,10 +5,10 @@ import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/aisiah/check_risk.dart';
 import 'package:try1/aisiah/precipitation.dart';
 import 'package:try1/auth_service.dart';
-import 'package:try1/main_map.dart';
-import 'package:try1/manage_screen.dart';
-import 'package:try1/reports.dart';
-import 'package:try1/src/features/weather/presentation/hourly_weather.dart';
+import 'package:try1/markers/main_map.dart';
+import 'package:try1/screens/manage_screen.dart';
+import 'package:try1/screens/reports.dart';
+import 'package:try1/weather.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -49,12 +49,28 @@ class _HomeState extends State<Home>{
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(
-                  height: 500,
-                  child: MainMap(),
-                ),  
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 200,
+                      height: 500,
+                      child: Card(
+
+                      ),
+                    ),
+                    Expanded(
+                      child: SizedBox(
+                        height: 500,
+                        width: 1000,
+                          child: MainMap(),
+                      ),
+                    )
+                  ],
+                ),
+                  
                 Padding(padding: EdgeInsets.only(top: 20)),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Expanded(
                       child: Column(
@@ -68,7 +84,7 @@ class _HomeState extends State<Home>{
                                 child: Card(
                                   color: Colors.lightBlueAccent,
                                   child: Padding(padding: EdgeInsetsDirectional.only(top: 30),
-                                    child: HourlyWeather(),
+                                    child: WeatherForecastWidget(),
                                   ),
                                 ),
                               ),
@@ -189,7 +205,8 @@ class _HomeState extends State<Home>{
       const Scaffold(
         body: Reports(),
       ),
-            Scaffold(
+      
+      Scaffold(
         body: Container(
           color: Colors.white,
           child: Center(
