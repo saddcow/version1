@@ -3,6 +3,7 @@ import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/admin/admin_screens/barangay_screen.dart';
 import 'package:try1/admin/admin_screens/risk_level_screen.dart';
 import 'package:try1/auth_service.dart';
+import 'package:try1/screens/login_screen.dart';
 
 class AdminHome extends StatefulWidget {
   const AdminHome({super.key});
@@ -49,6 +50,12 @@ class _AdminHomeState extends State<AdminHome> {
                         child: 
                           ElevatedButton(onPressed: () {
                             AuthService().signout();
+                            Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const LoginPage(),
+                                  ),
+                                );
                           }, 
                         child: const Center(child: Text('Sign Out'),),
                         ),

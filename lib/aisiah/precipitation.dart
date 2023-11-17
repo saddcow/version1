@@ -13,6 +13,7 @@ class _PrecipitationState extends State<Precipitation> {
   final String apiKey = '6378430bc45061aaccd4a566a86c25df';
   final double latitude = 13.617;
   final double longitude = 123.183;
+
   Map<String, dynamic> weatherData = {};
 
   @override
@@ -44,17 +45,18 @@ class _PrecipitationState extends State<Precipitation> {
         height: 350,
       child: Card(
         color: Colors.lightBlueAccent,
+
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (weatherData.isNotEmpty)
+            if (weatherData.isNotEmpty && weatherData['city'] != null)
               Text('City: ${weatherData['city']['name']}'),
             if (weatherData.isNotEmpty &&
                 weatherData['list'] != null &&
                 weatherData['list'].length >= 3) ...[
-              Text('Rain Volume (1st hour): ${weatherData['list'][0]['rain']['3h'] ?? 0} mm'),
-              Text('Rain Volume (2nd hour): ${weatherData['list'][1]['rain']['3h'] ?? 0} mm'),
-              Text('Rain Volume (3rd hour): ${weatherData['list'][2]['rain']['3h'] ?? 0} mm'),
+              Text('Rain Volume (Current Hour): ${weatherData['list'][0]['rain']?['3h'] ?? 0} mm'),
+              Text('Rain Volume (2nd hour): ${weatherData['list'][1]['rain']?['3h'] ?? 0} mm'),
+              Text('Rain Volume (3rd hour): ${weatherData['list'][2]['rain']?['3h'] ?? 0} mm'),
             ],
           ],
         ),

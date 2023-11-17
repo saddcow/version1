@@ -143,9 +143,9 @@ class _ManageState extends State<Manage> {
       case 'high':
         return Colors.red;
       case 'medium':
-        return Colors.yellow;
+        return Colors.orange;
       case 'low':
-        return Colors.green;
+        return Colors.yellow;
       default:
         return Colors.black; 
     }

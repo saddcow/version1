@@ -17,6 +17,7 @@ class _BarangayScreenState extends State<BarangayScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('List of Barangay in Naga City'),
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [
