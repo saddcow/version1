@@ -6,6 +6,7 @@ import 'package:try1/aisiah/check_risk.dart';
 import 'package:try1/aisiah/precipitation.dart';
 import 'package:try1/auth_service.dart';
 import 'package:try1/markers/main_map.dart';
+import 'package:try1/screens/login_screen.dart';
 import 'package:try1/screens/manage_screen.dart';
 import 'package:try1/screens/reports.dart';
 import 'package:try1/weather.dart';
@@ -302,6 +303,10 @@ class _HomeState extends State<Home> {
                         child: ElevatedButton(
                           onPressed: () {
                             AuthService().signout();
+                            Navigator.push(
+                              context, 
+                              MaterialPageRoute(
+                                builder: (context) => const LoginPage()));
                           },
                           child: const Center(child: Text('Sign Out')),
                         ),

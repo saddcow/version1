@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class Precipitation extends StatefulWidget {
-  const Precipitation({super.key});
+  const Precipitation({Key? key}) : super(key: key);
 
   @override
   _PrecipitationState createState() => _PrecipitationState();
@@ -15,6 +15,7 @@ class _PrecipitationState extends State<Precipitation> {
   final double longitude = 123.183;
 
   Map<String, dynamic> weatherData = {};
+  
 
   @override
   void initState() {
@@ -25,42 +26,55 @@ class _PrecipitationState extends State<Precipitation> {
   Future<void> getWeatherData() async {
     final apiUrl =
         'https://api.openweathermap.org/data/2.5/forecast?lat=$latitude&lon=$longitude&appid=$apiKey';
-    final response = await http.get(Uri.parse(apiUrl));
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      setState(() {
-        weatherData = data;
-      });
-    } else {
-      print('Failed to load weather data. Status code: ${response.statusCode}');
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        setState(() {
+          weatherData = data;
+        });
+      } else {
+        print('Failed to load weather data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching weather data: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox( 
+      body: SizedBox(
         width: 500,
         height: 350,
-      child: Card(
-        color: Colors.lightBlueAccent,
-
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (weatherData.isNotEmpty && weatherData['city'] != null)
-              Text('City: ${weatherData['city']['name']}'),
-            if (weatherData.isNotEmpty &&
-                weatherData['list'] != null &&
-                weatherData['list'].length >= 3) ...[
-              Text('Rain Volume (Current Hour): ${weatherData['list'][0]['rain']?['3h'] ?? 0} mm'),
-              Text('Rain Volume (2nd hour): ${weatherData['list'][1]['rain']?['3h'] ?? 0} mm'),
-              Text('Rain Volume (3rd hour): ${weatherData['list'][2]['rain']?['3h'] ?? 0} mm'),
-            ],
-          ],
+        child: Card(
+          color: Colors.lightBlueAccent,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (weatherData.isNotEmpty && weatherData['city'] != null)
+                  Text(
+                    'City: ${weatherData['city']['name']}'
+                  ),
+                  Padding(padding: EdgeInsets.only(bottom: 20)),
+                  
+                if (weatherData.isNotEmpty &&
+                    weatherData['list'] != null &&
+                    weatherData['list'].length >= 3) ...[
+                  Text('Rain Volume [time: ${DateTime.now().hour}:${DateTime.now().minute}]: ${weatherData['list'][0]['rain']?['3h'] ?? 0} mm'),
+                  Padding(padding: EdgeInsets.only(bottom: 10)),
+                  Text('Rain Volume [time: ${DateTime.now().hour + 1}:${DateTime.now().minute}]: ${weatherData['list'][1]['rain']?['3h'] ?? 0} mm'),
+                  Padding(padding: EdgeInsets.only(bottom: 10)),
+                  Text('Rain Volume [time: ${DateTime.now().hour + 2}:${DateTime.now().minute}]: ${weatherData['list'][2]['rain']?['3h'] ?? 0} mm'),
+                ],
+              ],
+            ),
+          ),
         ),
-      ),
       ),
     );
   }

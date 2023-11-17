@@ -50,18 +50,15 @@ class AuthService {
   }
 
   //signout
-  void signout() async {
-  try {
-    await FirebaseAuth.instance.signOut();
-    print('signout succes');
-    // Add your additional sign-out logic for Firestore or other services here
-  }
-  catch (e) {
-    print('Error signing out: $e');
+  Future<void> signout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+    } catch (err){
+      print('Error signing out: $err');
+    }
   } 
-  }
 
-    signIn(email, password) {
+  signIn(email, password) {
     FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password)
         .then((user) {
