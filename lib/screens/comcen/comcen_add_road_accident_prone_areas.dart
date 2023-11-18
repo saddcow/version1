@@ -99,15 +99,6 @@ class _MappComState extends State<MappCom> {
                   ),
                 ),
                 const Padding(padding: EdgeInsets.only(top: 20.0)),
-
-                // Dropdown for Risk Level
-                const Padding(
-                  padding: EdgeInsets.only(left: 25),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text('Risk Level'),
-                  ),
-                ),
               ],
             ),
 

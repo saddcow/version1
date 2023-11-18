@@ -3,7 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 Future<List<Marker>> getRoadMarkers() async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final QuerySnapshot snapshot = await firestore.collection('markers_road').get();
+  final QuerySnapshot snapshot = await firestore.collection('Road_Accident_Areas').get();
   final List<Marker> markers = [];
 
   for (final DocumentSnapshot document in snapshot.docs) {
@@ -18,8 +18,9 @@ Future<List<Marker>> getRoadMarkers() async {
         Marker(
           markerId: MarkerId(uniqeID),
           position: LatLng(coordinates.latitude, coordinates.longitude),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
           infoWindow: InfoWindow(
-            title: 'Road Risk Location:',
+            title: 'Road Accident Prone Area',
             snippet: '$barangay, ' ' $street ',
           )
         )

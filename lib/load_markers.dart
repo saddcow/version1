@@ -45,7 +45,7 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
       final coordinates = data['Coordinates'] as GeoPoint;
       final hazardStatus = data['Hazard_Status'] as String;
       final reportId = data['Report_ID'] as String;
-
+      
       markers.add(
         Marker(
           markerId: MarkerId(reportId),

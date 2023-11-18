@@ -12,10 +12,17 @@ class Reports extends StatefulWidget {
 class _ReportsState extends State<Reports> {
   late Stream<QuerySnapshot> reportsStream;
   String filterType = 'All';
+  DateTime? startDate;
+  DateTime? endDate;
 
   @override
   void initState() {
     super.initState();
+    // Initialize date range to null (no filter)
+    startDate = null;
+    endDate = null;
+
+    // Retrieve all reports initially
     reportsStream = FirebaseFirestore.instance.collection('Report').snapshots();
   }
 
@@ -60,23 +67,67 @@ class _ReportsState extends State<Reports> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Report Hazard Type Filter'),
-          content: DropdownButton<String>(
-            value: filterType,
-            onChanged: (String? newValue) {
-              setState(() {
-                filterType = newValue!;
-              });
-              Navigator.of(context).pop();
-            },
-            items: ['All', 'Flood', 'Road Accident']
-                .map<DropdownMenuItem<String>>(
-                  (String value) => DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
+          title: const Text('Filter Options'),
+          content: SizedBox(
+            height: 100,
+            width: 100,
+            child: Column(
+              children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Start Date:'),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      );
+
+                      if (pickedDate != null && pickedDate != startDate) {
+                        setState(() {
+                          startDate = pickedDate;
+                        });
+                      }
+                    },
+                    child: Text(startDate != null
+                        ? DateFormat('MM-dd-yyyy').format(startDate!)
+                        : 'Select'),
                   ),
-                )
-                .toList(),
+                ],
+              ),
+
+              const Padding(padding: EdgeInsets.all(16.0)),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('End Date:'),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      );
+
+                      if (pickedDate != null && pickedDate != endDate) {
+                        setState(() {
+                          endDate = pickedDate;
+                        });
+                      }
+                    },
+                    child: Text(endDate != null
+                        ? DateFormat('MM-dd-yyyy').format(endDate!)
+                        : 'Select'),
+                  ),
+                ],
+              ),
+              ]
+          ),
           ),
         );
       },
@@ -84,11 +135,19 @@ class _ReportsState extends State<Reports> {
   }
 
   List applyFilter(List data) {
-    if (filterType == 'All') {
-      return data;
-    } else {
-      return data.where((item) => item['Report_Hazard_Type'] == filterType).toList();
-    }
+    // Apply filter based on report hazard type and timestamp
+    return data.where((item) {
+      bool hazardTypeFilter = item['Report_Hazard_Type'] == filterType || filterType == 'All';
+
+      if (startDate != null && endDate != null) {
+        // Apply date range filter
+        DateTime timestamp = (item['Timestamp'] as Timestamp).toDate();
+        bool dateRangeFilter = timestamp.isAfter(startDate!) && timestamp.isBefore(endDate!);
+        return hazardTypeFilter && dateRangeFilter;
+      }
+
+      return hazardTypeFilter;
+    }).toList();
   }
 
   Widget buildDataTable(List dataList) {

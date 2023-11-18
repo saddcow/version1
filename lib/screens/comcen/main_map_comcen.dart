@@ -1,6 +1,7 @@
+// ignore_for_file: library_private_types_in_public_api
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:try1/markers/reports_marker_helper.dart';
+import 'package:try1/screens/comcen/comcen_map_markers.dart';
 import 'package:try1/screens/comcen/road_markers.dart';
 
 class MainMapComcen extends StatefulWidget {
@@ -20,7 +21,7 @@ class _MainMapComcenState extends State<MainMapComcen> {
   }
 
   Future<void> _loadMarkers() async {
-    List<Marker> markers = await retrieveMarkersFromFirestore();
+    List<Marker> markers = await retrieveMarkersFromFirestoreRoad();
     setState(() {
       markersCombined.addAll(markers);
     });

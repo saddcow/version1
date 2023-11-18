@@ -119,7 +119,6 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
         Marker(
           markerId: MarkerId(position.toString()),
           position: position,
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           infoWindow: InfoWindow(
             title: 'Location',
             snippet: address,
@@ -178,7 +177,6 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
       });
       print('Marker details saved to Firestore');
     } catch (e) {
-      print(id);
       print('Error saving marker details to Firestore: $e');
     }
   }
