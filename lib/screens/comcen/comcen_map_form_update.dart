@@ -31,6 +31,7 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
 
   @override
   Widget build(BuildContext context) {
+    id = widget.myString;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Road Risk Area'),
@@ -97,6 +98,7 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
               ),
               ElevatedButton(
                 onPressed: () {
+                  print(id);
                   _saveMarkerDetails(id);
                   Navigator.pop(context);
                 },
@@ -158,15 +160,16 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
   Future<void> updateDocument(
       String documentId, Map<String, dynamic> data) async {
     await FirebaseFirestore.instance
-        .collection('markers_road') // Replace with your collection name
+        .collection('Road_Accident_Areas') // Replace with your collection name
         .doc(documentId)
         .update(data);
   }
 
   Future<void> _saveMarkerToFirestore(
+    
       String barangay, String street, String address, LatLng coordinates) async {
     try {
-      await FirebaseFirestore.instance.collection('markers_road').doc(id).update({
+      await FirebaseFirestore.instance.collection('Road_Accident_Areas').doc(id).update({
         'uniqueID': id,
         'barangay': barangay,
         'street': street,
@@ -175,6 +178,7 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
       });
       print('Marker details saved to Firestore');
     } catch (e) {
+      print(id);
       print('Error saving marker details to Firestore: $e');
     }
   }

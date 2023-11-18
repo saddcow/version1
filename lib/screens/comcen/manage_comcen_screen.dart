@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:try1/screens/comcen/comcen_add_road_accident_prone_areas.dart';
 import 'package:try1/screens/comcen/comcen_map_form_update.dart';
 
 class RoadRiskManage extends StatefulWidget {
@@ -27,7 +28,7 @@ class _RoadRiskManageState extends State<RoadRiskManage> {
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: _firestore.collection('markers_road').snapshots(),
+              stream: _firestore.collection('Road_Accident_Areas').snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return const Text('Something went wrong');
@@ -84,7 +85,21 @@ class _RoadRiskManageState extends State<RoadRiskManage> {
                 );
               },
             ),
-          )
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: FloatingActionButton.extended(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const MappCom()));
+                },
+                label: const Text('Add Hazard Area'),
+                icon: const Icon(Icons.add),
+              ),
+            ),
+          ),
         ],
       ),
     );
