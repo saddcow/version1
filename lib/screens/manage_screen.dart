@@ -32,7 +32,7 @@ class _ManageState extends State<Manage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Managing Risk Area'),
+        title: const Text('Managing Flood Risk Area'),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
