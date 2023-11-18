@@ -32,60 +32,18 @@ class AuthService {
     );    
   }
 
-   Widget checkUserType(BuildContext context, User user) {
+  Widget checkUserType(BuildContext context, User user) {
     FirebaseFirestore.instance.collection('User').doc(user.uid).get().then((doc) {
-      if (doc.exists) {
-        String userType = doc['User_Type'];
-
-        if (userType == 'ADMIN') {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const AdminHome()));
-        } else if (userType == 'AUTHORITY') {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
-        } else {
-          // Show error message for unrecognized user type
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Login Error'),
-                content: const Text('Wrong credentials. Please check your email and password.'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close the dialog
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
-                      AuthService().signout();
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
-              );
-            },
-          );
-        }
+      String userType = doc['User_Type'];
+      if (userType == 'ADMIN') {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const AdminHome()));
+      } else if (userType == 'AUTHORITY') {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
       } else {
-        // Show error message for user document not found
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Login Error'),
-              content: const Text('User document not found. Please contact support.'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
+        AuthService().signout();
+        return LoginPage();
       }
     });
-
     return Scaffold(
       body: Center(child: CircularProgressIndicator()),
     );

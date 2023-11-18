@@ -21,7 +21,7 @@ class _WarningState extends State<Warning> {
   final double longitude = 123.183; 
   Map<String, dynamic> weatherData = {};
 
-   @override
+  @override
   void initState() {
     super.initState();
     getWeatherData();
@@ -57,20 +57,15 @@ class FirestoreCheck extends StatelessWidget {
     final Map<String, dynamic> weatherData;
     
   FirestoreCheck({Key? key, required this.weatherData}) : super(key: key);
-  String searchString = '';
-  double hour1 = 0.00;
-  double hour2 = 0.00;
-  double hour3 = 0.00;
   
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,  
       home: Scaffold(
         body: StreamBuilder(
           stream: FirebaseFirestore.instance.collection('markers').snapshots(),
           builder: (context, snapshot) {
-
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
@@ -82,37 +77,7 @@ class FirestoreCheck extends StatelessWidget {
               for (QueryDocumentSnapshot document in querySnapshot.docs) {
                 String fieldValue = document['risk_level'];
                 String add = document['address'];
-
-              if (weatherData['list'][0]['rain']['3h'] >= 6.5 && weatherData['list'][0]['rain']['3h'] <= 15.0){
-              if (weatherData['list'][1]['rain']['3h'] >= 6.5 && weatherData['list'][1]['rain']['3h'] <= 15.0){
-                if (weatherData['list'][2]['rain']['3h'] >= 6.5 && weatherData['list'][2]['rain']['3h'] <= 15.0){
-                  searchString = 'Low';
-                } else {searchString = '';}
-              } else {
-                searchString = '';
-              }
-            }
-            else if (weatherData['list'][0]['rain']['3h'] >= 15.0 && weatherData['list'][0]['rain']['3h'] <= 30.0){
-              if (weatherData['list'][1]['rain']['3h'] >= 15.0 && weatherData['list'][1]['rain']['3h'] <= 30.0){
-                if (weatherData['list'][2]['rain']['3h'] >= 15.0 && weatherData['list'][2]['rain']['3h'] <= 30.0){
-                  searchString = 'Medium';
-                } else {searchString = '';}
-              } else {
-                searchString = '';
-              }
-            }
-            else if (weatherData['list'][0]['rain']['3h'] > 30.0){
-              if (weatherData['list'][1]['rain']['3h'] > 30.0 ){
-                if (weatherData['list'][2]['rain']['3h'] > 30){
-                  searchString = 'High';
-                } else {searchString = '';}
-              } else {
-                searchString = '';
-              }
-            }
-            else {
-              searchString = '';
-            }
+                String searchString = getSearchString(weatherData: weatherData);
 
                 if (searchString == 'High' ) {
                   matchingDocumentIds.add(add); 
@@ -128,6 +93,7 @@ class FirestoreCheck extends StatelessWidget {
                   child: Card(
                   color: Colors.lightBlueAccent,
                   child: Column(
+                  
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       for (String docInfo in matchingDocumentIds)
@@ -158,3 +124,39 @@ class FirestoreCheck extends StatelessWidget {
   }
 }
 
+String getSearchString({required Map<String, dynamic> weatherData}) {
+  String searchString = '';
+
+   if (weatherData['list'][0]['rain']['3h'] >= 6.5 && weatherData['list'][0]['rain']['3h'] <= 15.0){
+              if (weatherData['list'][1]['rain']['3h'] >= 6.5 && weatherData['list'][1]['rain']['3h'] <= 15.0){
+                if (weatherData['list'][2]['rain']['3h'] >= 6.5 && weatherData['list'][2]['rain']['3h'] <= 15.0){
+                  searchString = 'Low';
+                } else {searchString = '';}
+              } else {
+                searchString = '';
+              }
+            }
+            else if (weatherData['list'][0]['rain']['3h'] >= 15.0 && weatherData['list'][0]['rain']['3h'] <= 30.0){
+              if (weatherData['list'][1]['rain']['3h'] >= 15.0 && weatherData['list'][1]['rain']['3h'] <= 30.0){
+                if (weatherData['list'][2]['rain']['3h'] >= 15.0 && weatherData['list'][2]['rain']['3h'] <= 30.0){
+                  searchString = 'Medium';
+                } else {searchString = '';}
+              } else {
+                searchString = '';
+              }
+            }
+            else if (weatherData['list'][0]['rain']['3h'] > 30.0){
+              if (weatherData['list'][1]['rain']['3h'] > 30.0 ){
+                if (weatherData['list'][2]['rain']['3h'] > 30){
+                  searchString = 'High';
+                } else {searchString = '';}
+              } else {
+                searchString = '';
+              }
+            }
+            else {
+              searchString = '';
+            }
+    return searchString;
+
+}

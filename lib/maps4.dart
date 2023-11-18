@@ -156,7 +156,7 @@ class _MappState extends State<Mapp> {
   // Add marker on map at the tapped location
   void _addMarker(LatLng position) async {
     final address = await _getAddressFromLatLng(position);
-    setState(()  {
+    setState(() {
       myMarker = [
         Marker(
           markerId: MarkerId(position.toString()),
@@ -167,9 +167,6 @@ class _MappState extends State<Mapp> {
           ),
         ),
       ];
-      
-        
-     
     });
   }
 

@@ -17,6 +17,7 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('List of Risk Level'),
+        automaticallyImplyLeading: false,
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore.collection('Risk_Level').snapshots(),
