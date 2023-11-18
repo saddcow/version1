@@ -50,7 +50,7 @@ class _AdminHomeState extends State<AdminHome> {
                         child: 
                           ElevatedButton(onPressed: () {
                             AuthService().signout();
-                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginPage()));
                           }, 
                         child: const Center(child: Text('Sign Out'),),
                         ),
