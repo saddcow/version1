@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/auth_service.dart';
-import 'package:try1/screens/comcen/comcen_report.dart';
 import 'package:try1/screens/comcen/main_map_comcen.dart';
 import 'package:try1/screens/comcen/manage_comcen_screen.dart';
 import 'package:try1/screens/login_screen.dart';
+import 'package:try1/screens/reports.dart';
 import 'package:try1/weather.dart';
 
 class ComcenHome extends StatefulWidget {
@@ -34,24 +34,86 @@ class _ComcenHomeState extends State<ComcenHome> {
         appBar: AppBar(
           title: const Text("Monitoring"),
         ),
-        body: const SizedBox(
+        body: SizedBox(
           child: SingleChildScrollView(
             child: Column(
               children: [
                 //map and sidebar
                 Row(
                   children: [
-                    Expanded(
+                    SizedBox(
+                      width: 200,
+                      height: 500,
+                      child: Card(
+                        child: Column(
+                          children: [
+                            const Text(
+                              'Map Filters',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const Divider(
+                              thickness: 2.0, 
+                            ), 
+                            CheckboxListTile(
+                              title: const Text('Show Reports Marker'),
+                              value: showReports,
+                              onChanged: (value) {
+                                setState(() {
+                                  showReports = value!;
+                                });
+                              },
+                            ),
+                            if (showReports)
+                              Column(
+                                children: [
+                                  CheckboxListTile(
+                                    title: const Text('Show Flood Reports Marker'),
+                                    value: showFloodReports,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        showFloodReports = value!;
+                                      });
+                                    },
+                                  ),
+                                  CheckboxListTile(
+                                    title: const Text('Show Road Accident Reports Marker'),
+                                    value: showRoadAccidentReports,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        showRoadAccidentReports = value!;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            CheckboxListTile(
+                              title: const Text('Show Hazard Areas'),
+                              value: showHazardAreas,
+                              onChanged: (value) {
+                                setState(() {
+                                  showHazardAreas = value!;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Expanded(
                       child: SizedBox(
-                        height: 680,
+                        height: 500,
                         width: 1000,
                         child: MainMapComcen(),
                       ),
                     ),
                   ],
                 ),
-                Padding(padding: EdgeInsets.only(top: 20)),
-                Row(
+                const Padding(padding: EdgeInsets.only(top: 20)),
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Expanded(
@@ -87,7 +149,7 @@ class _ComcenHomeState extends State<ComcenHome> {
       ),
       //reports view
       const Scaffold(
-        body: ReportsCom(),
+        body: Reports(),
       ),
       Scaffold(
         body: Container(
