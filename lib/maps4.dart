@@ -23,16 +23,8 @@ class _MappState extends State<Mapp> {
   List<String> options = ['Low', 'Medium', 'High'];
 
   // Controllers for text fields
-  TextEditingController barangayController = TextEditingController();
   TextEditingController streetController = TextEditingController();
-
-  @override
-  void dispose() {
-    // Dispose controllers to avoid memory leaks
-    barangayController.dispose();
-    streetController.dispose();
-    super.dispose();
-  }
+  String? selectedBarangay;
 
   @override
   Widget build(BuildContext context) {
@@ -58,84 +50,110 @@ class _MappState extends State<Mapp> {
             ),
             const Padding(padding: EdgeInsets.only(top: 20.0)),
 
-            // Text Field for Barangay Name
-            Column(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(left: 25),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text('Barangay Name'),
+            // Dropdown for Barangay Name
+Column(
+  children: [
+    const Padding(
+      padding: EdgeInsets.only(left: 25),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Text('Barangay Name'),
+      ),
+    ),
+    SizedBox(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Container(
+          child: FutureBuilder(
+            future: _getBarangays(), // Fetch barangays from Firestore
+            builder: (context, AsyncSnapshot<List<String>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                List<String> barangays = snapshot.data!;
+                return DropdownButtonFormField<String>(
+                  value: selectedBarangay,
+                  isDense: true, // Reduces the vertical size of the dropdown
+                  menuMaxHeight: 200, // Set the maximum height of the dropdown menu
+                  items: barangays.map((String barangay) {
+                    return DropdownMenuItem<String>(
+                      value: barangay,
+                      child: Text(barangay),
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedBarangay = value;
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
                   ),
-                ),
-                SizedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: TextField(
-                      controller: barangayController,
-                      decoration: const InputDecoration(
-                        labelText: 'Barangay',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.only(top: 20.0)),
+                );
+              }
+            },
+          ),
+        ),
+      ),
+    ),
+    const Padding(padding: EdgeInsets.only(top: 5.0)), // Adjusted padding
 
-                // Text Field for Street Name
-                const Padding(
-                  padding: EdgeInsets.only(left: 25),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text('Street Name'),
-                  ),
-                ),
-                SizedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: TextField(
-                      controller: streetController,
-                      decoration: const InputDecoration(
-                        labelText: 'Street',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.only(top: 20.0)),
+    // Text Field for Street Name
+    const Padding(
+      padding: EdgeInsets.only(left: 25),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Text('Street Name'),
+      ),
+    ),
+    SizedBox(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: TextField(
+          controller: streetController,
+          decoration: const InputDecoration(
+            labelText: 'Street',
+            border: OutlineInputBorder(),
+          ),
+        ),
+      ),
+    ),
+    const Padding(padding: EdgeInsets.only(top: 20.0)),
 
-                // Dropdown for Risk Level
-                const Padding(
-                  padding: EdgeInsets.only(left: 25),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text('Risk Level'),
-                  ),
-                ),
-                SizedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 25.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: DropdownButton<String>(
-                        value: selectedValue,
-                        onChanged: (newValue) {
-                          setState(() {
-                            selectedValue = newValue!;
-                          });
-                        },
-                        items: options.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
+    // Dropdown for Risk Level
+    const Padding(
+      padding: EdgeInsets.only(left: 25),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Text('Risk Level'),
+      ),
+    ),
+    SizedBox(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 25.0),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: DropdownButton<String>(
+            value: selectedValue,
+            onChanged: (newValue) {
+              setState(() {
+                selectedValue = newValue!;
+              });
+            },
+            items: options.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    )
+  ],
+),
 
             // Button to save marker details
             ElevatedButton(
@@ -188,13 +206,24 @@ class _MappState extends State<Mapp> {
     return "Address not found";
   }
 
+  // Fetch barangays from Firestore
+  Future<List<String>> _getBarangays() async {
+    try {
+      final QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('Barangay').get();
+      return querySnapshot.docs.map((doc) => doc['name'] as String).toList();
+    } catch (e) {
+      print('Error fetching barangays: $e');
+      return [];
+    }
+  }
+
   // Save marker details to Firestore
   void _saveMarkerDetails() {
-    final String barangay = barangayController.text;
     final String street = streetController.text;
 
-    if (barangay.isEmpty || street.isEmpty) {
-      print('Please enter Barangay and Street');
+    if (selectedBarangay == null || street.isEmpty) {
+      print('Please select a Barangay and enter Street');
       return;
     }
 
@@ -202,7 +231,7 @@ class _MappState extends State<Mapp> {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
       final selectedOption = selectedValue;
-      _saveMarkerToFirestore(barangay, street, address, position, selectedOption);
+      _saveMarkerToFirestore(selectedBarangay!, street, address, position, selectedOption);
     }
   }
 

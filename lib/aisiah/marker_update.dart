@@ -24,19 +24,25 @@ class _MappUpdateState extends State<MappUpdate> {
   String selectedValue = "Low";
   List<String> options = ['Low', 'Medium', 'High'];
 
-  TextEditingController barangayController = TextEditingController();
   TextEditingController streetController = TextEditingController();
+  String? selectedBarangay;
+  List<String> barangayOptions = []; // List to store barangay options
+
+  @override
+  void initState() {
+    super.initState();
+    id = widget.myString;
+    _getBarangayOptions(); // Fetch barangay options from Firestore
+  }
 
   @override
   void dispose() {
-    barangayController.dispose();
     streetController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    id = widget.myString;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Flood Risk Area'),
@@ -70,10 +76,22 @@ class _MappUpdateState extends State<MappUpdate> {
                   SizedBox(
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: TextField(
-                        controller: barangayController,
+                      child: DropdownButtonFormField<String>(
+                        value: selectedBarangay,
+                        isDense: true, // Reduces the vertical size of the dropdown
+                        menuMaxHeight: 200, // Set the maximum height of the dropdown menu
+                        items: barangayOptions.map((String barangay) {
+                          return DropdownMenuItem<String>(
+                            value: barangay,
+                            child: Text(barangay),
+                          );
+                        }).toList(),
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedBarangay = value;
+                          });
+                        },
                         decoration: const InputDecoration(
-                          labelText: 'Barangay',
                           border: OutlineInputBorder(),
                         ),
                       ),
@@ -82,10 +100,10 @@ class _MappUpdateState extends State<MappUpdate> {
                   const Padding(padding: EdgeInsets.only(top: 20.0)),
                   const Padding(
                     padding: EdgeInsets.only(left: 25),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Text('Street Name'),
-                      ),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text('Street Name'),
+                    ),
                   ),
                   SizedBox(
                     child: Padding(
@@ -100,9 +118,8 @@ class _MappUpdateState extends State<MappUpdate> {
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 20.0)),
-                  
                   const Padding(
-                  padding: EdgeInsets.only(left: 25),
+                    padding: EdgeInsets.only(left: 25),
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Text('Risk Level'),
@@ -183,27 +200,31 @@ class _MappUpdateState extends State<MappUpdate> {
   }
 
   void _saveMarkerDetails(String id) {
-    final String barangay = barangayController.text;
     final String street = streetController.text;
 
     for (final marker in myMarker) {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
       final selectedOption = selectedValue;
-      _saveMarkerToFirestore(barangay, street, address, position, selectedOption);
+      _saveMarkerToFirestore(id, selectedBarangay!, street, address, position, selectedOption);
     }
   }
 
-  Future<void> updateDocument(
-      String documentId, Map<String, dynamic> data) async {
-    await FirebaseFirestore.instance
-        .collection('markers') // Replace with your collection name
-        .doc(documentId)
-        .update(data);
+  // Fetch barangay options from Firestore
+  Future<void> _getBarangayOptions() async {
+    try {
+      final QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('Barangay').get();
+      setState(() {
+        barangayOptions = querySnapshot.docs.map((doc) => doc['name'] as String).toList();
+      });
+    } catch (e) {
+      print('Error fetching barangay options: $e');
+    }
   }
 
   Future<void> _saveMarkerToFirestore(
-      String barangay, String street, String address, LatLng coordinates, String selectedOption) async {
+      String id, String barangay, String street, String address, LatLng coordinates, String selectedOption) async {
     try {
       await FirebaseFirestore.instance.collection('markers').doc(id).update({
         'uniqueID': id,

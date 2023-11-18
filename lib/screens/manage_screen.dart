@@ -176,7 +176,10 @@ class _ManageState extends State<Manage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Filter Risk Level'),
-          content: Column(
+          content: SizedBox(
+            height: 200,
+            width: 200,
+            child: Column(
             children: [
               ElevatedButton(
                 onPressed: () {
@@ -206,6 +209,7 @@ class _ManageState extends State<Manage> {
                 child: const Text('Low'),
               ),
             ],
+            ),
           ),
         );
       },

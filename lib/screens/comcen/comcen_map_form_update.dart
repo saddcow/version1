@@ -17,7 +17,6 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
   String id = "";
 
   List<Marker> myMarker = [];
-  GoogleMapController? mapController;
   TextEditingController streetController = TextEditingController();
   String? selectedBarangay;
 
@@ -69,34 +68,38 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
                   SizedBox(
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: FutureBuilder(
-                        future: _getBarangays(), // Fetch barangays from Firestore
-                        builder: (context, AsyncSnapshot<List<String>> snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          } else {
-                            List<String> barangays = snapshot.data!;
-                            return DropdownButtonFormField<String>(
-                              value: selectedBarangay,
-                              items: barangays.map((String barangay) {
-                                return DropdownMenuItem<String>(
-                                  value: barangay,
-                                  child: Text(barangay),
-                                );
-                              }).toList(),
-                              onChanged: (String? value) {
-                                setState(() {
-                                  selectedBarangay = value;
-                                });
-                              },
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                              ),
-                            );
-                          }
-                        },
+                      child: Container(
+                        height: 40,
+                        child: FutureBuilder(
+                          future: _getBarangays(), // Fetch barangays from Firestore
+                          builder: (context, AsyncSnapshot<List<String>> snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              List<String> barangays = snapshot.data!;
+                              return DropdownButtonFormField<String>(
+                                value: selectedBarangay,
+                                items: barangays.map((String barangay) {
+                                  return DropdownMenuItem<String>(
+                                    value: barangay,
+                                    child: Text(barangay),
+                                  );
+                                }).toList(),
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    selectedBarangay = value;
+                                  });
+                                },
+                                menuMaxHeight: 200, // Set the maximum height of the dropdown menu
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                ),
+                              );
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),
