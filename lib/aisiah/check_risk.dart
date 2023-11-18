@@ -93,7 +93,6 @@ class FirestoreCheck extends StatelessWidget {
                   child: Card(
                   color: Colors.lightBlueAccent,
                   child: Column(
-                  
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       for (String docInfo in matchingDocumentIds)
@@ -124,39 +123,26 @@ class FirestoreCheck extends StatelessWidget {
   }
 }
 
-String getSearchString({required Map<String, dynamic> weatherData}) {
+  String getSearchString({required Map<String, dynamic> weatherData}) {
   String searchString = '';
 
-   if (weatherData['list'][0]['rain']['3h'] >= 6.5 && weatherData['list'][0]['rain']['3h'] <= 15.0){
-              if (weatherData['list'][1]['rain']['3h'] >= 6.5 && weatherData['list'][1]['rain']['3h'] <= 15.0){
-                if (weatherData['list'][2]['rain']['3h'] >= 6.5 && weatherData['list'][2]['rain']['3h'] <= 15.0){
-                  searchString = 'Low';
-                } else {searchString = '';}
-              } else {
-                searchString = '';
-              }
-            }
-            else if (weatherData['list'][0]['rain']['3h'] >= 15.0 && weatherData['list'][0]['rain']['3h'] <= 30.0){
-              if (weatherData['list'][1]['rain']['3h'] >= 15.0 && weatherData['list'][1]['rain']['3h'] <= 30.0){
-                if (weatherData['list'][2]['rain']['3h'] >= 15.0 && weatherData['list'][2]['rain']['3h'] <= 30.0){
-                  searchString = 'Medium';
-                } else {searchString = '';}
-              } else {
-                searchString = '';
-              }
-            }
-            else if (weatherData['list'][0]['rain']['3h'] > 30.0){
-              if (weatherData['list'][1]['rain']['3h'] > 30.0 ){
-                if (weatherData['list'][2]['rain']['3h'] > 30){
-                  searchString = 'High';
-                } else {searchString = '';}
-              } else {
-                searchString = '';
-              }
-            }
-            else {
-              searchString = '';
-            }
-    return searchString;
+  if (weatherData.containsKey('list') && weatherData['list'] is List && (weatherData['list'] as List).isNotEmpty) {
+    final List<dynamic> list = weatherData['list'];
 
+    if (list.length > 2) {
+      double rain1 = list[0]['rain']['3h'] ?? 0.0;
+      double rain2 = list[1]['rain']['3h'] ?? 0.0;
+      double rain3 = list[2]['rain']['3h'] ?? 0.0;
+
+      if (rain1 >= 6.5 && rain1 <= 15.0 && rain2 >= 6.5 && rain2 <= 15.0 && rain3 >= 6.5 && rain3 <= 15.0) {
+        searchString = 'Low';
+      } else if (rain1 >= 15.0 && rain1 <= 30.0 && rain2 >= 15.0 && rain2 <= 30.0 && rain3 >= 15.0 && rain3 <= 30.0) {
+        searchString = 'Medium';
+      } else if (rain1 > 30.0 && rain2 > 30.0 && rain3 > 30.0) {
+        searchString = 'High';
+      }
+    }
+  }
+
+  return searchString;
 }

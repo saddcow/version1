@@ -15,7 +15,6 @@ class _PrecipitationState extends State<Precipitation> {
   final double longitude = 123.183;
 
   Map<String, dynamic> weatherData = {};
-  
 
   @override
   void initState() {
@@ -30,7 +29,7 @@ class _PrecipitationState extends State<Precipitation> {
     try {
       final response = await http.get(Uri.parse(apiUrl));
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200) { 
         final Map<String, dynamic> data = json.decode(response.body);
         setState(() {
           weatherData = data;
@@ -57,11 +56,8 @@ class _PrecipitationState extends State<Precipitation> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (weatherData.isNotEmpty && weatherData['city'] != null)
-                  Text(
-                    'City: ${weatherData['city']['name']}'
-                  ),
-                  Padding(padding: EdgeInsets.only(bottom: 20)),
-                  
+                  Text('City: ${weatherData['city']['name']}'),
+                Padding(padding: EdgeInsets.only(bottom: 20)),
                 if (weatherData.isNotEmpty &&
                     weatherData['list'] != null &&
                     weatherData['list'].length >= 3) ...[

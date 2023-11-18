@@ -10,7 +10,6 @@ import 'package:try1/screens/login_screen.dart';
 import 'package:try1/screens/manage_screen.dart';
 import 'package:try1/screens/reports.dart';
 import 'package:try1/weather.dart';
-import 'package:try1/screens/login_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -121,7 +120,7 @@ class _HomeState extends State<Home> {
                                 });
                               },
                             ),
-                          ],
+                            ],
                         ),
                       ),
                     ),
@@ -303,10 +302,7 @@ class _HomeState extends State<Home> {
                         child: ElevatedButton(
                           onPressed: () {
                             AuthService().signout();
-                            Navigator.push(
-                              context, 
-                              MaterialPageRoute(
-                                builder: (context) => const LoginPage()));
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
                           },
                           child: const Center(child: Text('Sign Out')),
                         ),

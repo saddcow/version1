@@ -53,6 +53,7 @@ class AuthService {
   Future<void> signout() async {
     try {
       await FirebaseAuth.instance.signOut();
+      print('Signed out');
     } catch (err){
       print('Error signing out: $err');
     }
