@@ -77,7 +77,7 @@ void onDropdownChanged(String? selectedValue) {
               items: buildDropdownMenuItems(),
               onChanged: onDropdownChanged,
               decoration: const InputDecoration(
-                labelText: 'Select Marker Type',
+                labelText: 'Marker Filter',
                 border: OutlineInputBorder(),
               ),
             ),
