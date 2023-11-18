@@ -31,7 +31,7 @@ class _MainMapState extends State<MainMap> {
 
   Future<void> hazardAreaMarkers() async {
     List<Marker> markers = await hazardMarkers();
-
+     
     setState(() {
       combinedMarkers.addAll(markers);
     });
@@ -64,7 +64,7 @@ void onDropdownChanged(String? selectedValue) {
       if (selectedValue == 'All') {
         loadMarkers();
         _loadMarkers();
-      } else if (selectedValue == 'Flood Prone Area') {
+      } else if (selectedValue == 'Flood Prone Areas') {
         hazardAreaMarkers();
       } else if (selectedValue == 'Flood Report Markers') {
         _loadMarkers();
