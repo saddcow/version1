@@ -55,76 +55,14 @@ class _HomeState extends State<Home> {
         appBar: AppBar(
           title: const Text("Monitoring"),
         ),
-        body: SizedBox(
+        body: const SizedBox(
           child: SingleChildScrollView(
             child: Column(
               children: [
                 // Map and Sidebar
                 Row(
                   children: [
-                    SizedBox(
-                      width: 200,
-                      height: 500,
-                      child: Card(
-                        child: Column(
-                          children: [
-                            const Text(
-                              'Map Filters',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const Divider(
-                              thickness: 2.0, 
-                            ), 
-                            CheckboxListTile(
-                              title: const Text('Show Reports Marker'),
-                              value: showReports,
-                              onChanged: (value) {
-                                setState(() {
-                                  showReports = value!;
-                                });
-                              },
-                            ),
-                            if (showReports)
-                              Column(
-                                children: [
-                                  CheckboxListTile(
-                                    title: const Text('Show Flood Reports Marker'),
-                                    value: showFloodReports,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        showFloodReports = value!;
-                                      });
-                                    },
-                                  ),
-                                  CheckboxListTile(
-                                    title: const Text('Show Road Accident Reports Marker'),
-                                    value: showRoadAccidentReports,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        showRoadAccidentReports = value!;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            CheckboxListTile(
-                              title: const Text('Show Hazard Areas'),
-                              value: showHazardAreas,
-                              onChanged: (value) {
-                                setState(() {
-                                  showHazardAreas = value!;
-                                });
-                              },
-                            ),
-                            ],
-                        ),
-                      ),
-                    ),
-                    const Expanded(
+                    Expanded(
                       child: SizedBox(
                         height: 500,
                         width: 1000,
@@ -133,8 +71,8 @@ class _HomeState extends State<Home> {
                     ),
                   ],
                 ),
-                const Padding(padding: EdgeInsets.only(top: 20)),
-                const Row(
+                Padding(padding: EdgeInsets.only(top: 20)),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Expanded(
@@ -258,7 +196,7 @@ class _HomeState extends State<Home> {
                     )
                   ],
                 ),
-                const Padding(padding: EdgeInsets.only(bottom: 50))
+                Padding(padding: EdgeInsets.only(bottom: 50))
               ],
             ),
           ),
@@ -302,7 +240,7 @@ class _HomeState extends State<Home> {
                         child: ElevatedButton(
                           onPressed: () {
                             AuthService().signout();
-                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginPage()));
                           },
                           child: const Center(child: Text('Sign Out')),
                         ),

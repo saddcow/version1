@@ -69,7 +69,6 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Container(
-                        height: 40,
                         child: FutureBuilder(
                           future: _getBarangays(), // Fetch barangays from Firestore
                           builder: (context, AsyncSnapshot<List<String>> snapshot) {

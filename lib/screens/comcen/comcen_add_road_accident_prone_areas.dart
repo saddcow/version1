@@ -27,7 +27,7 @@ class _MappComState extends State<MappCom> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Flood Risk Area'),
+        title: const Text('Add Road Accident Prone Area'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -70,6 +70,8 @@ class _MappComState extends State<MappCom> {
                           List<String> barangays = snapshot.data!;
                           return DropdownButtonFormField<String>(
                             value: selectedBarangay,
+                            isDense: true, // Reduces the vertical size of the dropdown
+                            menuMaxHeight: 200, // Set the maximum height of the dropdown menu
                             items: barangays.map((String barangay) {
                               return DropdownMenuItem<String>(
                                 value: barangay,
