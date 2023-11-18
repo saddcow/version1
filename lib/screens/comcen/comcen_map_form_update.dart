@@ -1,28 +1,23 @@
-// ignore_for_file: library_private_types_in_public_api
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class MappUpdate extends StatefulWidget {
+class ComcenMarkerUpdate extends StatefulWidget {
   final String myString;
 
-  const MappUpdate({Key? key, required this.myString}) : super(key: key);
+  const ComcenMarkerUpdate({Key? key, required this.myString}) : super(key: key);
 
   @override
-  _MappUpdateState createState() => _MappUpdateState();
+  State<ComcenMarkerUpdate> createState() => _ComcenMarkerUpdate();
 }
 
-class _MappUpdateState extends State<MappUpdate> {
+class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
   String id = "";
 
   List<Marker> myMarker = [];
   GoogleMapController? mapController;
-
-  String selectedValue = "Low";
-  List<String> options = ['Low', 'Medium', 'High'];
 
   TextEditingController barangayController = TextEditingController();
   TextEditingController streetController = TextEditingController();
@@ -36,10 +31,9 @@ class _MappUpdateState extends State<MappUpdate> {
 
   @override
   Widget build(BuildContext context) {
-    id = widget.myString;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Flood Risk Area'),
+        title: const Text('Edit Road Risk Area'),
       ),
       body: SizedBox(
         child: SingleChildScrollView(
@@ -68,8 +62,7 @@ class _MappUpdateState extends State<MappUpdate> {
                     ),
                   ),
                   SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                    child: Padding(padding: const EdgeInsets.all(20.0),
                       child: TextField(
                         controller: barangayController,
                         decoration: const InputDecoration(
@@ -82,10 +75,10 @@ class _MappUpdateState extends State<MappUpdate> {
                   const Padding(padding: EdgeInsets.only(top: 20.0)),
                   const Padding(
                     padding: EdgeInsets.only(left: 25),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Text('Street Name'),
-                      ),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text('Street Name'),
+                    ),
                   ),
                   SizedBox(
                     child: Padding(
@@ -100,36 +93,6 @@ class _MappUpdateState extends State<MappUpdate> {
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 20.0)),
-                  
-                  const Padding(
-                  padding: EdgeInsets.only(left: 25),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text('Risk Level'),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: DropdownButton<String>(
-                          value: selectedValue,
-                          onChanged: (newValue) {
-                            setState(() {
-                              selectedValue = newValue!;
-                            });
-                          },
-                          items: options.map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                  )
                 ],
               ),
               ElevatedButton(
@@ -138,8 +101,7 @@ class _MappUpdateState extends State<MappUpdate> {
                   Navigator.pop(context);
                 },
                 child: const Text('Save Marker'),
-              ),
-              const Padding(padding: EdgeInsets.only(top: 50)),
+              )
             ],
           ),
         ),
@@ -189,33 +151,32 @@ class _MappUpdateState extends State<MappUpdate> {
     for (final marker in myMarker) {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
-      final selectedOption = selectedValue;
-      _saveMarkerToFirestore(barangay, street, address, position, selectedOption);
+      _saveMarkerToFirestore(barangay, street, address, position);
     }
   }
 
   Future<void> updateDocument(
       String documentId, Map<String, dynamic> data) async {
     await FirebaseFirestore.instance
-        .collection('markers') // Replace with your collection name
+        .collection('markers_road') // Replace with your collection name
         .doc(documentId)
         .update(data);
   }
 
   Future<void> _saveMarkerToFirestore(
-      String barangay, String street, String address, LatLng coordinates, String selectedOption) async {
+      String barangay, String street, String address, LatLng coordinates) async {
     try {
-      await FirebaseFirestore.instance.collection('markers').doc(id).update({
+      await FirebaseFirestore.instance.collection('markers_road').doc(id).update({
         'uniqueID': id,
         'barangay': barangay,
         'street': street,
         'address': address,
         'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
-        'risk_level': selectedOption,
       });
       print('Marker details saved to Firestore');
     } catch (e) {
       print('Error saving marker details to Firestore: $e');
     }
   }
+
 }
