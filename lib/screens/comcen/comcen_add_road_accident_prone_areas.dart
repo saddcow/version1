@@ -12,20 +12,13 @@ class MappCom extends StatefulWidget {
 }
 
 class _MappComState extends State<MappCom> {
-  // List to store markers on the map
   List<Marker> myMarker = [];
-
-  // Google Map controller
   GoogleMapController? mapController;
-
-  // Controllers for text fields
-  TextEditingController barangayController = TextEditingController();
   TextEditingController streetController = TextEditingController();
+  String? selectedBarangay;
 
   @override
   void dispose() {
-    // Dispose controllers to avoid memory leaks
-    barangayController.dispose();
     streetController.dispose();
     super.dispose();
   }
@@ -39,7 +32,6 @@ class _MappComState extends State<MappCom> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Google Map Widget
             SizedBox(
               height: 600,
               width: double.infinity,
@@ -54,7 +46,7 @@ class _MappComState extends State<MappCom> {
             ),
             const Padding(padding: EdgeInsets.only(top: 20.0)),
 
-            // Text Field for Barangay Name
+            // Dropdown for Barangay Name
             Column(
               children: [
                 const Padding(
@@ -67,12 +59,34 @@ class _MappComState extends State<MappCom> {
                 SizedBox(
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: TextField(
-                      controller: barangayController,
-                      decoration: const InputDecoration(
-                        labelText: 'Barangay',
-                        border: OutlineInputBorder(),
-                      ),
+                    child: FutureBuilder(
+                      future: _getBarangays(), // Fetch barangays from Firestore
+                      builder: (context, AsyncSnapshot<List<String>> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          List<String> barangays = snapshot.data!;
+                          return DropdownButtonFormField<String>(
+                            value: selectedBarangay,
+                            items: barangays.map((String barangay) {
+                              return DropdownMenuItem<String>(
+                                value: barangay,
+                                child: Text(barangay),
+                              );
+                            }).toList(),
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedBarangay = value;
+                              });
+                            },
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
+                          );
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -86,6 +100,7 @@ class _MappComState extends State<MappCom> {
                     child: Text('Street Name'),
                   ),
                 ),
+
                 SizedBox(
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
@@ -118,7 +133,6 @@ class _MappComState extends State<MappCom> {
     );
   }
 
-  // Add marker on map at the tapped location
   void _addMarker(LatLng position) async {
     final address = await _getAddressFromLatLng(position);
     setState(() {
@@ -135,7 +149,6 @@ class _MappComState extends State<MappCom> {
     });
   }
 
-  // Get address from latitude and longitude using a reverse geocoding API
   Future<String> _getAddressFromLatLng(LatLng position) async {
     final url =
         'https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.latitude}&lon=${position.longitude}&zoom=18&addressdetails=1';
@@ -153,25 +166,38 @@ class _MappComState extends State<MappCom> {
     return "Address not found";
   }
 
-  // Save marker details to Firestore
+  Future<List<String>> _getBarangays() async {
+    try {
+      final QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('Barangay').get();
+      return querySnapshot.docs.map((doc) => doc['name'] as String).toList();
+    } catch (e) {
+      print('Error fetching barangays: $e');
+      return [];
+    }
+  }
+
   void _saveMarkerDetails() {
-    final String barangay = barangayController.text;
     final String street = streetController.text;
 
-    if (barangay.isEmpty || street.isEmpty) {
-      print('Please enter Barangay and Street');
+    if (selectedBarangay == null || street.isEmpty) {
+      print('Please select a Barangay and enter Street');
       return;
     }
 
     for (final marker in myMarker) {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
-      _saveMarkerToFirestore(barangay, street, address, position);
+      _saveMarkerToFirestore(selectedBarangay!, street, address, position);
     }
   }
 
-  // Save marker details to Firestore
-  Future<void> _saveMarkerToFirestore(String barangay, String street, String address, LatLng coordinates) async {
+  Future<void> _saveMarkerToFirestore(
+    String barangay,
+    String street,
+    String address,
+    LatLng coordinates,
+  ) async {
     String first = "RA";
     var rng = Random();
     var code = rng.nextInt(90000) + 10000;

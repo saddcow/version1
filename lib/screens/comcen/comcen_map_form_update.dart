@@ -18,20 +18,23 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
 
   List<Marker> myMarker = [];
   GoogleMapController? mapController;
-
-  TextEditingController barangayController = TextEditingController();
   TextEditingController streetController = TextEditingController();
+  String? selectedBarangay;
+
+  @override
+  void initState() {
+    super.initState();
+    id = widget.myString;
+  }
 
   @override
   void dispose() {
-    barangayController.dispose();
     streetController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    id = widget.myString;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Road Risk Area'),
@@ -53,6 +56,7 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
                 ),
               ),
               const Padding(padding: EdgeInsets.only(top: 20.0)),
+              // Dropdown for Barangay Name
               Column(
                 children: [
                   const Padding(
@@ -63,17 +67,41 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
                     ),
                   ),
                   SizedBox(
-                    child: Padding(padding: const EdgeInsets.all(20.0),
-                      child: TextField(
-                        controller: barangayController,
-                        decoration: const InputDecoration(
-                          labelText: 'Barangay',
-                          border: OutlineInputBorder(),
-                        ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: FutureBuilder(
+                        future: _getBarangays(), // Fetch barangays from Firestore
+                        builder: (context, AsyncSnapshot<List<String>> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            List<String> barangays = snapshot.data!;
+                            return DropdownButtonFormField<String>(
+                              value: selectedBarangay,
+                              items: barangays.map((String barangay) {
+                                return DropdownMenuItem<String>(
+                                  value: barangay,
+                                  child: Text(barangay),
+                                );
+                              }).toList(),
+                              onChanged: (String? value) {
+                                setState(() {
+                                  selectedBarangay = value;
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 20.0)),
+
                   const Padding(
                     padding: EdgeInsets.only(left: 25),
                     child: Align(
@@ -98,7 +126,6 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  print(id);
                   _saveMarkerDetails(id);
                   Navigator.pop(context);
                 },
@@ -145,28 +172,39 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
     return "Address not found";
   }
 
+  Future<List<String>> _getBarangays() async {
+    try {
+      final QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('Barangay').get();
+      return querySnapshot.docs.map((doc) => doc['name'] as String).toList();
+    } catch (e) {
+      print('Error fetching barangays: $e');
+      return [];
+    }
+  }
+
   void _saveMarkerDetails(String id) {
-    final String barangay = barangayController.text;
     final String street = streetController.text;
+
+    if (selectedBarangay == null || street.isEmpty) {
+      print('Please select a Barangay and enter Street');
+      return;
+    }
 
     for (final marker in myMarker) {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
-      _saveMarkerToFirestore(barangay, street, address, position);
+      _saveMarkerToFirestore(id, selectedBarangay!, street, address, position);
     }
   }
 
-  Future<void> updateDocument(
-      String documentId, Map<String, dynamic> data) async {
-    await FirebaseFirestore.instance
-        .collection('Road_Accident_Areas') // Replace with your collection name
-        .doc(documentId)
-        .update(data);
-  }
-
   Future<void> _saveMarkerToFirestore(
-    
-      String barangay, String street, String address, LatLng coordinates) async {
+    String id,
+    String barangay,
+    String street,
+    String address,
+    LatLng coordinates,
+  ) async {
     try {
       await FirebaseFirestore.instance.collection('Road_Accident_Areas').doc(id).update({
         'uniqueID': id,
@@ -180,5 +218,4 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
       print('Error saving marker details to Firestore: $e');
     }
   }
-
 }
