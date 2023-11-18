@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:try1/admin/admin_home.dart';
 import 'package:try1/home_screen.dart';
+import 'package:try1/screens/comcen/comcen_home.dart';
 import 'package:try1/screens/login_screen.dart';
 
 class AuthService {
@@ -39,6 +40,8 @@ class AuthService {
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const AdminHome()));
       } else if (userType == 'AUTHORITY') {
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+      } else if(userType == 'COMCEN'){
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ComcenHome()));
       } else {
         AuthService().signout();
         return LoginPage();
