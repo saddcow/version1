@@ -23,7 +23,8 @@ class _ReportsState extends State<Reports> {
     endDate = null;
 
     // Retrieve all reports initially
-    reportsStream = FirebaseFirestore.instance.collection('Report').snapshots();
+    reportsStream = FirebaseFirestore.instance.collection('Report').orderBy('Timestamp', descending: true).snapshots();
+    
   }
 
   @override
