@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field
+// ignore_for_file: unused_field, use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:side_navigation/side_navigation.dart';
@@ -237,10 +237,10 @@ class _HomeState extends State<Home> {
                     SizedBox(
                       width: 200,
                       child: Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            AuthService().signout();
-                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginPage()));
+                       child: ElevatedButton(
+                          onPressed: () async {
+                            await AuthService().signout(); // Ensure signout is completed before navigating
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()),);
                           },
                           child: const Center(child: Text('Sign Out')),
                         ),

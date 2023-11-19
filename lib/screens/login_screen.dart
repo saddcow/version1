@@ -16,6 +16,9 @@ class _LoginPageState extends State<LoginPage> {
 
   final formKey =  GlobalKey<FormState>();
 
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   checkFields() {
     final form = formKey.currentState;
     if (form!.validate()) {
@@ -62,6 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                                 child: SizedBox(
                                   height: 50.0,
                                   child: TextFormField(
+                                    controller: emailController,
                                     decoration:
                                         const InputDecoration(hintText: 'Email'),
                                     validator: (value) => value!.isEmpty
@@ -77,12 +81,11 @@ class _LoginPageState extends State<LoginPage> {
                                 child: SizedBox(
                                   height: 50.0,
                                   child: TextFormField(
+                                    controller: passwordController,
                                     obscureText: true,
-                                    decoration:
-                                        const InputDecoration(hintText: 'Password'),
-                                    validator: (value) => value!.isEmpty
-                                        ? 'Password is required'
-                                        : null,
+                                    decoration: const InputDecoration(hintText: 'Password'),
+                                    validator: (value) =>
+                                        value!.isEmpty ? 'Password is required' : null,
                                     onChanged: (value) {
                                       password = value;
                                     },
