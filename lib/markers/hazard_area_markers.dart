@@ -1,34 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+
 Future<List<Marker>> hazardMarkers() async {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final QuerySnapshot snapshot = await firestore.collection('markers').get();
+  List<Marker> markers = [];
 
-  final List<Marker> markers = [];
+  final QuerySnapshot querySnapshot =
+      await FirebaseFirestore.instance.collection('markers').get();
 
-  for (final DocumentSnapshot document in snapshot.docs) {
+  final List<Marker> matchingMarkers = [];
 
-    final data = document.data() as Map<String, dynamic>;
-    final barangay = data['Barangay'] as String?;
-    final street = data['Street'] as String?;
-    final coordinates = data['Coordinates'] as GeoPoint?;
-    final hazardStatus = data['Risk_Level'] as String?;
-    final uniqueID = data['uniqueID'];
-
-    if(barangay != null && street != null && coordinates != null && hazardStatus != null && uniqueID != null) {
-      markers.add(
+  for (final QueryDocumentSnapshot document in querySnapshot.docs) {
+    final riskLevel = document['risk_level'] as String;
+    final address = document['address'] as String;
+    final coordinates = document['coordinates'] as GeoPoint;
+    final uniqeID = document['uniqueID'] as String;
+      matchingMarkers.add(
         Marker(
-          markerId: MarkerId(uniqueID),
+          markerId: MarkerId(uniqeID),
           position: LatLng(coordinates.latitude, coordinates.longitude),
           infoWindow: InfoWindow(
-            title: 'Report location status: $hazardStatus',
-            snippet: 'Location:  $barangay, ' ' $street ',
+            title: 'Risk Level: $riskLevel',
+            snippet: address,
           ),
         ),
       );
-    }
   }
-
+  markers = matchingMarkers;
   return markers;
 }

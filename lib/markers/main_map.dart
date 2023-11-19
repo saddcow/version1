@@ -65,7 +65,7 @@ void onDropdownChanged(String? selectedValue) {
         loadFloodMarkers();
         _loadFloodMarkers();
       } else if (selectedValue == 'Flood Prone Areas') {
-        loadFloodMarkers();
+        getRiskMarkers();
       } else if (selectedValue == 'Flood Report Markers') {
         _loadFloodMarkers();
       }
