@@ -16,11 +16,13 @@ Future<List<Marker>> retrieveMarkersFromFirestore() async {
     final hazardStatus = data['Hazard_Status'] as String?;
     final reportID = data['Report_ID'] as String?;
     final type = data['Report_Hazard_Type'];
-    if(barangay != null && street != null && coordinates != null && hazardStatus != null && reportID != null && type != 'Road') {
+
+    if(barangay != null && street != null && coordinates != null && hazardStatus != null && reportID != null && type != 'Road Accident') {
       markers.add(
         Marker(
           markerId: MarkerId(reportID),
           position: LatLng(coordinates.latitude, coordinates.longitude),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
           infoWindow: InfoWindow(
             title: 'Report location status: $hazardStatus',
             snippet: 'Location:  $barangay, ' ' $street ',

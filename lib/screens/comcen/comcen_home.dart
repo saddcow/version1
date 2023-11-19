@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/auth_service.dart';
+import 'package:try1/screens/comcen/comcen_report.dart';
 import 'package:try1/screens/comcen/main_map_comcen.dart';
 import 'package:try1/screens/comcen/manage_comcen_screen.dart';
 import 'package:try1/screens/login_screen.dart';
@@ -87,7 +88,7 @@ class _ComcenHomeState extends State<ComcenHome> {
       ),
       //reports view
       const Scaffold(
-        body: Reports(),
+        body: ReportsCom(),
       ),
       Scaffold(
         body: Container(

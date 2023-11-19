@@ -17,11 +17,11 @@ class _MainMapState extends State<MainMap> {
   @override
   void initState() {
     super.initState();
-    loadMarkers();
-    _loadMarkers(); // Load markers when the app starts
+    loadFloodMarkers();
+    _loadFloodMarkers(); // Load markers when the app starts
   }
 
-  Future<void> _loadMarkers() async {
+  Future<void> _loadFloodMarkers() async {
     List<Marker> markers = await retrieveMarkersFromFirestore();
 
     setState(() {
@@ -37,7 +37,7 @@ class _MainMapState extends State<MainMap> {
     });
   }
 
-  Future<void> loadMarkers() async {
+  Future<void> loadFloodMarkers() async {
     List<Marker> riskMarkers = await getRiskMarkers();
 
     setState(() {
@@ -62,12 +62,12 @@ void onDropdownChanged(String? selectedValue) {
       combinedMarkers.clear();
       // Load the selected type of markers
       if (selectedValue == 'All') {
-        loadMarkers();
-        _loadMarkers();
+        loadFloodMarkers();
+        _loadFloodMarkers();
       } else if (selectedValue == 'Flood Prone Areas') {
-        hazardAreaMarkers();
+        loadFloodMarkers();
       } else if (selectedValue == 'Flood Report Markers') {
-        _loadMarkers();
+        _loadFloodMarkers();
       }
     });
   }

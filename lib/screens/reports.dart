@@ -137,7 +137,7 @@ class _ReportsState extends State<Reports> {
   List applyFilter(List data) {
     // Apply filter based on report hazard type and timestamp
     return data.where((item) {
-      bool hazardTypeFilter = item['Report_Hazard_Type'] == filterType || filterType == 'All';
+      bool hazardTypeFilter = item['Report_Hazard_Type'] == 'Flood';
 
       if (startDate != null && endDate != null) {
         // Apply date range filter
