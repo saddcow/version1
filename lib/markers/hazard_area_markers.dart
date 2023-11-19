@@ -8,7 +8,6 @@ Future<List<Marker>> hazardMarkers() async {
   final List<Marker> markers = [];
 
   for (final DocumentSnapshot document in snapshot.docs) {
-    print('baka');
 
     final data = document.data() as Map<String, dynamic>;
     final barangay = data['Barangay'] as String?;

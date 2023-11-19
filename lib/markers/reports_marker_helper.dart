@@ -15,8 +15,8 @@ Future<List<Marker>> retrieveMarkersFromFirestore() async {
     final coordinates = data['Coordinates'] as GeoPoint?;
     final hazardStatus = data['Hazard_Status'] as String?;
     final reportID = data['Report_ID'] as String?;
-
-    if(barangay != null && street != null && coordinates != null && hazardStatus != null && reportID != null) {
+    final type = data['Report_Hazard_Type'];
+    if(barangay != null && street != null && coordinates != null && hazardStatus != null && reportID != null && type != 'Road') {
       markers.add(
         Marker(
           markerId: MarkerId(reportID),
