@@ -78,6 +78,7 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
                               return Text('Error: ${snapshot.error}');
                             } else {
                               List<String> barangays = snapshot.data!;
+                              barangays.sort();
                               return DropdownButtonFormField<String>(
                                 value: selectedBarangay,
                                 items: barangays.map((String barangay) {

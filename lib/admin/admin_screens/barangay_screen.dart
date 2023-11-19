@@ -33,6 +33,7 @@ class _BarangayScreenState extends State<BarangayScreen> {
                 }
 
                 List<DocumentSnapshot> dataList = snapshot.data!.docs;
+                dataList.sort((a, b) => a['name'].compareTo(b['name']));
 
                 return SingleChildScrollView(
                   child: SizedBox(

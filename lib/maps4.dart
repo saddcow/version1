@@ -73,6 +73,7 @@ Column(
                 return Text('Error: ${snapshot.error}');
               } else {
                 List<String> barangays = snapshot.data!;
+                barangays.sort();
                 return DropdownButtonFormField<String>(
                   value: selectedBarangay,
                   isDense: true, // Reduces the vertical size of the dropdown

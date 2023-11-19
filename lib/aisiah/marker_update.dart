@@ -215,12 +215,19 @@ class _MappUpdateState extends State<MappUpdate> {
     try {
       final QuerySnapshot querySnapshot =
           await FirebaseFirestore.instance.collection('Barangay').get();
+      
+      List<String> unsortedOptions = querySnapshot.docs.map((doc) => doc['name'] as String).toList();
+      
+      // Sort the barangayOptions alphabetically
+      unsortedOptions.sort();
+
       setState(() {
-        barangayOptions = querySnapshot.docs.map((doc) => doc['name'] as String).toList();
+        barangayOptions = unsortedOptions;
       });
     } catch (e) {
       print('Error fetching barangay options: $e');
     }
+  
   }
 
   Future<void> _saveMarkerToFirestore(
