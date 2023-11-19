@@ -6,7 +6,6 @@ import 'package:try1/screens/comcen/comcen_report.dart';
 import 'package:try1/screens/comcen/main_map_comcen.dart';
 import 'package:try1/screens/comcen/manage_comcen_screen.dart';
 import 'package:try1/screens/login_screen.dart';
-import 'package:try1/screens/reports.dart';
 import 'package:try1/weather.dart';
 
 class ComcenHome extends StatefulWidget {

@@ -12,6 +12,8 @@ class ReportsCom extends StatefulWidget {
 class _ReportsComState extends State<ReportsCom> {
   late Stream<QuerySnapshot> reportsStream;
   String selectedStatus = 'All';
+  DateTime? startDate;
+  DateTime? endDate;
 
   @override
   void initState() {
