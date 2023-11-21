@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field, use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/aisiah/check_risk.dart';
 import 'package:try1/aisiah/precipitation.dart';
@@ -10,6 +11,7 @@ import 'package:try1/screens/login_screen.dart';
 import 'package:try1/screens/manage_screen.dart';
 import 'package:try1/screens/reports.dart';
 import 'package:try1/weather.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -54,13 +56,19 @@ class _HomeState extends State<Home> {
       // Monitoring View
       Scaffold(
         appBar: AppBar(
-          title: const Text("Monitoring"),
+          title: Text(
+            "Monitoring",
+            style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w400,
+              fontSize: 25
+            )
+          ),
         ),
         body: const SizedBox(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Map and Sidebar
+                //google map
                 Row(
                   children: [
                     Expanded(
@@ -83,7 +91,7 @@ class _HomeState extends State<Home> {
                         children: [
                           SizedBox(
                             width: double.infinity,
-                            height: 200,
+                            height: 250,
                               child: Padding(padding: EdgeInsets.all(16),
                                 child: Card(
                                   color: Colors.lightBlueAccent,
@@ -223,15 +231,16 @@ class _HomeState extends State<Home> {
               color: Colors.white,
               child: SizedBox(
                 width: 500,
-                height: 300,
+                height: 250,
                 child: Column(
                   children: [
                     const Padding(padding: EdgeInsets.all(8.0)),
-                    const Text(
+                    Text(
                       'Settings',
-                      style: TextStyle(
-                        fontSize: 50,
-                      ),
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 25
+                      )
                     ),
                     const Divider(),
                     const Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0)),

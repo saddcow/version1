@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/admin/admin_screens/barangay_screen.dart';
 import 'package:try1/admin/admin_screens/risk_level_screen.dart';
@@ -32,15 +33,16 @@ class _AdminHomeState extends State<AdminHome> {
               color: Colors.white,
               child: SizedBox(
                 width: 500,
-                height: 300,
+                height: 250,
                 child: Column(
                   children: [
                     const Padding(padding: EdgeInsets.all(8.0)),
-                    const Text(
+                    Text(
                       'Settings',
-                      style: TextStyle(
-                        fontSize: 50,
-                      ),
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 25
+                      )
                     ),
                     const Divider(),
                     const Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0)),

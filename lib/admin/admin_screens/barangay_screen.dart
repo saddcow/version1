@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:try1/admin/admin_screens/barangay_add_form.dart';
 
 class BarangayScreen extends StatefulWidget {
@@ -16,7 +17,13 @@ class _BarangayScreenState extends State<BarangayScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('List of Barangay in Naga City'),
+        title: Text(
+          'List of Barangay in Naga City',
+          style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w400,
+              fontSize: 25
+          )
+        ),
         automaticallyImplyLeading: false,
       ),
       body: Column(

@@ -4,6 +4,7 @@ import 'package:try1/markers/hazard_area_markers.dart';
 import 'package:try1/markers/reports_marker_helper.dart';
 import 'risk_markers_helper.dart';
 
+
 class MainMap extends StatefulWidget {
   const MainMap({super.key});
   @override
@@ -82,6 +83,7 @@ class _MainMapState extends State<MainMap> {
       body: Column(
         children: [
           // Filter Dropdown
+          const Padding(padding: EdgeInsets.only(top: 20)),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: DropdownButtonFormField<String>(

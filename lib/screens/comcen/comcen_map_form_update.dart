@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -36,7 +37,13 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Road Risk Area'),
+        title: Text(
+          'Edit Road Risk Area',
+          style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w400,
+              fontSize: 25
+          )
+        ),
       ),
       body: SizedBox(
         child: SingleChildScrollView(

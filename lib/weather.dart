@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WeatherForecastWidget extends StatefulWidget {
   const WeatherForecastWidget({Key? key}) : super(key: key);
@@ -50,13 +51,13 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Display a loading indicator while data is being fetched
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           // Display an error message if there's an error in fetching data
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           // Display a message if no data is available
-          return Center(child: Text('No data available'));
+          return const Center(child: Text('No data available'));
         } else {
           // Display the weather forecast data
           return Center(
@@ -66,12 +67,37 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
                 return Column(
                   children: [
                     // Display date, weather icon, temperature, and description
-                    Text(weatherData.day, style: const TextStyle(fontWeight: FontWeight.bold),),
-                    Text('${weatherData.month} - ${weatherData.date}, ${weatherData.year}'),
+                    Text(
+                      weatherData.day, 
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20
+                      ),
+                      
+                    ),
+                    Text(
+                      '${weatherData.month} - ${weatherData.date}',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15
+                      ),
+                    ),
                     const SizedBox(height: 5),
                     Image.network(weatherData.iconUrl),
-                    Text('Temperature: ${weatherData.temperature}°C'),
-                    Text('Weather: ${weatherData.weatherDescription}'),
+                    Text(
+                      '${weatherData.temperature}°C',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 30
+                      ),
+                    ),
+                    Text(
+                      weatherData.weatherDescription,
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 20
+                      ),
+                    ),
                     const SizedBox(width: 16),
                   ],
                 );
@@ -114,6 +140,7 @@ class WeatherData {
     final String weatherDescription = json['weather'][0]['description'];
     final String iconCode = json['weather'][0]['icon'];
     final String iconUrl = 'https://openweathermap.org/img/w/$iconCode.png';
+  
 
     return WeatherData(
       date: date,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RiskLevelForm extends StatefulWidget {
   const RiskLevelForm({super.key});
@@ -25,7 +26,7 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
         _riskLevelController.clear();
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Risk Level saved to Firestore!'),
             duration: Duration(seconds: 3),
           )
@@ -35,7 +36,7 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Please enter Risk Level.'),
           duration: Duration(seconds: 3),
         )
@@ -47,7 +48,13 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Risk Level'),
+        title: Text(
+          'Add Risk Level',
+          style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w400,
+              fontSize: 25
+          )
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -55,7 +62,7 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
           children: [
             TextField(
               controller: _riskLevelController,
-              decoration: InputDecoration(labelText: 'Risk Level Name'),
+              decoration: const InputDecoration(labelText: 'Risk Level Name'),
             ),
             const SizedBox(height: 16.0,),
             ElevatedButton(

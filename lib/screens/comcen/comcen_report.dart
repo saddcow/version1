@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class ReportsCom extends StatefulWidget {
@@ -26,7 +27,13 @@ class _ReportsComState extends State<ReportsCom> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Reports'),
+        title: Text(
+          'Reports',
+          style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w400,
+              fontSize: 25
+          )
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),

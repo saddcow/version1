@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BarangayForm extends StatefulWidget{
   const BarangayForm({Key? key}) : super(key: key);
@@ -48,7 +49,13 @@ class _BarangayFormState extends State<BarangayForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Barangay'),
+        title: Text(
+          'Add Barangay',
+          style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w400,
+              fontSize: 25
+          )
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:try1/admin/admin_screens/risk_level_form.dart';
 
 class RiskLevelScreen extends StatefulWidget {
@@ -16,7 +17,13 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('List of Risk Level'),
+        title: Text(
+          'List of Risk Level',
+          style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w400,
+              fontSize: 25
+          )
+        ),
         automaticallyImplyLeading: false,
       ),
       body: StreamBuilder<QuerySnapshot>(
