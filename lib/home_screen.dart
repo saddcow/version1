@@ -87,7 +87,7 @@ class _HomeState extends State<Home> {
                               child: Padding(padding: EdgeInsets.all(16),
                                 child: Card(
                                   color: Colors.lightBlueAccent,
-                                  child: Padding(padding: EdgeInsetsDirectional.only(top: 30),
+                                  child: Padding(padding: EdgeInsetsDirectional.only(top: 20),
                                     child: WeatherForecastWidget(),
                                   ),
                                 ),

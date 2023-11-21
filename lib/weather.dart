@@ -63,18 +63,15 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: snapshot.data!.map((weatherData) {
-                return Row(
+                return Column(
                   children: [
-                    Column(
-                      children: [
-                        // Display date, weather icon, temperature, and description
-                        Text(weatherData.date),
-                        SizedBox(height: 5),
-                        Image.network(weatherData.iconUrl),
-                        Text('Temperature: ${weatherData.temperature}°C'),
-                        Text('Weather: ${weatherData.weatherDescription}'),
-                      ],
-                    ),
+                    // Display date, weather icon, temperature, and description
+                    Text(weatherData.day, style: const TextStyle(fontWeight: FontWeight.bold),),
+                    Text('${weatherData.month} - ${weatherData.date}, ${weatherData.year}'),
+                    const SizedBox(height: 5),
+                    Image.network(weatherData.iconUrl),
+                    Text('Temperature: ${weatherData.temperature}°C'),
+                    Text('Weather: ${weatherData.weatherDescription}'),
                     const SizedBox(width: 16),
                   ],
                 );
@@ -89,12 +86,18 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
 
 class WeatherData {
   final String date;
+  final String day;
+  final String month;
+  final String year;
   final int temperature;
   final String weatherDescription;
   final String iconUrl;
 
   WeatherData({
     required this.date,
+    required this.day,
+    required this.month,
+    required this.year,
     required this.temperature,
     required this.weatherDescription,
     required this.iconUrl,
@@ -103,14 +106,20 @@ class WeatherData {
   // Factory method to create a WeatherData instance from JSON
   factory WeatherData.fromJson(Map<String, dynamic> json) {
     final DateTime dateTime = DateTime.parse(json['dt_txt']);
-    final String formattedDate = DateFormat('yyyy-MM-dd HH:mm').format(dateTime);
+    final String date = DateFormat('dd').format(dateTime); // Day as number
+    final String day = DateFormat('EEEE').format(dateTime); // Extract day from date
+    final String month = DateFormat('MMMM').format(dateTime);
+    final String year = DateFormat('yyyy').format(dateTime);
     final int temperature = (json['main']['temp'] - 273.15).toInt();
     final String weatherDescription = json['weather'][0]['description'];
     final String iconCode = json['weather'][0]['icon'];
     final String iconUrl = 'https://openweathermap.org/img/w/$iconCode.png';
 
     return WeatherData(
-      date: formattedDate,
+      date: date,
+      day: day,
+      month: month,
+      year: year,
       temperature: temperature,
       weatherDescription: weatherDescription,
       iconUrl: iconUrl,
