@@ -12,7 +12,7 @@ class MainMap extends StatefulWidget {
 
 class _MainMapState extends State<MainMap> {
   List<Marker> combinedMarkers = [];
-  String selectedMarkerType = 'All'; 
+  String selectedMarkerType = 'All';
 
   @override
   void initState() {
@@ -22,30 +22,33 @@ class _MainMapState extends State<MainMap> {
   }
 
   Future<void> _loadFloodMarkers() async {
-    List<Marker> markers = await retrieveMarkersFromFirestore();
+    try {
+      List<Marker> markers = await retrieveMarkersFromFirestore();
 
-    setState(() {
-      combinedMarkers.addAll(markers);
-    });
+      setState(() {
+        combinedMarkers.addAll(markers);
+      });
+    } catch (error) {
+      print('Error loading flood markers: $error');
+      // Handle the error appropriately (e.g., show a message to the user)
+    }
   }
 
-  Future<void> hazardAreaMarkers() async {
-    List<Marker> markers = await hazardMarkers();
-     
-    setState(() {
-      combinedMarkers.addAll(markers);
-    });
-  }
 
   Future<void> loadFloodMarkers() async {
-    List<Marker> riskMarkers = await getRiskMarkers();
+    try {
+      List<Marker> riskMarkers = await getRiskMarkers();
 
-    setState(() {
-      combinedMarkers.addAll(riskMarkers);
-    });
+      setState(() {
+        combinedMarkers.addAll(riskMarkers);
+      });
+    } catch (error) {
+      print('That Error loading flood risk markers: $error');
+      // Handle the error appropriately (e.g., show a message to the user)
+    }
   }
 
-    List<DropdownMenuItem<String>> buildDropdownMenuItems() {
+  List<DropdownMenuItem<String>> buildDropdownMenuItems() {
     return ['All', 'Flood Prone Areas', 'Flood Report Markers'].map((String value) {
       return DropdownMenuItem<String>(
         value: value,
@@ -54,29 +57,29 @@ class _MainMapState extends State<MainMap> {
     }).toList();
   }
 
-void onDropdownChanged(String? selectedValue) {
-  if (selectedValue != null) {
-    setState(() {
-      selectedMarkerType = selectedValue;
-      // Clear existing markers
-      combinedMarkers.clear();
-      // Load the selected type of markers
-      if (selectedValue == 'All') {
-        loadFloodMarkers();
-        _loadFloodMarkers();
-      } else if (selectedValue == 'Flood Prone Areas') {
-        getRiskMarkers();
-      } else if (selectedValue == 'Flood Report Markers') {
-        _loadFloodMarkers();
-      }
-    });
+  void onDropdownChanged(String? selectedValue) {
+    if (selectedValue != null) {
+      setState(() {
+        selectedMarkerType = selectedValue;
+        // Clear existing markers
+        combinedMarkers.clear();
+        // Load the selected type of markers
+        if (selectedValue == 'All') {
+          loadFloodMarkers();
+          _loadFloodMarkers();
+        } else if (selectedValue == 'Flood Prone Areas') {
+          loadFloodMarkers();
+        } else if (selectedValue == 'Flood Report Markers') {
+          _loadFloodMarkers();
+        }
+      });
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Column(
+      body: Column(
         children: [
           // Filter Dropdown
           Padding(

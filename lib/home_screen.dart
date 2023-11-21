@@ -12,11 +12,12 @@ import 'package:try1/screens/reports.dart';
 import 'package:try1/weather.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
-  
+  const Home({Key? key}) : super(key: key);
+
   @override
   State<Home> createState() => _HomeState();
 }
+
 
 class _HomeState extends State<Home> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

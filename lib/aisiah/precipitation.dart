@@ -46,8 +46,8 @@ class _PrecipitationState extends State<Precipitation> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SizedBox(
-        width: 500,
-        height: 350,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
         child: Card(
           color: Colors.lightBlueAccent,
           child: Padding(
@@ -57,14 +57,14 @@ class _PrecipitationState extends State<Precipitation> {
               children: [
                 if (weatherData.isNotEmpty && weatherData['city'] != null)
                   Text('City: ${weatherData['city']['name']}'),
-                Padding(padding: EdgeInsets.only(bottom: 20)),
+                const SizedBox(height: 20),
                 if (weatherData.isNotEmpty &&
                     weatherData['list'] != null &&
                     weatherData['list'].length >= 3) ...[
                   Text('Rain Volume [time: ${DateTime.now().hour}:${DateTime.now().minute}]: ${weatherData['list'][0]['rain']?['3h'] ?? 0} mm'),
-                  Padding(padding: EdgeInsets.only(bottom: 10)),
+                  const SizedBox(height: 10),
                   Text('Rain Volume [time: ${DateTime.now().hour + 1}:${DateTime.now().minute}]: ${weatherData['list'][1]['rain']?['3h'] ?? 0} mm'),
-                  Padding(padding: EdgeInsets.only(bottom: 10)),
+                  const SizedBox(height: 10),
                   Text('Rain Volume [time: ${DateTime.now().hour + 2}:${DateTime.now().minute}]: ${weatherData['list'][2]['rain']?['3h'] ?? 0} mm'),
                 ],
               ],

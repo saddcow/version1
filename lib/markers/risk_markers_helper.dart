@@ -30,9 +30,9 @@ Future<List<Marker>> getRiskMarkers() async {
     final List<dynamic> list = weatherData['list'];
 
     if (list.length > 2) {
-      double rain1 = list[0]['rain']['3h'] ?? 0.0;
-      double rain2 = list[1]['rain']['3h'] ?? 0.0;
-      double rain3 = list[2]['rain']['3h'] ?? 0.0;
+      double rain1 = (list.isNotEmpty && list[0]['rain'] != null && list[0]['rain']['3h'] != null) ? list[0]['rain']['3h'] : 0.0;
+      double rain2 = (list.length > 1 && list[1]['rain'] != null && list[1]['rain']['3h'] != null) ? list[1]['rain']['3h'] : 0.0;
+      double rain3 = (list.length > 2 && list[2]['rain'] != null && list[2]['rain']['3h'] != null) ? list[2]['rain']['3h'] : 0.0;
 
       if (rain1 >= 6.5 && rain1 <= 15.0 && rain2 >= 6.5 && rain2 <= 15.0 && rain3 >= 6.5 && rain3 <= 15.0) {
         searchString = 'Low';
