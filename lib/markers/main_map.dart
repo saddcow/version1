@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:try1/markers/hazard_area_markers.dart';
 import 'package:try1/markers/reports_marker_helper.dart';
 import 'risk_markers_helper.dart';
 

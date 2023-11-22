@@ -20,10 +20,7 @@ class _MappUpdateState extends State<MappUpdate> {
 
   List<Marker> myMarker = [];
   GoogleMapController? mapController;
-
-  String selectedValue = "Low";
-  List<String> options = ['Low', 'Medium', 'High'];
-
+  String? selectedRiskLevel;
   TextEditingController streetController = TextEditingController();
   String? selectedBarangay;
   List<String> barangayOptions = []; // List to store barangay options
@@ -125,29 +122,46 @@ class _MappUpdateState extends State<MappUpdate> {
                       child: Text('Risk Level'),
                     ),
                   ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: DropdownButton<String>(
-                          value: selectedValue,
-                          onChanged: (newValue) {
-                            setState(() {
-                              selectedValue = newValue!;
-                            });
-                          },
-                          items: options.map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+                      SizedBox(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Container(
+          child: FutureBuilder(
+            future: _getRiskLevel(), // Fetch barangays from Firestore
+            builder: (context, AsyncSnapshot<List<String>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                List<String> riskLevel = snapshot.data!;
+                riskLevel.sort();
+                return DropdownButtonFormField<String>(
+                  value: selectedRiskLevel,
+                  isDense: true, // Reduces the vertical size of the dropdown
+                  menuMaxHeight: 200, // Set the maximum height of the dropdown menu
+                  items: riskLevel.map((String risklvl) {
+                    return DropdownMenuItem<String>(
+                      value: risklvl,
+                      child: Text(risklvl),
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedRiskLevel = value;
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                  ),
+                );
+              }
+            },
+          ),
+        ),
+      ),
+    ),
+  ],
               ),
               ElevatedButton(
                 onPressed: () {
@@ -182,6 +196,17 @@ class _MappUpdateState extends State<MappUpdate> {
     });
   }
 
+      Future<List<String>> _getRiskLevel() async {
+    try {
+      final QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('Risk_Level').get();
+      return querySnapshot.docs.map((doc) => doc['risk_level'] as String).toList();
+    } catch (e) {
+      print('Error fetching barangays: $e');
+      return [];
+    }
+  }
+
   Future<String> _getAddressFromLatLng(LatLng position) async {
     final url =
         'https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.latitude}&lon=${position.longitude}&zoom=18&addressdetails=1';
@@ -205,8 +230,8 @@ class _MappUpdateState extends State<MappUpdate> {
     for (final marker in myMarker) {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
-      final selectedOption = selectedValue;
-      _saveMarkerToFirestore(id, selectedBarangay!, street, address, position, selectedOption);
+      final selectedOption = selectedRiskLevel;
+      _saveMarkerToFirestore(id, selectedBarangay!, street, address, position, selectedOption!);
     }
   }
 

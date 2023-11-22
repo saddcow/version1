@@ -19,12 +19,12 @@ class _MappState extends State<Mapp> {
   GoogleMapController? mapController;
 
   // Dropdown menu options
-  String selectedValue = 'Low';
-  List<String> options = ['Low', 'Medium', 'High'];
 
   // Controllers for text fields
   TextEditingController streetController = TextEditingController();
   String? selectedBarangay;
+
+  String? selectedRiskLevel;
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +99,7 @@ Column(
         ),
       ),
     ),
+
     const Padding(padding: EdgeInsets.only(top: 5.0)), // Adjusted padding
 
     // Text Field for Street Name
@@ -131,28 +132,46 @@ Column(
         child: Text('Risk Level'),
       ),
     ),
-    SizedBox(
+
+      SizedBox(
       child: Padding(
-        padding: const EdgeInsets.only(left: 25.0),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: DropdownButton<String>(
-            value: selectedValue,
-            onChanged: (newValue) {
-              setState(() {
-                selectedValue = newValue!;
-              });
+        padding: const EdgeInsets.all(20.0),
+        child: Container(
+          child: FutureBuilder(
+            future: _getRiskLevel(), // Fetch barangays from Firestore
+            builder: (context, AsyncSnapshot<List<String>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                List<String> riskLevel = snapshot.data!;
+                riskLevel.sort();
+                return DropdownButtonFormField<String>(
+                  value: selectedRiskLevel,
+                  isDense: true, // Reduces the vertical size of the dropdown
+                  menuMaxHeight: 200, // Set the maximum height of the dropdown menu
+                  items: riskLevel.map((String risklvl) {
+                    return DropdownMenuItem<String>(
+                      value: risklvl,
+                      child: Text(risklvl),
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedRiskLevel = value;
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                  ),
+                );
+              }
             },
-            items: options.map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
           ),
         ),
       ),
-    )
+    ),
   ],
 ),
 
@@ -219,6 +238,17 @@ Column(
     }
   }
 
+    Future<List<String>> _getRiskLevel() async {
+    try {
+      final QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('Risk_Level').get();
+      return querySnapshot.docs.map((doc) => doc['risk_level'] as String).toList();
+    } catch (e) {
+      print('Error fetching barangays: $e');
+      return [];
+    }
+  }
+
   // Save marker details to Firestore
   void _saveMarkerDetails() {
     final String street = streetController.text;
@@ -231,13 +261,13 @@ Column(
     for (final marker in myMarker) {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
-      final selectedOption = selectedValue;
-      _saveMarkerToFirestore(selectedBarangay!, street, address, position, selectedOption);
+      final RiskLevel = selectedRiskLevel;
+      _saveMarkerToFirestore(selectedBarangay!, street, address, position, RiskLevel!);
     }
   }
 
   // Save marker details to Firestore
-  Future<void> _saveMarkerToFirestore(String barangay, String street, String address, LatLng coordinates, String selectedOption) async {
+  Future<void> _saveMarkerToFirestore(String barangay, String street, String address, LatLng coordinates, String selectedRiskLevel) async {
     String first = "HA";
     var rng = Random();
     var code = rng.nextInt(90000) + 10000;
@@ -251,8 +281,9 @@ Column(
         'street': street,
         'address': address,
         'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
-        'risk_level': selectedOption,
+        'risk_level': selectedRiskLevel,
       });
+      print('$uniqueID - $selectedRiskLevel');
       print('Marker details saved to Firestore');
     } catch (e) {
       print('Error saving marker details to Firestore: $e');
