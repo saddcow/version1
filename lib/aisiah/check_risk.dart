@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
+import 'package:try1/utils/color_utils.dart';
 
 class Warning extends StatefulWidget {
   const Warning({super.key});
@@ -91,7 +92,7 @@ class FirestoreCheck extends StatelessWidget {
               if (matchingDocumentIds.isNotEmpty) {
                 return SingleChildScrollView(
                   child: Card(
-                  color: Colors.lightBlueAccent,
+                  color: hexStringToColor("#86BBD8"),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -105,12 +106,12 @@ class FirestoreCheck extends StatelessWidget {
                   ),
                 );
               } else {
-                return const SizedBox(
+                return SizedBox(
                    height: 270,
                    width: 500,
                   child: Card(
-                    color: Colors.lightBlueAccent,
-                    child: Center(
+                    color: hexStringToColor("#86BBD8"),
+                    child: const Center(
                       child: Text('All Good! Nothing to worry!')),
                   )
                 );

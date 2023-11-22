@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:try1/aisiah/marker_update.dart';
 import 'package:try1/maps4.dart';
@@ -32,7 +33,13 @@ class _ManageState extends State<Manage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Managing Flood Risk Area'),
+        title: Text(
+          'Managing Flood Risk Area',
+          style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w400,
+              fontSize: 25
+          )
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),

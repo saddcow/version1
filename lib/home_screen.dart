@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field, use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/aisiah/check_risk.dart';
 import 'package:try1/aisiah/precipitation.dart';
@@ -9,6 +10,7 @@ import 'package:try1/markers/main_map.dart';
 import 'package:try1/screens/login_screen.dart';
 import 'package:try1/screens/manage_screen.dart';
 import 'package:try1/screens/reports.dart';
+import 'package:try1/utils/color_utils.dart';
 import 'package:try1/weather.dart';
 
 class Home extends StatefulWidget {
@@ -54,14 +56,20 @@ class _HomeState extends State<Home> {
       // Monitoring View
       Scaffold(
         appBar: AppBar(
-          title: const Text("Monitoring"),
+          title: Text(
+            "Monitoring",
+            style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w400,
+              fontSize: 25
+            )
+          ),
         ),
-        body: const SizedBox(
+        body: SizedBox(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Map and Sidebar
-                Row(
+                //google map
+                const Row(
                   children: [
                     Expanded(
                       child: SizedBox(
@@ -72,7 +80,7 @@ class _HomeState extends State<Home> {
                     ),
                   ],
                 ),
-                Padding(padding: EdgeInsets.only(top: 20)),
+                const Padding(padding: EdgeInsets.only(top: 20)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -83,54 +91,95 @@ class _HomeState extends State<Home> {
                         children: [
                           SizedBox(
                             width: double.infinity,
-                            height: 200,
-                              child: Padding(padding: EdgeInsets.all(16),
+                            height: 250,
+                              child: Padding(padding: const EdgeInsets.all(16),
                                 child: Card(
-                                  color: Colors.lightBlueAccent,
-                                  child: Padding(padding: EdgeInsetsDirectional.only(top: 30),
+                                  color: hexStringToColor("#F6AE2D"),
+                                  child: const Padding(padding: EdgeInsetsDirectional.only(top: 20),
                                     child: WeatherForecastWidget(),
                                   ),
                                 ),
                               ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          Padding(padding: const EdgeInsets.all(16),
+                            child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
                                 width: 500,
                                 height: 350,
                                 child: Card(
-                                  color: Colors.lightBlueAccent,
+                                  color: hexStringToColor("#86BBD8"),
                                   elevation: 4,
                                   child: Column(
                                     children: <Widget> [
                                       Padding(
-                                      padding: EdgeInsets.all(16.0),
+                                      padding: const EdgeInsets.all(16.0),
                                         child: Text(
                                           'Risk Level Description',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18.0,
+                                          style: GoogleFonts.roboto(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 20
                                           ),
                                         ),
                                       ),
-                                      Divider(),
+                                      const Divider(),
                                       ListTile(
                                         title: Text(
                                           'Red Marker',
-                                          style: TextStyle(color: Colors.red),
+                                          style: GoogleFonts.roboto(
+                                            color: Colors.red,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w400
+                                          ),
                                         ),
-                                        subtitle: (Text('If More than 30 mm rain observed in 1 hour and expected to continue in the next 2 hours then serious flooding is expected in these low-lying areas.')),
+                                        subtitle: (
+                                          Text(
+                                            'More than 30 mm rain observed in 1 hour and expected to continue. Serious flooding is expected in these low-lying areas.',
+                                            style: GoogleFonts.roboto(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.normal
+                                            ),
+                                          )
+                                        ),
                                       ),
-                                      Divider(),
+                                      const Divider(),
                                       ListTile(
-                                        title: Text('Orange Marker', style: TextStyle(color: Colors.orange),),
-                                        subtitle: (Text('15-30 mm rain observed in 1 hour and expected to continue in the next 2hours. Flooding is threatening.')),
+                                        title: Text(
+                                          'Orange Marker', 
+                                          style: GoogleFonts.roboto(
+                                            color: Colors.orange,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w400
+                                          ),
+                                        ),
+                                        subtitle: (
+                                          Text(
+                                            '15-30 mm rain observed in 1 hour and expected to continue. Flooding is threatening.',
+                                            style: GoogleFonts.roboto(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.normal
+                                            ),
+                                          )
+                                        ),
                                       ),
-                                      Divider(),
+                                      const Divider(),
                                       ListTile(
-                                        title: Text('Yellow Marker', style: TextStyle(color: Colors.yellow),),
-                                        subtitle: Text('6.5-15 mm of rain observed in 1 hour and expected to continue in the next 2 hours. Flooding is possible '),
+                                        title: Text(
+                                          'Yellow Marker', 
+                                          style:GoogleFonts.roboto(
+                                            color: Colors.yellow,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w400
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          '6.5-15 mm of rain observed in 1 hour and expected to continue. Flooding is possible.',
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.normal
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -141,63 +190,66 @@ class _HomeState extends State<Home> {
                                 height: 350,
                                 child: Card(
                                   elevation: 4,
-                                  color: Colors.lightBlueAccent,
+                                  color: hexStringToColor("#86BBD8"),
                                   child: Column(
                                     children: [
                                       Padding(
-                                      padding: EdgeInsets.all(16.0),
+                                      padding: const EdgeInsets.all(16.0),
                                         child: Text(
                                           'Rain Volume for 3 hours',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18.0,
+                                          style: GoogleFonts.roboto(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 20
                                           ),
                                         ),
                                       ),
-                                      Divider(),
-                                      SizedBox(
+                                      const  Divider(),
+                                      const SizedBox(
                                         height: 270,
                                         width: 500,
                                         child: Precipitation(),
                                       )
                                     ],
-                                ),
-                              )),
+                                  ),
+                                )
+                              ),
                               SizedBox(
                                 width: 500,
                                 height: 350,
                                 child: Card(
                                   elevation: 4,
-                                  color: Colors.lightBlueAccent,
+                                  color: hexStringToColor("#86BBD8"),
                                   child: Column(
                                     children: <Widget> [
                                       Padding(
-                                      padding: EdgeInsets.all(16.0),
+                                      padding: const EdgeInsets.all(16.0),
                                         child: Text(
                                           'Possible Flood Places',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18.0,
+                                          style: GoogleFonts.roboto(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 20
                                           ),
                                         ),
                                       ),
-                                      Divider(),
-                                      SizedBox(
+                                      const Divider(),
+                                      const SizedBox(
                                         height: 270,
                                         width: 500,
                                         child: Warning(),
                                       )
                                     ],
-                                ),
-                              )),
+                                  ),
+                                )
+                              ),
                             ],
+                          ),
                           )
                         ],
                       ),
                     )
                   ],
                 ),
-                Padding(padding: EdgeInsets.only(bottom: 50))
+                const Padding(padding: EdgeInsets.only(bottom: 50))
               ],
             ),
           ),
@@ -223,15 +275,16 @@ class _HomeState extends State<Home> {
               color: Colors.white,
               child: SizedBox(
                 width: 500,
-                height: 300,
+                height: 250,
                 child: Column(
                   children: [
                     const Padding(padding: EdgeInsets.all(8.0)),
-                    const Text(
+                    Text(
                       'Settings',
-                      style: TextStyle(
-                        fontSize: 50,
-                      ),
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 25
+                      )
                     ),
                     const Divider(),
                     const Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0)),
@@ -243,6 +296,11 @@ class _HomeState extends State<Home> {
                             await AuthService().signout(); // Ensure signout is completed before navigating
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()),);
                           },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)
+                            )
+                          ),
                           child: const Center(child: Text('Sign Out')),
                         ),
                       ),

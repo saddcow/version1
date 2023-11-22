@@ -21,6 +21,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'E-Alert',
         debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey)
+        ),
         home: AuthService().handleAuth(),
       ),
     );

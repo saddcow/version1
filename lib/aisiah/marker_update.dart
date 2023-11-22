@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -42,7 +43,13 @@ class _MappUpdateState extends State<MappUpdate> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Flood Risk Area'),
+        title: Text(
+          'Edit Flood Risk Area',
+          style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w400,
+              fontSize: 25
+          )
+        ),
       ),
       body: SizedBox(
         child: SingleChildScrollView(
@@ -168,6 +175,11 @@ class _MappUpdateState extends State<MappUpdate> {
                   _saveMarkerDetails(id);
                   Navigator.pop(context);
                 },
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)
+                  )
+                ),
                 child: const Text('Save Marker'),
               ),
               const Padding(padding: EdgeInsets.only(top: 50)),

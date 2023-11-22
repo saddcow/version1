@@ -22,7 +22,6 @@ Future<List<Marker>> retrieveMarkersFromFirestore() async {
         Marker(
           markerId: MarkerId(reportID),
           position: LatLng(coordinates.latitude, coordinates.longitude),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
           infoWindow: InfoWindow(
             title: 'Report location status: $hazardStatus',
             snippet: 'Location:  $barangay, ' ' $street ',
