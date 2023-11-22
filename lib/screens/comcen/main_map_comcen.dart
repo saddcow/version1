@@ -69,6 +69,7 @@ void onDropdownChanged(String? selectedValue) {
     return Scaffold(
       body: Column(
         children: [
+          const Padding(padding: EdgeInsets.only(top: 20)),
           // Filter Dropdown
           Padding(
             padding: const EdgeInsets.all(8.0),

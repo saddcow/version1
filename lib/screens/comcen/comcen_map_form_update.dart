@@ -139,6 +139,11 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
                   _saveMarkerDetails(id);
                   Navigator.pop(context);
                 },
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)
+                  )
+                ),
                 child: const Text('Save Marker'),
               )
             ],
