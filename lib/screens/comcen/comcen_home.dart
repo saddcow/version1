@@ -7,6 +7,7 @@ import 'package:try1/screens/comcen/comcen_report.dart';
 import 'package:try1/screens/comcen/main_map_comcen.dart';
 import 'package:try1/screens/comcen/manage_comcen_screen.dart';
 import 'package:try1/screens/login_screen.dart';
+import 'package:try1/utils/color_utils.dart';
 import 'package:try1/weather.dart';
 
 class ComcenHome extends StatefulWidget {
@@ -41,12 +42,12 @@ class _ComcenHomeState extends State<ComcenHome> {
           )
           ),
         ),
-        body: const SizedBox(
+        body: SizedBox(
           child: SingleChildScrollView(
             child: Column(
               children: [
                 //map and sidebar
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: SizedBox(
@@ -57,7 +58,7 @@ class _ComcenHomeState extends State<ComcenHome> {
                     ),
                   ],
                 ),
-                Padding(padding: EdgeInsets.only(top: 20)),
+                const Padding(padding: EdgeInsets.only(top: 20)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -69,10 +70,10 @@ class _ComcenHomeState extends State<ComcenHome> {
                           SizedBox(
                             width: double.infinity,
                             height: 250,
-                              child: Padding(padding: EdgeInsets.all(16),
+                              child: Padding(padding: const EdgeInsets.all(16),
                                 child: Card(
-                                  color: Colors.lightBlueAccent,
-                                  child: Padding(padding: EdgeInsetsDirectional.only(top: 30),
+                                  color: hexStringToColor("#86BBD8"),
+                                  child: const Padding(padding: EdgeInsetsDirectional.only(top: 30),
                                     child: WeatherForecastWidget(),
                                   ),
                                 ),
@@ -130,6 +131,11 @@ class _ComcenHomeState extends State<ComcenHome> {
                               MaterialPageRoute(
                                 builder: (context) => const LoginPage()));
                           },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)
+                            )
+                          ),
                           child: const Center(child: Text('Sign Out')),
                         ),
                       ),

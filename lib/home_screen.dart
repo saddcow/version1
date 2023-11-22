@@ -10,6 +10,7 @@ import 'package:try1/markers/main_map.dart';
 import 'package:try1/screens/login_screen.dart';
 import 'package:try1/screens/manage_screen.dart';
 import 'package:try1/screens/reports.dart';
+import 'package:try1/utils/color_utils.dart';
 import 'package:try1/weather.dart';
 
 class Home extends StatefulWidget {
@@ -88,13 +89,13 @@ class _HomeState extends State<Home> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const SizedBox(
+                          SizedBox(
                             width: double.infinity,
                             height: 250,
-                              child: Padding(padding: EdgeInsets.all(16),
+                              child: Padding(padding: const EdgeInsets.all(16),
                                 child: Card(
-                                  color: Colors.lightBlueAccent,
-                                  child: Padding(padding: EdgeInsetsDirectional.only(top: 20),
+                                  color: hexStringToColor("#F6AE2D"),
+                                  child: const Padding(padding: EdgeInsetsDirectional.only(top: 20),
                                     child: WeatherForecastWidget(),
                                   ),
                                 ),
@@ -108,7 +109,7 @@ class _HomeState extends State<Home> {
                                 width: 500,
                                 height: 350,
                                 child: Card(
-                                  color: Colors.lightBlueAccent,
+                                  color: hexStringToColor("#86BBD8"),
                                   elevation: 4,
                                   child: Column(
                                     children: <Widget> [
@@ -189,7 +190,7 @@ class _HomeState extends State<Home> {
                                 height: 350,
                                 child: Card(
                                   elevation: 4,
-                                  color: Colors.lightBlueAccent,
+                                  color: hexStringToColor("#86BBD8"),
                                   child: Column(
                                     children: [
                                       Padding(
@@ -217,7 +218,7 @@ class _HomeState extends State<Home> {
                                 height: 350,
                                 child: Card(
                                   elevation: 4,
-                                  color: Colors.lightBlueAccent,
+                                  color: hexStringToColor("#86BBD8"),
                                   child: Column(
                                     children: <Widget> [
                                       Padding(
@@ -295,6 +296,11 @@ class _HomeState extends State<Home> {
                             await AuthService().signout(); // Ensure signout is completed before navigating
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()),);
                           },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)
+                            )
+                          ),
                           child: const Center(child: Text('Sign Out')),
                         ),
                       ),

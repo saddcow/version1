@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:try1/utils/color_utils.dart';
 
 class Precipitation extends StatefulWidget {
   const Precipitation({Key? key}) : super(key: key);
@@ -49,7 +50,7 @@ class _PrecipitationState extends State<Precipitation> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Card(
-          color: Colors.lightBlueAccent,
+          color: hexStringToColor("#86BBD8"),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(

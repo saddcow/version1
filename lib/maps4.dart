@@ -31,13 +31,9 @@ class _MappState extends State<Mapp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Add Flood Risk Area',
-          style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w400,
-              fontSize: 25
-          )
-        ),
+        title: Text('Add Flood Risk Area',
+            style:
+                GoogleFonts.roboto(fontWeight: FontWeight.w400, fontSize: 25)),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -58,110 +54,116 @@ class _MappState extends State<Mapp> {
             const Padding(padding: EdgeInsets.only(top: 20.0)),
 
             // Dropdown for Barangay Name
-Column(
-  children: [
-    const Padding(
-      padding: EdgeInsets.only(left: 25),
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: Text('Barangay Name'),
-      ),
-    ),
-    SizedBox(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Container(
-          child: FutureBuilder(
-            future: _getBarangays(), // Fetch barangays from Firestore
-            builder: (context, AsyncSnapshot<List<String>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                List<String> barangays = snapshot.data!;
-                barangays.sort();
-                return DropdownButtonFormField<String>(
-                  value: selectedBarangay,
-                  isDense: true, // Reduces the vertical size of the dropdown
-                  menuMaxHeight: 200, // Set the maximum height of the dropdown menu
-                  items: barangays.map((String barangay) {
-                    return DropdownMenuItem<String>(
-                      value: barangay,
-                      child: Text(barangay),
-                    );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    setState(() {
-                      selectedBarangay = value;
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+            Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text('Barangay Name'),
                   ),
-                );
-              }
-            },
-          ),
-        ),
-      ),
-    ),
-    const Padding(padding: EdgeInsets.only(top: 5.0)), // Adjusted padding
+                ),
+                SizedBox(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                      child: FutureBuilder(
+                        future:
+                            _getBarangays(), // Fetch barangays from Firestore
+                        builder:
+                            (context, AsyncSnapshot<List<String>> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            List<String> barangays = snapshot.data!;
+                            barangays.sort();
+                            return DropdownButtonFormField<String>(
+                              value: selectedBarangay,
+                              isDense:
+                                  true, // Reduces the vertical size of the dropdown
+                              menuMaxHeight:
+                                  200, // Set the maximum height of the dropdown menu
+                              items: barangays.map((String barangay) {
+                                return DropdownMenuItem<String>(
+                                  value: barangay,
+                                  child: Text(barangay),
+                                );
+                              }).toList(),
+                              onChanged: (String? value) {
+                                setState(() {
+                                  selectedBarangay = value;
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                const Padding(
+                    padding: EdgeInsets.only(top: 5.0)), // Adjusted padding
 
-    // Text Field for Street Name
-    const Padding(
-      padding: EdgeInsets.only(left: 25),
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: Text('Street Name'),
-      ),
-    ),
-    SizedBox(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: TextField(
-          controller: streetController,
-          decoration: const InputDecoration(
-            labelText: 'Street',
-            border: OutlineInputBorder(),
-          ),
-        ),
-      ),
-    ),
-    const Padding(padding: EdgeInsets.only(top: 20.0)),
+                // Text Field for Street Name
+                const Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text('Street Name'),
+                  ),
+                ),
+                SizedBox(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: TextField(
+                      controller: streetController,
+                      decoration: const InputDecoration(
+                        labelText: 'Street',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.only(top: 20.0)),
 
-    // Dropdown for Risk Level
-    const Padding(
-      padding: EdgeInsets.only(left: 25),
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: Text('Risk Level'),
-      ),
-    ),
-    SizedBox(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 25.0),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: DropdownButton<String>(
-            value: selectedValue,
-            onChanged: (newValue) {
-              setState(() {
-                selectedValue = newValue!;
-              });
-            },
-            items: options.map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
-        ),
-      ),
-    )
-  ],
-),
+                // Dropdown for Risk Level
+                const Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text('Risk Level'),
+                  ),
+                ),
+                SizedBox(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 25.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: DropdownButton<String>(
+                        value: selectedValue,
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedValue = newValue!;
+                          });
+                        },
+                        items: options.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
 
             // Button to save marker details
             ElevatedButton(
@@ -170,6 +172,11 @@ Column(
                 Navigator.pop(context);
                 setState(() {});
               },
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)
+                )
+              ),
               child: const Text('Save Marker'),
             ),
             const Padding(padding: EdgeInsets.only(top: 50)),
@@ -239,12 +246,14 @@ Column(
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
       final selectedOption = selectedValue;
-      _saveMarkerToFirestore(selectedBarangay!, street, address, position, selectedOption);
+      _saveMarkerToFirestore(
+          selectedBarangay!, street, address, position, selectedOption);
     }
   }
 
   // Save marker details to Firestore
-  Future<void> _saveMarkerToFirestore(String barangay, String street, String address, LatLng coordinates, String selectedOption) async {
+  Future<void> _saveMarkerToFirestore(String barangay, String street,
+      String address, LatLng coordinates, String selectedOption) async {
     String first = "HA";
     var rng = Random();
     var code = rng.nextInt(90000) + 10000;
