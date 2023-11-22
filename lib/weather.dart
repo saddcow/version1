@@ -76,7 +76,7 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
                       
                     ),
                     Text(
-                      '${weatherData.month} - ${weatherData.date}',
+                      '${weatherData.month}  ${weatherData.date}',
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w400,
                         fontSize: 15
@@ -92,7 +92,7 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
                       ),
                     ),
                     Text(
-                      weatherData.weatherDescription,
+                      weatherData.weatherDescription.toUpperCase(),
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w400,
                         fontSize: 20
