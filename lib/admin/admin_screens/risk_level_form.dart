@@ -11,19 +11,38 @@ class RiskLevelForm extends StatefulWidget {
 
 class _RiskLevelFormState extends State<RiskLevelForm> {
   final TextEditingController _riskLevelController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _maxMMController = TextEditingController();
+  final TextEditingController _minMMController = TextEditingController();
+  final TextEditingController _colorController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   void _saveRiskLevelToFirestore() async {
-    String riskLevelName = _riskLevelController.text.trim();
+    String hazardLevelName = _riskLevelController.text.trim();
+    String description = _descriptionController.text.trim();
+    double max_mm = double.tryParse(_maxMMController.text) ?? 0.0;
+    double min_mm = double.tryParse(_minMMController.text) ?? 0.0;
+    String level_color = _colorController.text.trim();
 
-    if (riskLevelName.isNotEmpty) {
+    if (hazardLevelName.isNotEmpty &&
+        description.isNotEmpty &&
+        min_mm != null &&
+        max_mm != null &&
+        level_color.isNotEmpty) {
       try {
-        await _firestore.collection('Risk_Level').add({
-          'risk_level': riskLevelName,
+        await _firestore.collection('Flood_Risk_Level').add({
+          'Hazard_level': hazardLevelName,
+          'Description' : description,
+          'Min_mm' : min_mm,
+          'Max_mm' : max_mm,
+          'Color_level' : level_color
         });
 
         //clear aft saving
         _riskLevelController.clear();
+        _descriptionController.clear();
+        _maxMMController.clear();
+        _minMMController.clear();
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -37,7 +56,7 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please enter Risk Level.'),
+          content: Text('Please fill in all fields.'),
           duration: Duration(seconds: 3),
         )
       );
@@ -63,6 +82,21 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
             TextField(
               controller: _riskLevelController,
               decoration: const InputDecoration(labelText: 'Risk Level Name'),
+            ),
+            const SizedBox(height: 16.0,),
+            TextField(
+              controller: _minMMController,
+              decoration: const InputDecoration(labelText: 'Minimum mm of Rain'),
+            ),
+            const SizedBox(height: 16.0,),
+            TextField(
+              controller: _maxMMController,
+              decoration: const InputDecoration(labelText: 'Maximum mm of Rain'),
+            ),
+            const SizedBox(height: 16.0,),
+            TextField(
+              controller: _descriptionController,
+              decoration: const InputDecoration(labelText: 'Description'),
             ),
             const SizedBox(height: 16.0,),
             ElevatedButton(
