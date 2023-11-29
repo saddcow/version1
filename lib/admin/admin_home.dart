@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:side_navigation/side_navigation.dart';
+import 'package:try1/admin/admin_screens/account_management.dart';
 import 'package:try1/admin/admin_screens/barangay_screen.dart';
 import 'package:try1/admin/admin_screens/risk_level_screen.dart';
 import 'package:try1/auth_service.dart';
@@ -22,6 +23,9 @@ class _AdminHomeState extends State<AdminHome> {
       ),
       const Scaffold(
         body: RiskLevelScreen()
+      ),
+      const Scaffold(
+        body: AccountScreen()
       ),
       Scaffold(
         body: Container(
@@ -90,6 +94,10 @@ class _AdminHomeState extends State<AdminHome> {
                 SideNavigationBarItem(
                   icon: Icons.warning_amber, 
                   label: 'Risk Level'
+                ),
+                SideNavigationBarItem(
+                  icon: Icons.person, 
+                  label: 'User Accounts'
                 ),
                 SideNavigationBarItem(
                   icon: Icons.settings, 

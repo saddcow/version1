@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -21,9 +23,9 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
   }
 
   Future<List<WeatherData>> fetchWeatherData() async {
-    final String apiKey = '6378430bc45061aaccd4a566a86c25df';
-    final String baseUrl = 'https://api.openweathermap.org/data/2.5/forecast';
-    final String city = 'Naga';
+    const String apiKey = '6378430bc45061aaccd4a566a86c25df';
+    const String baseUrl = 'https://api.openweathermap.org/data/2.5/forecast';
+    const String city = 'Naga';
 
     final response = await http.get(Uri.parse('$baseUrl?q=$city&appid=$apiKey'));
 

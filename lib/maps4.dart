@@ -68,7 +68,7 @@ Column(
             future: _getBarangays(), // Fetch barangays from Firestore
             builder: (context, AsyncSnapshot<List<String>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
@@ -141,7 +141,7 @@ Column(
             future: _getRiskLevel(), // Fetch barangays from Firestore
             builder: (context, AsyncSnapshot<List<String>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {

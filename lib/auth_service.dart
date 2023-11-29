@@ -43,7 +43,7 @@ Widget checkUserType(BuildContext context, User user) {
     String userType = doc['User_Type'];
     if (userType == 'ADMIN') {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const AdminHome()));
-    } else if (userType == 'AUTHORITY') {
+    } else if (userType == 'CDRRMO') {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
     } else if (userType == 'COMCEN') {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ComcenHome()));
