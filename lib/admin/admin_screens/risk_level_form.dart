@@ -20,11 +20,6 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
   void _saveRiskLevelToFirestore() async {
-    if (!mounted) {
-      // The widget is disposed, do not proceed.
-      return;
-    }
-
     String hazardLevelName = _riskLevelController.text.trim();
     String description = _descriptionController.text.trim();
     double? max_mm = double.tryParse(_maxMMController.text);
@@ -48,7 +43,8 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
 
         });
 
-        //clear aft saving
+        if (mounted) {
+        // Clear fields after saving.
         _riskLevelController.clear();
         _descriptionController.clear();
         _maxMMController.clear();
@@ -58,23 +54,27 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
           const SnackBar(
             content: Text('Risk Level saved to Firestore!'),
             duration: Duration(seconds: 3),
-          )
-        );
-      } catch (b) {
-        print('Error saving to Firestore: $b');
-      }
-    } else {
-      //Will check if widget is still mounted before showing the snackbar message
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please fill in all fields.'),
-            duration: Duration(seconds: 3),
           ),
         );
       }
+    } catch (b) {
+      // Check if the widget is still mounted before updating the state.
+      if (mounted) {
+        print('Error saving to Firestore: $b');
+      }
+    }
+  } else {
+    // Check if the widget is still mounted before updating the state.
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all fields.'),
+          duration: Duration(seconds: 3),
+        ),
+      );
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {
