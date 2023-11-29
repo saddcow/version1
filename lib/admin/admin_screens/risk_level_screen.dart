@@ -36,6 +36,12 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
             return const Center(child: CircularProgressIndicator());
           }
           List<DocumentSnapshot> dataList = snapshot.data!.docs;
+          //sort ascending order of minMm
+          dataList.sort((a, b) {
+            double minMmA = a['Min_mm'] ?? 0.0;
+            double minMmB = b['Min_mm'] ?? 0.0;
+            return minMmA.compareTo(minMmB);
+          });
           return SingleChildScrollView(
             child: SizedBox(
               width: double.infinity,
@@ -54,6 +60,7 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
                   DataColumn(label: Text('Risk Level')),
                   DataColumn(label: Text('Minnimum mm of rain')),
                   DataColumn(label: Text('Maximum mm of rain')),
+                  DataColumn(label: Text('Color Level')),
                   DataColumn(label: Text('Description')),
                   //DataColumn(label: Text('Options')),
                 ],
@@ -65,6 +72,7 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
                       DataCell(Text(data['Hazard_level'] )),
                       DataCell(Text(minMm.toString())),
                       DataCell(Text(maxMm.toString())),
+                      DataCell(Text(data['Risk_level_color'] )),
                       DataCell(Text(data['Description'] )),
                       // DataCell(
                       //   TextButton(

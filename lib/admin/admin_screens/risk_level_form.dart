@@ -24,6 +24,7 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
     String description = _descriptionController.text.trim();
     double? max_mm = double.tryParse(_maxMMController.text);
     double? min_mm = double.tryParse(_minMMController.text);
+    String riskLevelColor = _colorController.text.trim();
     String first = "HVL";
     var rng = Random();
     var code = rng.nextInt(90000) + 10000;
@@ -32,15 +33,16 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
     if (hazardLevelName.isNotEmpty &&
         description.isNotEmpty &&
         min_mm != null &&
-        max_mm != null ) {
+        max_mm != null &&
+        riskLevelColor.isNotEmpty ) {
       try {
         await _firestore.collection('Flood_Risk_Level').doc(uniqueID).set({
           'Hazard_level': hazardLevelName,
           'Description' : description,
           'Min_mm' : min_mm,
           'Max_mm' : max_mm,
-          'Hazard_Level_ID' : uniqueID
-
+          'Hazard_Level_ID' : uniqueID,
+          'Risk_level_color' : riskLevelColor
         });
 
         if (mounted) {
@@ -49,6 +51,7 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
         _descriptionController.clear();
         _maxMMController.clear();
         _minMMController.clear();
+        _colorController.clear();
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -110,6 +113,11 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
             TextField(
               controller: _descriptionController,
               decoration: const InputDecoration(labelText: 'Description'),
+            ),
+            const SizedBox(height: 16.0,),
+            TextField(
+              controller: _colorController,
+              decoration: const InputDecoration(labelText: 'Color Level'),
             ),
             const SizedBox(height: 16.0,),
             ElevatedButton(
