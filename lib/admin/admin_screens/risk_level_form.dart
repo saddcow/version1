@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,26 +18,34 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
   final TextEditingController _minMMController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  
   void _saveRiskLevelToFirestore() async {
+    if (!mounted) {
+      // The widget is disposed, do not proceed.
+      return;
+    }
+
     String hazardLevelName = _riskLevelController.text.trim();
     String description = _descriptionController.text.trim();
-    double max_mm = double.tryParse(_maxMMController.text) ?? 0.0;
-    double min_mm = double.tryParse(_minMMController.text) ?? 0.0;
-    String level_color = _colorController.text.trim();
+    double? max_mm = double.tryParse(_maxMMController.text);
+    double? min_mm = double.tryParse(_minMMController.text);
+    String first = "HVL";
+    var rng = Random();
+    var code = rng.nextInt(90000) + 10000;
+    String uniqueID = first + code.toString();
 
     if (hazardLevelName.isNotEmpty &&
         description.isNotEmpty &&
         min_mm != null &&
-        max_mm != null &&
-        level_color.isNotEmpty) {
+        max_mm != null ) {
       try {
-        await _firestore.collection('Flood_Risk_Level').add({
+        await _firestore.collection('Flood_Risk_Level').doc(uniqueID).set({
           'Hazard_level': hazardLevelName,
           'Description' : description,
           'Min_mm' : min_mm,
           'Max_mm' : max_mm,
-          'Color_level' : level_color
+          'Hazard_Level_ID' : uniqueID
+
         });
 
         //clear aft saving
@@ -54,12 +64,15 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
         print('Error saving to Firestore: $b');
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill in all fields.'),
-          duration: Duration(seconds: 3),
-        )
-      );
+      //Will check if widget is still mounted before showing the snackbar message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please fill in all fields.'),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
     }
   }
 

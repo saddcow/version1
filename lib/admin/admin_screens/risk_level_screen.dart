@@ -27,7 +27,7 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
         automaticallyImplyLeading: false,
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: _firestore.collection('Risk_Level').snapshots(),
+        stream: _firestore.collection('Flood_Risk_Level').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Text('Something went wrong');
@@ -52,23 +52,31 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
                 dividerThickness: 3,
                 columns: const [
                   DataColumn(label: Text('Risk Level')),
-                  DataColumn(label: Text('Options')),
+                  DataColumn(label: Text('Minnimum mm of rain')),
+                  DataColumn(label: Text('Maximum mm of rain')),
+                  DataColumn(label: Text('Description')),
+                  //DataColumn(label: Text('Options')),
                 ],
                 rows: dataList.map((data) {
+                  double minMm = data['Min_mm'] ?? 0.0;
+                  double maxMm = data['Max_mm'] ?? 0.0;
                   return DataRow(
                     cells: [
-                      DataCell(Text(data['risk_level'])),
-                      DataCell(
-                        TextButton(
-                          onPressed: () {
-                            deleteDocument(data.id); // Use 'id' instead of 'risk_level'
-                          },
-                          child: const Text(
-                            'Delete',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        ),
-                      ),
+                      DataCell(Text(data['Hazard_level'] )),
+                      DataCell(Text(minMm.toString())),
+                      DataCell(Text(maxMm.toString())),
+                      DataCell(Text(data['Description'] )),
+                      // DataCell(
+                      //   TextButton(
+                      //     onPressed: () {
+                      //       deleteDocument(data.id); // Use 'id' instead of 'risk_level'
+                      //     },
+                      //     child: const Text(
+                      //       'Delete',
+                      //       style: TextStyle(color: Colors.red),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   );
                 }).toList(),
