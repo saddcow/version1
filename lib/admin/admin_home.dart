@@ -58,7 +58,12 @@ class _AdminHomeState extends State<AdminHome> {
                             AuthService().signout();
                             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginPage()));
                           }, 
-                        child: const Center(child: Text('Sign Out'),),
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)
+                            )
+                          ),
+                          child: const Center(child: Text('Sign Out'),),
                         ),
                       ),
                     ),

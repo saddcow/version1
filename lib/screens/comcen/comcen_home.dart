@@ -51,7 +51,7 @@ class _ComcenHomeState extends State<ComcenHome> {
                   children: [
                     Expanded(
                       child: SizedBox(
-                        height: 680,
+                        height: 620,
                         width: 1000,
                         child: MainMapComcen(),
                       ),
@@ -72,7 +72,7 @@ class _ComcenHomeState extends State<ComcenHome> {
                             height: 250,
                               child: Padding(padding: const EdgeInsets.all(16),
                                 child: Card(
-                                  color: hexStringToColor("#86BBD8"),
+                                  color: hexStringToColor("#F6AE2D"),
                                   child: const Padding(padding: EdgeInsetsDirectional.only(top: 30),
                                     child: WeatherForecastWidget(),
                                   ),
@@ -99,7 +99,7 @@ class _ComcenHomeState extends State<ComcenHome> {
       ),
       Scaffold(
         body: Container(
-          color: Colors.white,
+          color: hexStringToColor("#33658A"),
           child: Center(
             child: Card(
               elevation: 50,

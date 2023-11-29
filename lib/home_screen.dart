@@ -73,7 +73,7 @@ class _HomeState extends State<Home> {
                   children: [
                     Expanded(
                       child: SizedBox(
-                        height: 500,
+                        height: 650,
                         width: 1000,
                         child: MainMap(),
                       ),

@@ -58,23 +58,23 @@ class _BarangayScreenState extends State<BarangayScreen> {
                       dividerThickness: 3,
                       columns: const [
                         DataColumn(label: Text('Barangay')),
-                        DataColumn(label: Text('Options')),
+                        //DataColumn(label: Text('Options')),
                       ],
                       rows: dataList.map((data) {
                         return DataRow(
                           cells: [
                             DataCell(Text(data['name'])),
-                            DataCell(
-                              TextButton(
-                                onPressed: () {
-                                  deleteDocument(data.id);
-                                },
-                                child: const Text(
-                                  'Delete',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              ),
-                            ),
+                            // DataCell(
+                            //   TextButton(
+                            //     onPressed: () {
+                            //       deleteDocument(data.id);
+                            //     },
+                            //     child: const Text(
+                            //       'Delete',
+                            //       style: TextStyle(color: Colors.red),
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         );
                       }).toList(),

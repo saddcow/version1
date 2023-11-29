@@ -68,7 +68,7 @@ Column(
             future: _getBarangays(), // Fetch barangays from Firestore
             builder: (context, AsyncSnapshot<List<String>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
+                return CircularProgressIndicator();
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
@@ -100,80 +100,86 @@ Column(
       ),
     ),
 
-    const Padding(padding: EdgeInsets.only(top: 5.0)), // Adjusted padding
+                const Padding(
+                    padding: EdgeInsets.only(top: 5.0)), // Adjusted padding
 
-    // Text Field for Street Name
-    const Padding(
-      padding: EdgeInsets.only(left: 25),
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: Text('Street Name'),
-      ),
-    ),
-    SizedBox(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: TextField(
-          controller: streetController,
-          decoration: const InputDecoration(
-            labelText: 'Street',
-            border: OutlineInputBorder(),
-          ),
-        ),
-      ),
-    ),
-    const Padding(padding: EdgeInsets.only(top: 20.0)),
-
-    // Dropdown for Risk Level
-    const Padding(
-      padding: EdgeInsets.only(left: 25),
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: Text('Risk Level'),
-      ),
-    ),
-
-      SizedBox(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Container(
-          child: FutureBuilder(
-            future: _getRiskLevel(), // Fetch barangays from Firestore
-            builder: (context, AsyncSnapshot<List<String>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                List<String> riskLevel = snapshot.data!;
-                riskLevel.sort();
-                return DropdownButtonFormField<String>(
-                  value: selectedRiskLevel,
-                  isDense: true, // Reduces the vertical size of the dropdown
-                  menuMaxHeight: 200, // Set the maximum height of the dropdown menu
-                  items: riskLevel.map((String risklvl) {
-                    return DropdownMenuItem<String>(
-                      value: risklvl,
-                      child: Text(risklvl),
-                    );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    setState(() {
-                      selectedRiskLevel = value;
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                // Text Field for Street Name
+                const Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text('Street Name'),
                   ),
-                );
-              }
-            },
-          ),
-        ),
-      ),
-    ),
-  ],
-),
+                ),
+                SizedBox(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: TextField(
+                      controller: streetController,
+                      decoration: const InputDecoration(
+                        labelText: 'Street',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.only(top: 20.0)),
+
+                // Dropdown for Risk Level
+                const Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text('Risk Level'),
+                  ),
+                ),
+
+                SizedBox(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                      child: FutureBuilder(
+                        future:
+                            _getRiskLevel(), // Fetch barangays from Firestore
+                        builder:
+                            (context, AsyncSnapshot<List<String>> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            List<String> riskLevel = snapshot.data!;
+                            riskLevel.sort();
+                            return DropdownButtonFormField<String>(
+                              value: selectedRiskLevel,
+                              isDense:
+                                  true, // Reduces the vertical size of the dropdown
+                              menuMaxHeight:
+                                  200, // Set the maximum height of the dropdown menu
+                              items: riskLevel.map((String risklvl) {
+                                return DropdownMenuItem<String>(
+                                  value: risklvl,
+                                  child: Text(risklvl),
+                                );
+                              }).toList(),
+                              onChanged: (String? value) {
+                                setState(() {
+                                  selectedRiskLevel = value;
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
 
             // Button to save marker details
             ElevatedButton(
@@ -238,11 +244,13 @@ Column(
     }
   }
 
-    Future<List<String>> _getRiskLevel() async {
+  Future<List<String>> _getRiskLevel() async {
     try {
       final QuerySnapshot querySnapshot =
           await FirebaseFirestore.instance.collection('Risk_Level').get();
-      return querySnapshot.docs.map((doc) => doc['risk_level'] as String).toList();
+      return querySnapshot.docs
+          .map((doc) => doc['risk_level'] as String)
+          .toList();
     } catch (e) {
       print('Error fetching barangays: $e');
       return [];
@@ -262,12 +270,14 @@ Column(
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
       final RiskLevel = selectedRiskLevel;
-      _saveMarkerToFirestore(selectedBarangay!, street, address, position, RiskLevel!);
+      _saveMarkerToFirestore(
+          selectedBarangay!, street, address, position, RiskLevel!);
     }
   }
 
   // Save marker details to Firestore
-  Future<void> _saveMarkerToFirestore(String barangay, String street, String address, LatLng coordinates, String selectedRiskLevel) async {
+  Future<void> _saveMarkerToFirestore(String barangay, String street,
+      String address, LatLng coordinates, String selectedRiskLevel) async {
     String first = "HA";
     var rng = Random();
     var code = rng.nextInt(90000) + 10000;
