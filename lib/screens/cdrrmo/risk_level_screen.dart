@@ -1,7 +1,6 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:try1/utils/color_utils.dart';
 
 class RiskLvlCard extends StatefulWidget {
@@ -32,11 +31,16 @@ class _RiskLvlCardState extends State<RiskLvlCard> {
             String description = document['Description'].toString();
 
             return ListTile(
-              title: Text(riskLevel),
+              title: Text(
+                riskLevel,
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w600
+                  ),
+                ),
               subtitle: Text(description),
             );
           }).toList();
-
+  
           return SingleChildScrollView(
             child: Card(
               color: hexStringToColor("#86BBD8"),

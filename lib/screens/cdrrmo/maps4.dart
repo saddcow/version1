@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -51,64 +52,77 @@ class _MappState extends State<Mapp> {
             const Padding(padding: EdgeInsets.only(top: 20.0)),
 
             // Dropdown for Barangay Name
-Column(
-  children: [
-    const Padding(
-      padding: EdgeInsets.only(left: 25),
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: Text('Barangay Name'),
-      ),
-    ),
-    SizedBox(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Container(
-          child: FutureBuilder(
-            future: _getBarangays(), // Fetch barangays from Firestore
-            builder: (context, AsyncSnapshot<List<String>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                List<String> barangays = snapshot.data!;
-                barangays.sort();
-                return DropdownButtonFormField<String>(
-                  value: selectedBarangay,
-                  isDense: true, // Reduces the vertical size of the dropdown
-                  menuMaxHeight: 200, // Set the maximum height of the dropdown menu
-                  items: barangays.map((String barangay) {
-                    return DropdownMenuItem<String>(
-                      value: barangay,
-                      child: Text(barangay),
-                    );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    setState(() {
-                      selectedBarangay = value;
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Barangay Name',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w700
+                      ),
+                    ),
                   ),
-                );
-              }
-            },
-          ),
-        ),
-      ),
-    ),
+                ),
+                SizedBox(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: FutureBuilder(
+                      future:
+                          _getBarangays(), // Fetch barangays from Firestore
+                      builder:
+                          (context, AsyncSnapshot<List<String>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          List<String> barangays = snapshot.data!;
+                          barangays.sort();
+                          return DropdownButtonFormField<String>(
+                            value: selectedBarangay,
+                            isDense:
+                                true, // Reduces the vertical size of the dropdown
+                            menuMaxHeight:
+                                200, // Set the maximum height of the dropdown menu
+                            items: barangays.map((String barangay) {
+                              return DropdownMenuItem<String>(
+                                value: barangay,
+                                child: Text(barangay),
+                              );
+                            }).toList(),
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedBarangay = value;
+                              });
+                            },
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ),
 
                 const Padding(
                     padding: EdgeInsets.only(top: 5.0)), // Adjusted padding
 
                 // Text Field for Street Name
-                const Padding(
-                  padding: EdgeInsets.only(left: 25),
+                Padding(
+                  padding: const EdgeInsets.only(left: 25),
                   child: Align(
                     alignment: Alignment.topLeft,
-                    child: Text('Street Name'),
+                    child: Text(
+                      'Street Name',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w700
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -126,55 +140,58 @@ Column(
                 const Padding(padding: EdgeInsets.only(top: 20.0)),
 
                 // Dropdown for Risk Level
-                const Padding(
-                  padding: EdgeInsets.only(left: 25),
+                Padding(
+                  padding: const EdgeInsets.only(left: 25),
                   child: Align(
                     alignment: Alignment.topLeft,
-                    child: Text('Risk Level'),
+                    child: Text(
+                      'Risk Level',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w700
+                      ),
+                    ),
                   ),
                 ),
 
                 SizedBox(
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Container(
-                      child: FutureBuilder(
-                        future:
-                            _getRiskLevel(), // Fetch barangays from Firestore
-                        builder:
-                            (context, AsyncSnapshot<List<String>> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          } else {
-                            List<String> riskLevel = snapshot.data!;
-                            riskLevel.sort();
-                            return DropdownButtonFormField<String>(
-                              value: selectedRiskLevel,
-                              isDense:
-                                  true, // Reduces the vertical size of the dropdown
-                              menuMaxHeight:
-                                  200, // Set the maximum height of the dropdown menu
-                              items: riskLevel.map((String risklvl) {
-                                return DropdownMenuItem<String>(
-                                  value: risklvl,
-                                  child: Text(risklvl),
-                                );
-                              }).toList(),
-                              onChanged: (String? value) {
-                                setState(() {
-                                  selectedRiskLevel = value;
-                                });
-                              },
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                              ),
-                            );
-                          }
-                        },
-                      ),
+                    child: FutureBuilder(
+                      future:
+                          _getRiskLevel(), // Fetch barangays from Firestore
+                      builder:
+                          (context, AsyncSnapshot<List<String>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          List<String> riskLevel = snapshot.data!;
+                          riskLevel.sort();
+                          return DropdownButtonFormField<String>(
+                            value: selectedRiskLevel,
+                            isDense:
+                                true, // Reduces the vertical size of the dropdown
+                            menuMaxHeight:
+                                200, // Set the maximum height of the dropdown menu
+                            items: riskLevel.map((String risklvl) {
+                              return DropdownMenuItem<String>(
+                                value: risklvl,
+                                child: Text(risklvl),
+                              );
+                            }).toList(),
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedRiskLevel = value;
+                              });
+                            },
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
+                          );
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -247,9 +264,9 @@ Column(
   Future<List<String>> _getRiskLevel() async {
     try {
       final QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('Risk_Level').get();
+          await FirebaseFirestore.instance.collection('Flood_Risk_Level').get();
       return querySnapshot.docs
-          .map((doc) => doc['risk_level'] as String)
+          .map((doc) => doc['Hazard_level'] as String)
           .toList();
     } catch (e) {
       print('Error fetching barangays: $e');
