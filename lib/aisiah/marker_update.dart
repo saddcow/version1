@@ -130,11 +130,16 @@ class _MappUpdateState extends State<MappUpdate> {
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 20.0)),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 25),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text('Risk Level'),
+                      child: Text(
+                        'Risk Level',
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.w700
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(
