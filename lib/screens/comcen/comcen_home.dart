@@ -8,7 +8,7 @@ import 'package:try1/screens/comcen/main_map_comcen.dart';
 import 'package:try1/screens/comcen/manage_comcen_screen.dart';
 import 'package:try1/screens/login_screen.dart';
 import 'package:try1/utils/color_utils.dart';
-import 'package:try1/weather.dart';
+import 'package:try1/screens/weather_src/weather.dart';
 
 class ComcenHome extends StatefulWidget {
   const ComcenHome({super.key});

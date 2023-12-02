@@ -7,13 +7,13 @@ import 'package:try1/aisiah/check_risk.dart';
 import 'package:try1/aisiah/precipitation.dart';
 import 'package:try1/auth_service.dart';
 import 'package:try1/markers/main_map.dart';
-import 'package:try1/screens/current_weather.dart';
+import 'package:try1/screens/weather_src/current_weather.dart';
 import 'package:try1/screens/login_screen.dart';
-import 'package:try1/screens/manage_screen.dart';
-import 'package:try1/screens/reports.dart';
-import 'package:try1/screens/risk_level_screen.dart';
+import 'package:try1/screens/cdrrmo/manage_screen.dart';
+import 'package:try1/screens/cdrrmo/reports.dart';
+import 'package:try1/screens/cdrrmo/risk_level_screen.dart';
 import 'package:try1/utils/color_utils.dart';
-import 'package:try1/weather.dart';
+import 'package:try1/screens/weather_src/weather.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);

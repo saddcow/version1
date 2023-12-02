@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:try1/admin/admin_home.dart';
-import 'package:try1/home_screen.dart';
+import 'package:try1/screens/cdrrmo/home_screen.dart';
 import 'package:try1/screens/comcen/comcen_home.dart';
 import 'package:try1/screens/login_screen.dart';
 
