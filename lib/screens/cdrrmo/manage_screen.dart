@@ -162,7 +162,7 @@ class _ManageState extends State<Manage> {
   }
 
   Future<void> _fetchDataFromFirestore() async {
-    QuerySnapshot querySnapshot = await _firestore.collection('markers').get();
+    QuerySnapshot querySnapshot = await _firestore.collection('markers').orderBy('timestamp', descending: true).get();
 
     setState(() {
       _dataList = querySnapshot.docs;
