@@ -43,13 +43,9 @@ class _MappUpdateState extends State<MappUpdate> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Edit Flood Risk Area',
-          style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w400,
-              fontSize: 25
-          )
-        ),
+        title: Text('Edit Flood Risk Area',
+            style:
+                GoogleFonts.roboto(fontWeight: FontWeight.w400, fontSize: 25)),
       ),
       body: SizedBox(
         child: SingleChildScrollView(
@@ -70,11 +66,16 @@ class _MappUpdateState extends State<MappUpdate> {
               const Padding(padding: EdgeInsets.only(top: 20.0)),
               Column(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 25),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text('Barangay Name'),
+                      child: Text(
+                        'Barangay Name',
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.w700
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -82,8 +83,10 @@ class _MappUpdateState extends State<MappUpdate> {
                       padding: const EdgeInsets.all(20.0),
                       child: DropdownButtonFormField<String>(
                         value: selectedBarangay,
-                        isDense: true, // Reduces the vertical size of the dropdown
-                        menuMaxHeight: 200, // Set the maximum height of the dropdown menu
+                        isDense:
+                            true, // Reduces the vertical size of the dropdown
+                        menuMaxHeight:
+                            200, // Set the maximum height of the dropdown menu
                         items: barangayOptions.map((String barangay) {
                           return DropdownMenuItem<String>(
                             value: barangay,
@@ -102,11 +105,16 @@ class _MappUpdateState extends State<MappUpdate> {
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 20.0)),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 25),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text('Street Name'),
+                      child: Text(
+                        'Street Name',
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.w700
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -122,53 +130,61 @@ class _MappUpdateState extends State<MappUpdate> {
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 20.0)),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 25),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text('Risk Level'),
+                      child: Text(
+                        'Risk Level',
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.w700
+                        ),
+                      ),
                     ),
                   ),
-                      SizedBox(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Container(
-          child: FutureBuilder(
-            future: _getRiskLevel(), // Fetch barangays from Firestore
-            builder: (context, AsyncSnapshot<List<String>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                List<String> riskLevel = snapshot.data!;
-                riskLevel.sort();
-                return DropdownButtonFormField<String>(
-                  value: selectedRiskLevel,
-                  isDense: true, // Reduces the vertical size of the dropdown
-                  menuMaxHeight: 200, // Set the maximum height of the dropdown menu
-                  items: riskLevel.map((String risklvl) {
-                    return DropdownMenuItem<String>(
-                      value: risklvl,
-                      child: Text(risklvl),
-                    );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    setState(() {
-                      selectedRiskLevel = value;
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                  SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: FutureBuilder(
+                        future:
+                            _getRiskLevel(), // Fetch barangays from Firestore
+                        builder:
+                            (context, AsyncSnapshot<List<String>> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            List<String> riskLevel = snapshot.data!;
+                            riskLevel.sort();
+                            return DropdownButtonFormField<String>(
+                              value: selectedRiskLevel,
+                              isDense:
+                                  true, // Reduces the vertical size of the dropdown
+                              menuMaxHeight:
+                                  200, // Set the maximum height of the dropdown menu
+                              items: riskLevel.map((String risklvl) {
+                                return DropdownMenuItem<String>(
+                                  value: risklvl,
+                                  child: Text(risklvl),
+                                );
+                              }).toList(),
+                              onChanged: (String? value) {
+                                setState(() {
+                                  selectedRiskLevel = value;
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
                   ),
-                );
-              }
-            },
-          ),
-        ),
-      ),
-    ),
-  ],
+                ],
               ),
               ElevatedButton(
                 onPressed: () {
@@ -176,10 +192,8 @@ class _MappUpdateState extends State<MappUpdate> {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)
-                  )
-                ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16))),
                 child: const Text('Save Marker'),
               ),
               const Padding(padding: EdgeInsets.only(top: 50)),
@@ -208,11 +222,13 @@ class _MappUpdateState extends State<MappUpdate> {
     });
   }
 
-      Future<List<String>> _getRiskLevel() async {
+  Future<List<String>> _getRiskLevel() async {
     try {
       final QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('Risk_Level').get();
-      return querySnapshot.docs.map((doc) => doc['risk_level'] as String).toList();
+          await FirebaseFirestore.instance.collection('Flood_Risk_Level').get();
+      return querySnapshot.docs
+          .map((doc) => doc['Hazard_level'] as String)
+          .toList();
     } catch (e) {
       print('Error fetching barangays: $e');
       return [];
@@ -243,7 +259,8 @@ class _MappUpdateState extends State<MappUpdate> {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
       final selectedOption = selectedRiskLevel;
-      _saveMarkerToFirestore(id, selectedBarangay!, street, address, position, selectedOption!);
+      _saveMarkerToFirestore(
+          id, selectedBarangay!, street, address, position, selectedOption!);
     }
   }
 
@@ -252,9 +269,10 @@ class _MappUpdateState extends State<MappUpdate> {
     try {
       final QuerySnapshot querySnapshot =
           await FirebaseFirestore.instance.collection('Barangay').get();
-      
-      List<String> unsortedOptions = querySnapshot.docs.map((doc) => doc['name'] as String).toList();
-      
+
+      List<String> unsortedOptions =
+          querySnapshot.docs.map((doc) => doc['name'] as String).toList();
+
       // Sort the barangayOptions alphabetically
       unsortedOptions.sort();
 
@@ -264,11 +282,10 @@ class _MappUpdateState extends State<MappUpdate> {
     } catch (e) {
       print('Error fetching barangay options: $e');
     }
-  
   }
 
-  Future<void> _saveMarkerToFirestore(
-      String id, String barangay, String street, String address, LatLng coordinates, String selectedOption) async {
+  Future<void> _saveMarkerToFirestore(String id, String barangay, String street,
+      String address, LatLng coordinates, String selectedOption) async {
     try {
       await FirebaseFirestore.instance.collection('markers').doc(id).update({
         'uniqueID': id,

@@ -49,7 +49,7 @@ class _RoadRiskManageState extends State<RoadRiskManage> {
                   child: SizedBox(
                     width: double.infinity,
                     child: DataTable(
-                      columnSpacing: 10,
+                      columnSpacing: 2,
                       headingTextStyle: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -62,6 +62,9 @@ class _RoadRiskManageState extends State<RoadRiskManage> {
                         DataColumn(label: Text("Address")),
                         DataColumn(label: Text("Barangay")),
                         DataColumn(label: Text("Street")),
+                        DataColumn(label: Text("Landmark")),
+                        DataColumn(label: Text("Coordinates")),
+                        DataColumn(label: Text("Description")),
                         DataColumn(label: Text("Options")),
                       ],
                       rows: _dataList.map(
@@ -70,6 +73,12 @@ class _RoadRiskManageState extends State<RoadRiskManage> {
                             DataCell(Text(document["address"] ?? 'N/A')),
                             DataCell(Text(document["barangay"])),
                             DataCell(Text(document["street"])),
+                            DataCell(Text(document["landmark"])),
+                            DataCell(Text(
+                              "${document["coordinates"].latitude}, ${document["coordinates"].longitude}"
+                            )
+                            ),
+                            DataCell(Text(document["description"])),
                             DataCell(
                               TextButton(
                                 onPressed: () {

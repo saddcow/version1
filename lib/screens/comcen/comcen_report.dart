@@ -65,39 +65,54 @@ class _ReportsComState extends State<ReportsCom> {
   }
 
   Widget buildDataTable(List dataList) {
-    return DataTable(
-      columnSpacing: 30,
-      headingTextStyle: const TextStyle(
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-      headingRowColor: MaterialStateProperty.resolveWith(
-        (states) => Colors.black,
-      ),
-      showBottomBorder: true,
-      dividerThickness: 3,
-      columns: const [
-        DataColumn(label: Text('Date and Time')),
-        DataColumn(label: Text('Barangay')),
-        DataColumn(label: Text('Street')),
-        DataColumn(label: Text('User')),
-        DataColumn(label: Text('Report Description')),
-        DataColumn(label: Text('Report Hazard Type')),
-        DataColumn(label: Text('Report Status')),
-        DataColumn(label: Text('Verification Options')),
-      ],
-      rows: dataList.map((data) {
-        return DataRow(
-          cells: [
-            DataCell(
-              Text(
+  return DataTable(
+    columnSpacing: 10,
+    headingTextStyle: const TextStyle(
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+    ),
+    headingRowColor: MaterialStateProperty.resolveWith(
+      (states) => Colors.black,
+    ),
+    showBottomBorder: true,
+    dividerThickness: 3,
+    columns: const [
+      DataColumn(label: Text('Date and Time')),
+      DataColumn(label: Text('Barangay')),
+      DataColumn(label: Text('Street')),
+      DataColumn(label: Text('User')),
+      DataColumn(label: Text('Report Description')),
+      DataColumn(label: Text('Report Hazard Type')),
+      DataColumn(label: Text('Report Status')),
+      DataColumn(label: Text('Verification Options')),
+    ],
+    rows: dataList.map((data) {
+      return DataRow(
+        cells: [
+          DataCell(
+            Container(
+              constraints: BoxConstraints(maxWidth: 200), // Adjust the maxWidth as needed
+              child: Text(
                 formatTimestamp(data['Timestamp']),
               ),
             ),
-            DataCell(Text(data['Barangay'])),
-            DataCell(Text(data['Street'])),
-            DataCell(
-              FutureBuilder<String>(
+          ),
+          DataCell(
+            Container(
+              constraints: BoxConstraints(maxWidth: 200),
+              child: Text(data['Barangay']),
+            ),
+          ),
+          DataCell(
+            Container(
+              constraints: BoxConstraints(maxWidth: 200),
+              child: Text(data['Street']),
+            ),
+          ),
+          DataCell(
+            Container(
+              constraints: BoxConstraints(maxWidth: 200),
+              child: FutureBuilder<String>(
                 future: getUsername(data['User_ID']),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -110,17 +125,36 @@ class _ReportsComState extends State<ReportsCom> {
                 },
               ),
             ),
-            DataCell(Text(data['Report_Description'])),
-            DataCell(Text(data['Report_Hazard_Type'])),
-            DataCell(Text(data['Hazard_Status'])),
-            DataCell(
-              DropdownCell(user_ID: data['Report_ID']),
-            )
-          ],
-        );
-      }).toList(),
-    );
-  }
+          ),
+          DataCell(
+            Container(
+              constraints: BoxConstraints(maxWidth: 200),
+              child: Text(data['Report_Description']),
+            ),
+          ),
+          DataCell(
+            Container(
+              constraints: BoxConstraints(maxWidth: 200),
+              child: Text(data['Report_Hazard_Type']),
+            ),
+          ),
+          DataCell(
+            Container(
+              constraints: BoxConstraints(maxWidth: 200),
+              child: Text(data['Hazard_Status']),
+            ),
+          ),
+          DataCell(
+            Container(
+              constraints: BoxConstraints(maxWidth: 200),
+              child: DropdownCell(user_ID: data['Report_ID']),
+            ),
+          )
+        ],
+      );
+    }).toList(),
+  );
+}
 
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();

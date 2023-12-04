@@ -19,6 +19,8 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
 
   List<Marker> myMarker = [];
   TextEditingController streetController = TextEditingController();
+  TextEditingController landmarkController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
   String? selectedBarangay;
 
   @override
@@ -65,22 +67,27 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
               // Dropdown for Barangay Name
               Column(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 25),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text('Barangay Name'),
+                      child: Text(
+                        'Barangay Name',
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.w700
+                        ),
+                      ),
                     ),
                   ),
+
                   SizedBox(
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: Container(
                         child: FutureBuilder(
                           future: _getBarangays(), // Fetch barangays from Firestore
                           builder: (context, AsyncSnapshot<List<String>> snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
-                              return CircularProgressIndicator();
+                              return const Center(child: CircularProgressIndicator());
                             } else if (snapshot.hasError) {
                               return Text('Error: ${snapshot.error}');
                             } else {
@@ -108,17 +115,22 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
                           },
                         ),
                       ),
-                    ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 20.0)),
 
-                  const Padding(
-                    padding: EdgeInsets.only(left: 25),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text('Street Name'),
+                      child: Text(
+                        'Street Name',
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.w700
+                        ),
+                      ),
                     ),
                   ),
+
                   SizedBox(
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
@@ -132,8 +144,61 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 20.0)),
+
+                  Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Landmark',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w700
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: TextField(
+                      controller: landmarkController,
+                      decoration: const InputDecoration(
+                        labelText: 'Landmark',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.only(top: 20.0)),
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 25),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Description',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w700
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: TextField(
+                      controller: descriptionController,
+                      decoration: const InputDecoration(
+                        labelText: 'Description',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.only(top: 20.0)),
                 ],
               ),
+
               ElevatedButton(
                 onPressed: () {
                   _saveMarkerDetails(id);
@@ -145,7 +210,8 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
                   )
                 ),
                 child: const Text('Save Marker'),
-              )
+              ),
+              const Padding(padding: EdgeInsets.only(top: 50)),
             ],
           ),
         ),
@@ -200,6 +266,8 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
 
   void _saveMarkerDetails(String id) {
     final String street = streetController.text;
+    final String description = descriptionController.text;
+    final String landmark = landmarkController.text;
 
     if (selectedBarangay == null || street.isEmpty) {
       print('Please select a Barangay and enter Street');
@@ -209,7 +277,7 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
     for (final marker in myMarker) {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
-      _saveMarkerToFirestore(id, selectedBarangay!, street, address, position);
+      _saveMarkerToFirestore(id, selectedBarangay!, street, address, description, landmark, position);
     }
   }
 
@@ -218,6 +286,8 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
     String barangay,
     String street,
     String address,
+    String description,
+    String landmark,
     LatLng coordinates,
   ) async {
     try {
@@ -226,6 +296,8 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
         'barangay': barangay,
         'street': street,
         'address': address,
+        'landmark': landmark,
+        'description' : description,
         'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
       });
       print('Marker details saved to Firestore');

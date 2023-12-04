@@ -7,8 +7,9 @@ import 'package:try1/screens/comcen/comcen_report.dart';
 import 'package:try1/screens/comcen/main_map_comcen.dart';
 import 'package:try1/screens/comcen/manage_comcen_screen.dart';
 import 'package:try1/screens/login_screen.dart';
+import 'package:try1/screens/weather_src/current_weather.dart';
 import 'package:try1/utils/color_utils.dart';
-import 'package:try1/weather.dart';
+import 'package:try1/screens/weather_src/weather.dart';
 
 class ComcenHome extends StatefulWidget {
   const ComcenHome({super.key});
@@ -71,11 +72,23 @@ class _ComcenHomeState extends State<ComcenHome> {
                             width: double.infinity,
                             height: 250,
                               child: Padding(padding: const EdgeInsets.all(16),
-                                child: Card(
-                                  color: hexStringToColor("#F6AE2D"),
-                                  child: const Padding(padding: EdgeInsetsDirectional.only(top: 30),
-                                    child: WeatherForecastWidget(),
-                                  ),
+                                child: Row(
+                                  children: [
+                                    Card(
+                                      color: hexStringToColor('#F26419'),
+                                      child: const Padding(padding: EdgeInsets.only(top: 10),
+                                        child: CurrentWeatherCard(),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Card(
+                                        color: hexStringToColor("#F6AE2D"),
+                                        child: const Padding(padding: EdgeInsetsDirectional.only(top: 30),
+                                          child: WeatherForecastWidget(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                           ),

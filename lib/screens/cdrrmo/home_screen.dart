@@ -7,11 +7,13 @@ import 'package:try1/aisiah/check_risk.dart';
 import 'package:try1/aisiah/precipitation.dart';
 import 'package:try1/auth_service.dart';
 import 'package:try1/markers/main_map.dart';
+import 'package:try1/screens/weather_src/current_weather.dart';
 import 'package:try1/screens/login_screen.dart';
-import 'package:try1/screens/manage_screen.dart';
-import 'package:try1/screens/reports.dart';
+import 'package:try1/screens/cdrrmo/manage_screen.dart';
+import 'package:try1/screens/cdrrmo/reports.dart';
+import 'package:try1/screens/cdrrmo/risk_level_screen.dart';
 import 'package:try1/utils/color_utils.dart';
-import 'package:try1/weather.dart';
+import 'package:try1/screens/weather_src/weather.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -93,14 +95,28 @@ class _HomeState extends State<Home> {
                             width: double.infinity,
                             height: 250,
                               child: Padding(padding: const EdgeInsets.all(16),
-                                child: Card(
-                                  color: hexStringToColor("#F6AE2D"),
-                                  child: const Padding(padding: EdgeInsetsDirectional.only(top: 20),
-                                    child: WeatherForecastWidget(),
-                                  ),
+                                child: Row(
+                                  children: [
+                                    Card(
+                                      color: hexStringToColor('#F26419'),
+                                      child: const Padding(padding: EdgeInsets.only(top: 10),
+                                        child: CurrentWeatherCard(),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Card(
+                                        color: hexStringToColor("#F6AE2D"),
+                                        child: const Padding(padding: EdgeInsetsDirectional.only(top: 20),
+                                          child: WeatherForecastWidget(),
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
                           ),
+
+                          //Risk Level Description
                           Padding(padding: const EdgeInsets.all(16),
                             child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -112,7 +128,7 @@ class _HomeState extends State<Home> {
                                   color: hexStringToColor("#86BBD8"),
                                   elevation: 4,
                                   child: Column(
-                                    children: <Widget> [
+                                    children: [
                                       Padding(
                                       padding: const EdgeInsets.all(16.0),
                                         child: Text(
@@ -124,63 +140,11 @@ class _HomeState extends State<Home> {
                                         ),
                                       ),
                                       const Divider(),
-                                      ListTile(
-                                        title: Text(
-                                          'Red Marker',
-                                          style: GoogleFonts.roboto(
-                                            color: Colors.red,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w400
-                                          ),
-                                        ),
-                                        subtitle: (
-                                          Text(
-                                            'More than 30 mm rain observed in 1 hour and expected to continue. Serious flooding is expected in these low-lying areas.',
-                                            style: GoogleFonts.roboto(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.normal
-                                            ),
-                                          )
-                                        ),
-                                      ),
-                                      const Divider(),
-                                      ListTile(
-                                        title: Text(
-                                          'Orange Marker', 
-                                          style: GoogleFonts.roboto(
-                                            color: Colors.orange,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w400
-                                          ),
-                                        ),
-                                        subtitle: (
-                                          Text(
-                                            '15-30 mm rain observed in 1 hour and expected to continue. Flooding is threatening.',
-                                            style: GoogleFonts.roboto(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.normal
-                                            ),
-                                          )
-                                        ),
-                                      ),
-                                      const Divider(),
-                                      ListTile(
-                                        title: Text(
-                                          'Yellow Marker', 
-                                          style:GoogleFonts.roboto(
-                                            color: Colors.yellow,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w400
-                                          ),
-                                        ),
-                                        subtitle: Text(
-                                          '6.5-15 mm of rain observed in 1 hour and expected to continue. Flooding is possible.',
-                                          style: GoogleFonts.roboto(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.normal
-                                          ),
-                                        ),
-                                      ),
+                                      const SizedBox(
+                                        height: 270,
+                                        width: 500,
+                                        child: RiskLvlCard(),
+                                      )
                                     ],
                                   ),
                                 ),
