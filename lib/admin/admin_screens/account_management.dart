@@ -13,7 +13,7 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String selectedUserType = 'All';
+  List<String> selectedUserTypes = [];
 
   @override
   Widget build(BuildContext context) {
@@ -32,19 +32,74 @@ class _AccountScreenState extends State<AccountScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16),
-            child: DropdownButtonFormField<String>(
-              value: selectedUserType,
-              items: ['All', 'PUBLIC', 'ADMIN', 'COMCEN', 'DRR']
-                  .map((userType) => DropdownMenuItem(
-                        value: userType,
-                        child: Text(userType),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedUserType = value!;
-                });
-              },
+            child: Column(
+              children: [
+                CheckboxListTile(
+                  title: Text('All'),
+                  value: selectedUserTypes.contains('All'),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value!) {
+                        selectedUserTypes = ['All'];
+                      } else {
+                        selectedUserTypes = [];
+                      }
+                    });
+                  },
+                ),
+                CheckboxListTile(
+                  title: Text('PUBLIC'),
+                  value: selectedUserTypes.contains('PUBLIC'),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value!) {
+                        selectedUserTypes.add('PUBLIC');
+                      } else {
+                        selectedUserTypes.remove('PUBLIC');
+                      }
+                    });
+                  },
+                ),
+                CheckboxListTile(
+                  title: Text('ADMIN'),
+                  value: selectedUserTypes.contains('ADMIN'),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value!) {
+                        selectedUserTypes.add('ADMIN');
+                      } else {
+                        selectedUserTypes.remove('ADMIN');
+                      }
+                    });
+                  },
+                ),
+                CheckboxListTile(
+                  title: Text('COMCEN'),
+                  value: selectedUserTypes.contains('COMCEN'),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value!) {
+                        selectedUserTypes.add('COMCEN');
+                      } else {
+                        selectedUserTypes.remove('COMCEN');
+                      }
+                    });
+                  },
+                ),
+                CheckboxListTile(
+                  title: Text('DRR'),
+                  value: selectedUserTypes.contains('DRR'),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value!) {
+                        selectedUserTypes.add('DRR');
+                      } else {
+                        selectedUserTypes.remove('DRR');
+                      }
+                    });
+                  },
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -58,11 +113,14 @@ class _AccountScreenState extends State<AccountScreen> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 List<DocumentSnapshot> dataList = snapshot.data!.docs;
-                if (selectedUserType != 'All') {
+
+                // Apply user type filter
+                if (!selectedUserTypes.contains('All')) {
                   dataList = dataList
-                      .where((data) => data['User_Type'] == selectedUserType)
+                      .where((data) => selectedUserTypes.contains(data['User_Type']))
                       .toList();
                 }
+
                 dataList.sort((a, b) => a['Email'].compareTo(b['Email']));
 
                 return SingleChildScrollView(

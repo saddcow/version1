@@ -10,8 +10,46 @@ class RiskLevelScreen extends StatefulWidget {
   State<RiskLevelScreen> createState() => _RiskLevelScreenState();
 }
 
+
 class _RiskLevelScreenState extends State<RiskLevelScreen> {
+  String FloodAreaID = '';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> deleteDocument(String documentId) async {
+    try {
+      return await _firestore.collection('Flood_Risk_Level').doc(documentId).delete();
+    } catch (e) {
+      print('Error deleting document: $e');
+    }
+  }
+
+Future<void> deleteFloodHazardAreas(String hazardLevel) async {
+  try {
+    // Query the 'markers' collection for documents where 'risk_level' field contains hazardLevel
+    QuerySnapshot querySnapshot = await _firestore
+        .collection('markers')
+        .where('risk_level', isEqualTo: hazardLevel)
+        .get();
+
+    // Check if there are any documents in the query result
+    if (querySnapshot.docs.isNotEmpty) {
+      // Iterate through the documents and delete them
+      for (QueryDocumentSnapshot document in querySnapshot.docs) {
+        await document.reference.delete();
+      }
+
+      // Print a message or perform additional actions if needed 
+    return  print('Documents with risk_level $hazardLevel deleted successfully');
+    } else {
+      print('No documents found with risk_level $hazardLevel');
+    }
+  } catch (e) {
+    // Handle errors here
+    print('Error deleting documents: $e');
+  }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +100,7 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
                   DataColumn(label: Text('Maximum mm of rain')),
                   DataColumn(label: Text('Color Level')),
                   DataColumn(label: Text('Description')),
-                  //DataColumn(label: Text('Options')),
+                  DataColumn(label: Text('Options')),
                 ],
                 rows: dataList.map((data) {
                   double minMm = data['Min_mm'] ?? 0.0;
@@ -74,17 +112,21 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
                       DataCell(Text(maxMm.toString())),
                       DataCell(Text(data['Risk_level_color'] )),
                       DataCell(Text(data['Description'] )),
-                      // DataCell(
-                      //   TextButton(
-                      //     onPressed: () {
-                      //       deleteDocument(data.id); // Use 'id' instead of 'risk_level'
-                      //     },
-                      //     child: const Text(
-                      //       'Delete',
-                      //       style: TextStyle(color: Colors.red),
-                      //     ),
-                      //   ),
-                      // ),
+                       DataCell(
+                         TextButton(
+                           onPressed: () {
+                            FloodAreaID = data['Hazard_level'];
+
+                             deleteFloodHazardAreas(FloodAreaID);
+
+                             deleteDocument(data.id);
+                           },
+                           child: const Text(
+                             'Delete',
+                             style: TextStyle(color: Colors.red),
+                           ),
+                         ),
+                       ),
                     ],
                   );
                 }).toList(),
@@ -110,9 +152,5 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
-  }
-
-  Future<void> deleteDocument(String documentId) async {
-    await _firestore.collection('Risk_Level').doc(documentId).delete();
   }
 }
