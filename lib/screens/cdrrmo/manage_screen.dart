@@ -33,13 +33,9 @@ class _ManageState extends State<Manage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Managing Flood Risk Area',
-          style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w400,
-              fontSize: 25
-          )
-        ),
+        title: Text('Managing Flood Risk Area',
+            style:
+                GoogleFonts.roboto(fontWeight: FontWeight.w400, fontSize: 25)),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
@@ -92,7 +88,8 @@ class _ManageState extends State<Manage> {
                                   Text(
                                     document["risk_level"],
                                     style: TextStyle(
-                                      color: getColorForRiskLevel(document["risk_level"]),
+                                      color: getColorForRiskLevel(
+                                          document["risk_level"]),
                                     ),
                                   ),
                                 ),
@@ -145,7 +142,7 @@ class _ManageState extends State<Manage> {
     );
   }
 
-   Color getColorForRiskLevel(String riskLevel) {
+  Color getColorForRiskLevel(String riskLevel) {
     switch (riskLevel.toLowerCase()) {
       case 'high':
         return Colors.red;
@@ -154,7 +151,7 @@ class _ManageState extends State<Manage> {
       case 'low':
         return Colors.yellow;
       default:
-        return Colors.black; 
+        return Colors.black;
     }
   }
 
@@ -165,7 +162,7 @@ class _ManageState extends State<Manage> {
   }
 
   Future<void> _fetchDataFromFirestore() async {
-    QuerySnapshot querySnapshot = await _firestore.collection('markers').get();
+    QuerySnapshot querySnapshot = await _firestore.collection('markers').orderBy('timestamp', descending: true).get();
 
     setState(() {
       _dataList = querySnapshot.docs;
@@ -176,52 +173,51 @@ class _ManageState extends State<Manage> {
     return 'Lat: ${geoPoint.latitude.toString()}, Lng: ${geoPoint.longitude.toString()}';
   }
 
-  // Function to show the filter dialog
+  // Function to show the filter 
   Future<void> _showFilterDialog() async {
+    QuerySnapshot riskLevelSnapshot = await _firestore.collection('Flood_Risk_Level').get();
+
+    List riskLevels = riskLevelSnapshot.docs.map((doc) => doc['Hazard_level']).toList();
+
+    // ignore: use_build_context_synchronously
     String? newFilter = await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Filter Risk Level'),
-          content: SizedBox(
-            height: 200,
-            width: 200,
-            child: Column(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context, 'All');
-                },
-                child: const Text('All'),
+          content: SingleChildScrollView(
+            child: SizedBox(
+              width: 200,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context, 'All');
+                      },
+                      child: const Text('All'),
+                    ),
+                    const Divider(),
+                    // Dynamically generate buttons based on risk levels
+                    for (String riskLevel in riskLevels)
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context, riskLevel);
+                          },
+                          child: Text(riskLevel),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-              const Divider(),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context, 'High');
-                },
-                child: const Text('High'),
-              ),
-              const Divider(),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context, 'Medium');
-                },
-                child: const Text('Medium'),
-              ),
-              const Divider(),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context, 'Low');
-                },
-                child: const Text('Low'),
-              ),
-            ],
             ),
           ),
         );
       },
     );
-
     if (newFilter != null) {
       setState(() {
         filterRiskLevel = newFilter;

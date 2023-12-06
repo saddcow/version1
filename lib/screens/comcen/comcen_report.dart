@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:try1/utils/color_utils.dart';
 
 class ReportsCom extends StatefulWidget {
   const ReportsCom({Key? key});
@@ -13,13 +14,18 @@ class ReportsCom extends StatefulWidget {
 class _ReportsComState extends State<ReportsCom> {
   late Stream<QuerySnapshot> reportsStream;
   String selectedStatus = 'All';
-   
+  DateTime? startDate;
+  DateTime? endDate;
+
   @override
   void initState() {
     super.initState();
+    startDate = null;
+    endDate = null;
+
     reportsStream = FirebaseFirestore.instance
         .collection('Report')
-        .where('Report_Hazard_Type', isEqualTo: 'Road Accident')
+        .orderBy('Timestamp', descending: true)
         .snapshots();
   }
 
@@ -30,9 +36,9 @@ class _ReportsComState extends State<ReportsCom> {
         title: Text(
           'Reports',
           style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w400,
-              fontSize: 25
-          )
+            fontWeight: FontWeight.w400,
+            fontSize: 25
+          ),
         ),
         actions: [
           IconButton(
@@ -43,76 +49,244 @@ class _ReportsComState extends State<ReportsCom> {
           ),
         ],
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: reportsStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Text('Something went wrong');
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Today',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 30,
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    thickness: 3,
+                    color: hexStringToColor('#F26419')
+                  )
+                ],
+              )
+            ),
+            StreamBuilder<QuerySnapshot>(
+              stream: reportsStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text('Something went wrong');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          List dataList = snapshot.data!.docs;
+                List dataList = snapshot.data!.docs;
+                List filteredData = 
+                    applyFilterOnCurrentDayAndType(dataList, 'Road Accident');
 
-          return SizedBox(
-            width: double.infinity,
-            child: buildDataTable(dataList),
-          );
-        },
-      ),
+                return SizedBox(
+                  width: double.infinity,
+                  child: filteredData.isEmpty
+                      ? const Center(
+                          child: Text('No Accident report today'),
+                        )
+                      : buildDataTable(filteredData),
+                );
+              },
+            ),
+            // Heading for Archive
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Archives',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 30,
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    thickness: 3,
+                    color: hexStringToColor('#F6AE2D'),
+                  )
+                ],
+              )
+            ),
+            //all reports
+            StreamBuilder<QuerySnapshot>(
+              stream: reportsStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text('Something went wrong');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                List dataList = snapshot.data!.docs;
+                List filteredData = applyFilter(dataList);
+
+                return SizedBox(
+                  width: double.infinity,
+                  child: buildDataTable(filteredData),
+                );
+              },
+            ),
+          ],
+        ),
+      )
     );
   }
 
+  Future<void> _showFilterDialog() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Filter Options'),
+          content: SizedBox(
+            height: 100,
+            width: 100,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Start Date:'),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101),
+                        );
+
+                        if (pickedDate != null && pickedDate != startDate) {
+                          setState(() {
+                            startDate = pickedDate;
+                          });
+                        }
+                      },
+                      child: Text(startDate != null
+                          ? DateFormat('MM-dd-yyyy').format(startDate!)
+                          : 'Select'),
+                    ),
+                  ],
+                ),
+                const Padding(padding: EdgeInsets.all(16.0)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('End Date:'),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101),
+                        );
+
+                        if (pickedDate != null && pickedDate != endDate) {
+                          setState(() {
+                            endDate = pickedDate;
+                          });
+                        }
+                      },
+                      child: Text(endDate != null
+                          ? DateFormat('MM-dd-yyyy').format(endDate!)
+                          : 'Select'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    );
+  }
+
+  List applyFilter(List data) {
+    // Apply filter based on report hazard type and timestamp
+    return data.where((item) {
+      bool hazardTypeFilter = item['Report_Hazard_Type'] == 'Flood';
+
+      if (startDate != null && endDate != null) {
+        // Apply date range filter
+        DateTime timestamp = (item['Timestamp'] as Timestamp).toDate();
+        bool dateRangeFilter =
+            timestamp.isAfter(startDate!) && timestamp.isBefore(endDate!);
+
+        // Check if the report's date is not equal to the current date
+        bool notOnCurrentDate = !isSameDay(timestamp, DateTime.now());
+
+        return hazardTypeFilter && dateRangeFilter && notOnCurrentDate;
+      }
+
+      return hazardTypeFilter;
+    }).toList();
+  }
+
+  List applyFilterOnCurrentDayAndType(List data, String hazardType) {
+    return data.where((item) {
+      bool hazardTypeFilter = item['Report_Hazard_Type'] == hazardType;
+
+      DateTime timestamp = (item['Timestamp'] as Timestamp).toDate();
+      bool isOnCurrentDay = isSameDay(timestamp, DateTime.now());
+
+      return hazardTypeFilter && isOnCurrentDay;
+    }).toList();
+  }
+
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
   Widget buildDataTable(List dataList) {
-  return DataTable(
-    columnSpacing: 10,
-    headingTextStyle: const TextStyle(
-      fontWeight: FontWeight.bold,
-      color: Colors.white,
-    ),
-    headingRowColor: MaterialStateProperty.resolveWith(
-      (states) => Colors.black,
-    ),
-    showBottomBorder: true,
-    dividerThickness: 3,
-    columns: const [
-      DataColumn(label: Text('Date and Time')),
-      DataColumn(label: Text('Barangay')),
-      DataColumn(label: Text('Street')),
-      DataColumn(label: Text('User')),
-      DataColumn(label: Text('Report Description')),
-      DataColumn(label: Text('Report Hazard Type')),
-      DataColumn(label: Text('Report Status')),
-      DataColumn(label: Text('Verification Options')),
-    ],
-    rows: dataList.map((data) {
-      return DataRow(
-        cells: [
-          DataCell(
-            Container(
-              constraints: BoxConstraints(maxWidth: 200), // Adjust the maxWidth as needed
-              child: Text(
+    return DataTable(
+      columnSpacing: 10,
+      headingTextStyle: const TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+      headingRowColor: MaterialStateProperty.resolveWith(
+        (states) => Colors.black,
+      ),
+      showBottomBorder: true,
+      dividerThickness: 3,
+      columns: const [
+        DataColumn(label: Text('Date and Time')),
+        DataColumn(label: Text('Barangay')),
+        DataColumn(label: Text('Street')),
+        DataColumn(label: Text('User')),
+        DataColumn(label: Text('Report Description')),
+        DataColumn(label: Text('Report Hazard Type')),
+        DataColumn(label: Text('Report Status')),
+        DataColumn(label: Text('Verification Options')),
+      ],
+      rows: dataList.map((data) {
+        return DataRow(
+          cells: [
+            DataCell(
+              Text(
                 formatTimestamp(data['Timestamp']),
               ),
             ),
-          ),
-          DataCell(
-            Container(
-              constraints: BoxConstraints(maxWidth: 200),
-              child: Text(data['Barangay']),
-            ),
-          ),
-          DataCell(
-            Container(
-              constraints: BoxConstraints(maxWidth: 200),
-              child: Text(data['Street']),
-            ),
-          ),
-          DataCell(
-            Container(
-              constraints: BoxConstraints(maxWidth: 200),
-              child: FutureBuilder<String>(
+            DataCell(Text(data['Barangay'])),
+            DataCell(Text(data['Street'])),
+            DataCell(
+              FutureBuilder<String>(
                 future: getUsername(data['User_ID']),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -125,36 +299,17 @@ class _ReportsComState extends State<ReportsCom> {
                 },
               ),
             ),
-          ),
-          DataCell(
-            Container(
-              constraints: BoxConstraints(maxWidth: 200),
-              child: Text(data['Report_Description']),
+            DataCell(Text(data['Report_Description'])),
+            DataCell(Text(data['Report_Hazard_Type'])),
+            DataCell(Text(data['Hazard_Status'])),
+            DataCell(
+              DropdownCell(user_ID: data['Report_ID']),
             ),
-          ),
-          DataCell(
-            Container(
-              constraints: BoxConstraints(maxWidth: 200),
-              child: Text(data['Report_Hazard_Type']),
-            ),
-          ),
-          DataCell(
-            Container(
-              constraints: BoxConstraints(maxWidth: 200),
-              child: Text(data['Hazard_Status']),
-            ),
-          ),
-          DataCell(
-            Container(
-              constraints: BoxConstraints(maxWidth: 200),
-              child: DropdownCell(user_ID: data['Report_ID']),
-            ),
-          )
-        ],
-      );
-    }).toList(),
-  );
-}
+          ],
+        );
+      }).toList(),
+    );
+  }
 
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
@@ -165,8 +320,7 @@ class _ReportsComState extends State<ReportsCom> {
     String first = '';
     String last = '';
     try {
-      var userSnapshot =
-          await FirebaseFirestore.instance.collection('User').doc(userId).get();
+      var userSnapshot = await FirebaseFirestore.instance.collection('User').doc(userId).get();
 
       if (userSnapshot.exists) {
         first = userSnapshot['First_Name'];
@@ -179,52 +333,6 @@ class _ReportsComState extends State<ReportsCom> {
       print('Error fetching username: $error');
       return 'Error';
     }
-  }
-
-  Future<void> _showFilterDialog() async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Filter by Report Status'),
-          content: DropdownButton<String>(
-            value: selectedStatus,
-            onChanged: (String? newValue) {
-              setState(() {
-                selectedStatus = newValue!;
-                applyStatusFilter();
-              });
-              Navigator.of(context).pop();
-            },
-            items: ['All', 'Ongoing', 'Resolved', 'Spam']
-                .map<DropdownMenuItem<String>>(
-                  (String value) => DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  ),
-                )
-                .toList(),
-          ),
-        );
-      },
-    );
-  }
-
-  void applyStatusFilter() {
-    setState(() {
-      if (selectedStatus == 'All') {
-        reportsStream = FirebaseFirestore.instance
-            .collection('Report')
-            .where('Report_Hazard_Type', isEqualTo: 'Road Accident')
-            .snapshots();
-      } else {
-        reportsStream = FirebaseFirestore.instance
-            .collection('Report')
-            .where('Report_Hazard_Type', isEqualTo: 'Road Accident')
-            .where('Hazard_Status', isEqualTo: selectedStatus)
-            .snapshots();
-      }
-    });
   }
 }
 

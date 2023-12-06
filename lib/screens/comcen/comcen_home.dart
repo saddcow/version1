@@ -36,7 +36,7 @@ class _ComcenHomeState extends State<ComcenHome> {
       Scaffold(
         appBar: AppBar(
           title: Text(
-            "Monitoring",
+            "COMCEN Road Risk Monitoring",
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w400,
               fontSize: 25

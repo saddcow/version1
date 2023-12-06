@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:try1/utils/color_utils.dart';
 
 class Reports extends StatefulWidget {
   const Reports({Key? key});
@@ -24,8 +25,10 @@ class _ReportsState extends State<Reports> {
     endDate = null;
 
     // Retrieve all reports initially
-    reportsStream = FirebaseFirestore.instance.collection('Report').orderBy('Timestamp', descending: true).snapshots();
-    
+    reportsStream = FirebaseFirestore.instance
+        .collection('Report')
+        .orderBy('Timestamp', descending: true)
+        .snapshots();
   }
 
   @override
@@ -35,9 +38,9 @@ class _ReportsState extends State<Reports> {
         title: Text(
           'Reports',
           style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w400,
-              fontSize: 25
-          )
+            fontWeight: FontWeight.w400,
+            fontSize: 25,
+          ),
         ),
         actions: [
           IconButton(
@@ -48,24 +51,100 @@ class _ReportsState extends State<Reports> {
           ),
         ],
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: reportsStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Text('Something went wrong');
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Flood reports on the current day
+            //Header for current day
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Today',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 30,
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    thickness: 3,
+                    color: hexStringToColor('#F26419')
+                  )
+                ],
+              )
+            ),
+            StreamBuilder<QuerySnapshot>(
+              stream: reportsStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text('Something went wrong');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          List dataList = snapshot.data!.docs;
-          List filteredData = applyFilter(dataList);
+                List dataList = snapshot.data!.docs;
+                List filteredData =
+                    applyFilterOnCurrentDayAndType(dataList, 'Flood');
 
-          return SizedBox(
-            width: double.infinity,
-            child: buildDataTable(filteredData),
-          );
-        },
+                return SizedBox(
+                  width: double.infinity,
+                  child: filteredData.isEmpty
+                      ? const Center(
+                          child: Text('No Flood report today'),
+                        )
+                      : buildDataTable(filteredData),
+                );
+              },
+            ),
+            // Heading for Archive
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Archives',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 30,
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    thickness: 3,
+                    color: hexStringToColor('#F6AE2D'),
+                  )
+                ],
+              )
+            ),
+            // All reports
+            StreamBuilder<QuerySnapshot>(
+              stream: reportsStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text('Something went wrong');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                List dataList = snapshot.data!.docs;
+                List filteredData = applyFilter(dataList);
+
+                return SizedBox(
+                  width: double.infinity,
+                  child: buildDataTable(filteredData),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -79,8 +158,7 @@ class _ReportsState extends State<Reports> {
           content: SizedBox(
             height: 100,
             width: 100,
-            child: Column(
-              children: [
+            child: Column(children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -106,9 +184,7 @@ class _ReportsState extends State<Reports> {
                   ),
                 ],
               ),
-
               const Padding(padding: EdgeInsets.all(16.0)),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -134,8 +210,7 @@ class _ReportsState extends State<Reports> {
                   ),
                 ],
               ),
-              ]
-          ),
+            ]),
           ),
         );
       },
@@ -150,12 +225,34 @@ class _ReportsState extends State<Reports> {
       if (startDate != null && endDate != null) {
         // Apply date range filter
         DateTime timestamp = (item['Timestamp'] as Timestamp).toDate();
-        bool dateRangeFilter = timestamp.isAfter(startDate!) && timestamp.isBefore(endDate!);
-        return hazardTypeFilter && dateRangeFilter;
+        bool dateRangeFilter =
+            timestamp.isAfter(startDate!) && timestamp.isBefore(endDate!);
+
+        // Check if the report's date is not equal to the current date
+        bool notOnCurrentDate = !isSameDay(timestamp, DateTime.now());
+
+        return hazardTypeFilter && dateRangeFilter && notOnCurrentDate;
       }
 
       return hazardTypeFilter;
     }).toList();
+  }
+
+  List applyFilterOnCurrentDayAndType(List data, String hazardType) {
+    return data.where((item) {
+      bool hazardTypeFilter = item['Report_Hazard_Type'] == hazardType;
+
+      DateTime timestamp = (item['Timestamp'] as Timestamp).toDate();
+      bool isOnCurrentDay = isSameDay(timestamp, DateTime.now());
+
+      return hazardTypeFilter && isOnCurrentDay;
+    }).toList();
+  }
+
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 
   Widget buildDataTable(List dataList) {
@@ -253,7 +350,8 @@ class DropdownCell extends StatefulWidget {
 
 class _DropdownCellState extends State<DropdownCell> {
   String selectedValue = 'Ongoing';
-  final CollectionReference users = FirebaseFirestore.instance.collection('Report');
+  final CollectionReference users =
+      FirebaseFirestore.instance.collection('Report');
 
   @override
   Widget build(BuildContext context) {
@@ -287,7 +385,10 @@ class _DropdownCellState extends State<DropdownCell> {
   Future<void> updateUser(String selectedValue) async {
     String user = widget.user_ID;
     try {
-      FirebaseFirestore.instance.collection('Report').doc(user).update({'Hazard_Status': selectedValue});
+      FirebaseFirestore.instance
+          .collection('Report')
+          .doc(user)
+          .update({'Hazard_Status': selectedValue});
       print('Document updated successfully.');
     } catch (error) {
       print('Error updating document: $error');

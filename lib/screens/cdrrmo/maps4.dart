@@ -168,7 +168,7 @@ class _MappState extends State<Mapp> {
                           return Text('Error: ${snapshot.error}');
                         } else {
                           List<String> riskLevel = snapshot.data!;
-                          riskLevel.sort();
+
                           return DropdownButtonFormField<String>(
                             value: selectedRiskLevel,
                             isDense:
@@ -309,6 +309,7 @@ class _MappState extends State<Mapp> {
         'address': address,
         'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
         'risk_level': selectedRiskLevel,
+        'timestamp': FieldValue.serverTimestamp(),
       });
       print('$uniqueID - $selectedRiskLevel');
       print('Marker details saved to Firestore');

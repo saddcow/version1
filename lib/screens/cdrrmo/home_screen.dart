@@ -59,7 +59,7 @@ class _HomeState extends State<Home> {
       Scaffold(
         appBar: AppBar(
           title: Text(
-            "Monitoring",
+            "CDRRMO Flood Monitoring",
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w400,
               fontSize: 25

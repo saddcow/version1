@@ -17,6 +17,7 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
   final TextEditingController _maxMMController = TextEditingController();
   final TextEditingController _minMMController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
+  final TextEditingController _numberRankController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
   void _saveRiskLevelToFirestore() async {
@@ -25,6 +26,7 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
     double? max_mm = double.tryParse(_maxMMController.text);
     double? min_mm = double.tryParse(_minMMController.text);
     String riskLevelColor = _colorController.text.trim();
+    int? number = int.tryParse(_numberRankController.text);
     String first = "HVL";
     var rng = Random();
     var code = rng.nextInt(90000) + 10000;
@@ -42,7 +44,8 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
           'Min_mm' : min_mm,
           'Max_mm' : max_mm,
           'Hazard_Level_ID' : uniqueID,
-          'Risk_level_color' : riskLevelColor
+          'Risk_level_color' : riskLevelColor,
+          'Number': number
         });
 
         if (mounted) {
@@ -52,6 +55,7 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
         _maxMMController.clear();
         _minMMController.clear();
         _colorController.clear();
+        _numberRankController.clear();
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -118,6 +122,11 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
             TextField(
               controller: _colorController,
               decoration: const InputDecoration(labelText: 'Color Level'),
+            ),
+            const SizedBox(height: 16.0,),
+            TextField(
+              controller: _numberRankController,
+              decoration: const InputDecoration(labelText: 'Rank Number'),
             ),
             const SizedBox(height: 16.0,),
             ElevatedButton(
