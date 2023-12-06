@@ -87,8 +87,8 @@ void onDropdownChanged(String? selectedValue) {
           Expanded(
             child: GoogleMap(
               initialCameraPosition: const CameraPosition(
-                target: LatLng(13.6217753, 123.1948238),
-                zoom: 15,
+                target: LatLng(13.6317753, 123.1948238),
+                zoom: 14,
               ),
               markers: Set.from(markersCombined),
             ),

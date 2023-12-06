@@ -1,8 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/services.dart' show ByteData, Uint8List, rootBundle;
+
+Future<BitmapDescriptor> getCustomMarkerIcon() async {
+  final ByteData data = await rootBundle.load('assets/green.png');
+  final Uint8List bytes = data.buffer.asUint8List();
+  return BitmapDescriptor.fromBytes(bytes);
+}
+
+
 
 Future<List<Marker>> retrieveMarkersFromFirestore() async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  // Load the custom icon
+  final BitmapDescriptor customIcon = await getCustomMarkerIcon();
   
   // Calculate start and end timestamps for current day
   DateTime now = DateTime.now();
@@ -27,7 +39,7 @@ Future<List<Marker>> retrieveMarkersFromFirestore() async {
     final reportID = data['Report_ID'] as String?;
     final type = data['Report_Hazard_Type'] as String;
 
-    if (barangay != null &&
+     if (barangay != null &&
         street != null &&
         coordinates != null &&
         hazardStatus != null &&
@@ -37,13 +49,11 @@ Future<List<Marker>> retrieveMarkersFromFirestore() async {
         Marker(
           markerId: MarkerId(reportID),
           position: LatLng(coordinates.latitude, coordinates.longitude),
+          icon: customIcon, // Set the custom icon
           infoWindow: InfoWindow(
             title: 'Report location status: $hazardStatus',
             snippet: 'Location: $barangay, ' ' $street',
           ),
-          // icon: BitmapDescriptor.defaultMarkerWithHue(
-          //   BitmapDescriptor.hueAzure,
-          // )
         ),
       );
     }

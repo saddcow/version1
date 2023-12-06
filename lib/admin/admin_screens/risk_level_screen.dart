@@ -10,130 +10,136 @@ class RiskLevelScreen extends StatefulWidget {
   State<RiskLevelScreen> createState() => _RiskLevelScreenState();
 }
 
-
 class _RiskLevelScreenState extends State<RiskLevelScreen> {
   String FloodAreaID = '';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> deleteDocument(String documentId) async {
     try {
-      return await _firestore.collection('Flood_Risk_Level').doc(documentId).delete();
+      return await _firestore
+          .collection('Flood_Risk_Level')
+          .doc(documentId)
+          .delete();
     } catch (e) {
       print('Error deleting document: $e');
     }
   }
 
-Future<void> deleteFloodHazardAreas(String hazardLevel) async {
-  try {
-    // Query the 'markers' collection for documents where 'risk_level' field contains hazardLevel
-    QuerySnapshot querySnapshot = await _firestore
-        .collection('markers')
-        .where('risk_level', isEqualTo: hazardLevel)
-        .get();
+  Future<void> deleteFloodHazardAreas(String hazardLevel) async {
+    try {
+      // Query the 'markers' collection for documents where 'risk_level' field contains hazardLevel
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('markers')
+          .where('risk_level', isEqualTo: hazardLevel)
+          .get();
 
-    // Check if there are any documents in the query result
-    if (querySnapshot.docs.isNotEmpty) {
-      // Iterate through the documents and delete them
-      for (QueryDocumentSnapshot document in querySnapshot.docs) {
-        await document.reference.delete();
+      // Check if there are any documents in the query result
+      if (querySnapshot.docs.isNotEmpty) {
+        // Iterate through the documents and delete them
+        for (QueryDocumentSnapshot document in querySnapshot.docs) {
+          await document.reference.delete();
+        }
+
+        // Print a message or perform additional actions if needed
+        return print(
+            'Documents with risk_level $hazardLevel deleted successfully');
+      } else {
+        print('No documents found with risk_level $hazardLevel');
       }
-
-      // Print a message or perform additional actions if needed 
-    return  print('Documents with risk_level $hazardLevel deleted successfully');
-    } else {
-      print('No documents found with risk_level $hazardLevel');
+    } catch (e) {
+      // Handle errors here
+      print('Error deleting documents: $e');
     }
-  } catch (e) {
-    // Handle errors here
-    print('Error deleting documents: $e');
   }
-}
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'List of Risk Level',
-          style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w400,
-              fontSize: 25
-          )
-        ),
+        title: Text('List of Risk Level',
+            style:
+                GoogleFonts.roboto(fontWeight: FontWeight.w400, fontSize: 25)),
         automaticallyImplyLeading: false,
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: _firestore.collection('Flood_Risk_Level').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Text('Something went wrong');
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          List<DocumentSnapshot> dataList = snapshot.data!.docs;
-          //sort ascending order of minMm
-          dataList.sort((a, b) {
-            double minMmA = a['Min_mm'] ?? 0.0;
-            double minMmB = b['Min_mm'] ?? 0.0;
-            return minMmA.compareTo(minMmB);
-          });
-          return SingleChildScrollView(
-            child: SizedBox(
-              width: double.infinity,
-              child: DataTable(
-                columnSpacing: 30,
-                headingTextStyle: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-                headingRowColor: MaterialStateProperty.resolveWith(
-                  (states) => Colors.black,
-                ),
-                showBottomBorder: true,
-                dividerThickness: 3,
-                columns: const [
-                  DataColumn(label: Text('Risk Level')),
-                  DataColumn(label: Text('Minnimum mm of rain')),
-                  DataColumn(label: Text('Maximum mm of rain')),
-                  DataColumn(label: Text('Color Level')),
-                  DataColumn(label: Text('Description')),
-                  DataColumn(label: Text('Options')),
-                ],
-                rows: dataList.map((data) {
-                  double minMm = data['Min_mm'] ?? 0.0;
-                  double maxMm = data['Max_mm'] ?? 0.0;
-                  return DataRow(
-                    cells: [
-                      DataCell(Text(data['Hazard_level'] )),
-                      DataCell(Text(minMm.toString())),
-                      DataCell(Text(maxMm.toString())),
-                      DataCell(Text(data['Risk_level_color'] )),
-                      DataCell(Text(data['Description'] )),
-                       DataCell(
-                         TextButton(
-                           onPressed: () {
-                            FloodAreaID = data['Hazard_level'];
+      body: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: _firestore.collection('Flood_Risk_Level').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text('Something went wrong');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                List<DocumentSnapshot> dataList = snapshot.data!.docs;
+                //sort ascending order of minMm
+                dataList.sort((a, b) {
+                  double minMmA = a['Min_mm'] ?? 0.0;
+                  double minMmB = b['Min_mm'] ?? 0.0;
+                  return minMmA.compareTo(minMmB);
+                });
+                return SingleChildScrollView(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: DataTable(
+                      columnSpacing: 10,
+                      headingTextStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      headingRowColor: MaterialStateProperty.resolveWith(
+                        (states) => Colors.black,
+                      ),
+                      showBottomBorder: true,
+                      dividerThickness: 3,
+                      columns: const [
+                        DataColumn(label: Text('Risk Level')),
+                        DataColumn(label: Text('Minnimum mm of rain')),
+                        DataColumn(label: Text('Maximum mm of rain')),
+                        DataColumn(label: Text('Color Level')),
+                        DataColumn(label: Text('Number Rank')),
+                        DataColumn(label: Text('Description')),
+                        DataColumn(label: Text('Options')),
+                      ],
+                      rows: dataList.map((data) {
+                        double minMm = data['Min_mm'] ?? 0.0;
+                        double maxMm = data['Max_mm'] ?? 0.0;
+                        int numRank = data['Number'] ?? 0;
+                        return DataRow(
+                          cells: [
+                            DataCell(Text(data['Hazard_level'])),
+                            DataCell(Text(minMm.toString())),
+                            DataCell(Text(maxMm.toString())),
+                            DataCell(Text(data['Risk_level_color'])),
+                            DataCell(Text(numRank.toString())),
+                            DataCell(Text(data['Description'])),
+                            DataCell(
+                              TextButton(
+                                onPressed: () {
+                                  FloodAreaID = data['Hazard_level'];
 
-                             deleteFloodHazardAreas(FloodAreaID);
+                                  deleteFloodHazardAreas(FloodAreaID);
 
-                             deleteDocument(data.id);
-                           },
-                           child: const Text(
-                             'Delete',
-                             style: TextStyle(color: Colors.red),
-                           ),
-                         ),
-                       ),
-                    ],
-                  );
-                }).toList(),
-              ),
+                                  deleteDocument(data.id);
+                                },
+                                child: const Text(
+                                  'Delete',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                );
+              },
             ),
-          );
-        },
+          )
+        ],
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(16),
