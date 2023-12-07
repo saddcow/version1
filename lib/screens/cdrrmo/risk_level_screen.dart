@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:try1/utils/color_utils.dart';
 
 class RiskLvlCard extends StatefulWidget {
   const RiskLvlCard({Key? key});
@@ -25,6 +26,11 @@ class _RiskLvlCardState extends State<RiskLvlCard> {
           }
 
           List<DocumentSnapshot> dataList = snapshot.data!.docs;
+          dataList.sort((a, b) {
+            double minMmA = a['Min_mm'] ?? 0.0;
+            double minMmB = b['Min_mm'] ?? 0.0;
+            return minMmA.compareTo(minMmB);
+          });
           List<ListTile> riskTiles = dataList.map((document) {
             String riskLevel = document['Hazard_level'].toString().toUpperCase();
             String description = document['Description'].toString();
@@ -41,13 +47,20 @@ class _RiskLvlCardState extends State<RiskLvlCard> {
                   color: riskColor,
                 ),
               ),
-              subtitle: Text(description),
+              subtitle: Text(
+                description, 
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15
+                ),
+              ),
+              contentPadding: const EdgeInsets.all(10),
             );
           }).toList();
 
           return SingleChildScrollView(
             child: Card(
-              color: Colors.blue, // Set the card color
+              color: hexStringToColor("#86BBD8"), // Set the card color
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: riskTiles,

@@ -59,3 +59,4 @@ Future<List<Marker>> retrieveMarkersFromFirestore() async {
 
   return markers;
 }
+

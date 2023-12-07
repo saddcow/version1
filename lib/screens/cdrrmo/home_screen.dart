@@ -231,7 +231,7 @@ class _HomeState extends State<Home> {
       // Settings View
       Scaffold(
         body: Container(
-          color: Colors.white,
+          color: hexStringToColor("#33658A"),
           child: Center(
             child: Card(
               elevation: 50,

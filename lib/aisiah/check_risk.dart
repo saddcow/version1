@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
@@ -97,10 +96,7 @@ class FirestoreCheck extends StatelessWidget {
                 String risk = '';
 
                 // Find the corresponding Flood_Risk_Level document
-                Map<String, dynamic>? floodRiskLevel = floodRiskLevels.firstWhere(
-                  (floodRiskLevel) =>
-                      floodRiskLevel['Hazard_level'] == document['risk_level']
-                );
+                Map<String, dynamic> floodRiskLevel = getFloodRiskLevel(document['risk_level']);
 
                 minMm = floodRiskLevel['Min_mm'] ?? 0.0;
                 maxMm = floodRiskLevel['Max_mm'] ?? 0.0;
@@ -115,7 +111,6 @@ class FirestoreCheck extends StatelessWidget {
                   risk: risk,
                 );
 
-                for (QueryDocumentSnapshot document in querySnapshot.docs) {
                 String fieldValue = document['risk_level'];
                 String add = document['address'];
 
@@ -126,7 +121,6 @@ class FirestoreCheck extends StatelessWidget {
                 } else if (searchString == 'Low' && fieldValue == 'High') {
                   matchingDocumentIds.add(add);
                 }
-              }
               }
 
               if (matchingDocumentIds.isNotEmpty) {
@@ -147,13 +141,15 @@ class FirestoreCheck extends StatelessWidget {
                 );
               } else {
                 return SizedBox(
-                    height: 270,
-                    width: 500,
-                    child: Card(
-                      color: hexStringToColor("#86BBD8"),
-                      child: const Center(
-                          child: Text('All Good! Nothing to worry!')),
-                    ));
+                  height: 270,
+                  width: 500,
+                  child: Card(
+                    color: hexStringToColor("#86BBD8"),
+                    child: const Center(
+                      child: Text('All Good! Nothing to worry!'),
+                    ),
+                  ),
+                );
               }
             }
           },
@@ -161,39 +157,47 @@ class FirestoreCheck extends StatelessWidget {
       ),
     );
   }
-}
 
-String getSearchString({
-  required Map<String, dynamic> weatherData,
-  required double minMm,
-  required double maxMm, 
-  required String risk,
-}) {
-  String searchString = '';
+  Map<String, dynamic> getFloodRiskLevel(String riskLevel) {
+    // Find the corresponding Flood_Risk_Level document
+    Map<String, dynamic>? floodRiskLevel = floodRiskLevels.firstWhere(
+      (floodRiskLevel) => floodRiskLevel['Hazard_level'] == riskLevel,
+      orElse: () => <String, dynamic>{},
+    );
 
-  if (weatherData.containsKey('list') &&
-      weatherData['list'] is List &&
-      (weatherData['list'] as List).isNotEmpty) {
-    final List<dynamic> list = weatherData['list'];
-
-    if (list.length > 2) {
-      double rain1 = weatherData['list'][0]['rain']?['3h'] ?? 0;
-      double rain2 = weatherData['list'][0]['rain']?['3h'] ?? 0;
-      double rain3 = weatherData['list'][0]['rain']?['3h'] ?? 0;
-
-      if (rain1 >= minMm && rain1 <= maxMm){
-        if(rain2 >= minMm && rain2 <= maxMm){
-          if (rain3 >= minMm && rain3 <= maxMm) {
-            searchString =risk;
-          }        
-        }
-      }
-       else {
-        searchString = '';
-      }
-    }
+    return floodRiskLevel;
   }
 
+  String getSearchString({
+    required Map<String, dynamic> weatherData,
+    required double minMm,
+    required double maxMm,
+    required String risk,
+  }) {
+    String searchString = '';
 
-  return searchString;
+    if (weatherData.containsKey('list') &&
+        weatherData['list'] is List &&
+        (weatherData['list'] as List).isNotEmpty) {
+      final List<dynamic> list = weatherData['list'];
+
+      if (list.length > 2) {
+        double rain1 = weatherData['list'][0]['rain']?['3h'] ?? 0;
+        double rain2 = weatherData['list'][0]['rain']?['3h'] ?? 0;
+        double rain3 = weatherData['list'][0]['rain']?['3h'] ?? 0;
+
+        if (rain1 >= minMm && rain1 <= maxMm) {
+          if (rain2 >= minMm && rain2 <= maxMm) {
+            if (rain3 >= minMm && rain3 <= maxMm) {
+              searchString = risk;
+            }
+          }
+        } else {
+          searchString = '';
+        }
+      }
+    }
+
+    return searchString;
+  }
 }

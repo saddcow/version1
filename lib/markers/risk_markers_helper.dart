@@ -2,11 +2,17 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/services.dart' show ByteData, Uint8List, rootBundle;
 
+Future<BitmapDescriptor> getCustomMarkerIcon() async {
+  final ByteData data = await rootBundle.load('assets/Flood Hazard Area.png');
+  final Uint8List bytes = data.buffer.asUint8List();
+  return BitmapDescriptor.fromBytes(bytes);
+}
 
 Future<List<Marker>> getRiskMarkers() async {
   List<Marker> markers = [];
-
+  final BitmapDescriptor customIcon = await getCustomMarkerIcon();
   const String apiKey = '6378430bc45061aaccd4a566a86c25df';
   const double latitude = 13.6217753;
   const double longitude = 123.1948238;
@@ -60,6 +66,7 @@ Future<List<Marker>> getRiskMarkers() async {
         Marker(
           markerId: MarkerId(uniqeID),
           position: LatLng(coordinates.latitude, coordinates.longitude),
+          icon: customIcon,
           infoWindow: InfoWindow(
             title: 'Risk Level: $riskLevel',
             snippet: address,
@@ -71,6 +78,7 @@ Future<List<Marker>> getRiskMarkers() async {
         Marker(
           markerId: MarkerId(address),
           position: LatLng(coordinates.latitude, coordinates.longitude),
+          icon: customIcon,
           infoWindow: InfoWindow(
             title: 'Risk Level: $riskLevel',
             snippet: address,
@@ -82,6 +90,7 @@ Future<List<Marker>> getRiskMarkers() async {
         Marker(
           markerId: MarkerId(address),
           position: LatLng(coordinates.latitude, coordinates.longitude),
+          icon: customIcon,
           infoWindow: InfoWindow(
             title: ('Risk Level: $riskLevel'),
             snippet: address,
