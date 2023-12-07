@@ -1,8 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/services.dart' show ByteData, Uint8List, rootBundle;
+
+Future<BitmapDescriptor> getCustomMarkerIcon() async {
+  final ByteData data = await rootBundle.load('assets/Road Accident Report 1.png');
+  final Uint8List bytes = data.buffer.asUint8List();
+  return BitmapDescriptor.fromBytes(bytes);
+}
 
 Future<List<Marker>> retrieveMarkersFromFirestoreRoad() async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  final BitmapDescriptor customIcon = await getCustomMarkerIcon();
 
   //Calculate start and end timestamps for current day
   DateTime now = DateTime.now();
@@ -37,6 +46,7 @@ Future<List<Marker>> retrieveMarkersFromFirestoreRoad() async {
         Marker(
           markerId: MarkerId(reportID),
           position: LatLng(coordinates.latitude, coordinates.longitude),
+          icon: customIcon,
           infoWindow: InfoWindow(
             title: 'Report location status: $hazardStatus',
             snippet: 'Location:  $barangay, ' ' $street ',

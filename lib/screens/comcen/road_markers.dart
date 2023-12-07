@@ -1,8 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/services.dart' show ByteData, Uint8List, rootBundle;
+
+Future<BitmapDescriptor> getCustomMarkerIcon() async {
+  final ByteData data = await rootBundle.load('assets/Road Accident Hazard Area 1 (1).png');
+  final Uint8List bytes = data.buffer.asUint8List();
+  return BitmapDescriptor.fromBytes(bytes);
+}
 
 Future<List<Marker>> getRoadMarkers() async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  final BitmapDescriptor customIcon = await getCustomMarkerIcon();
+
   final QuerySnapshot snapshot = await firestore.collection('Road_Accident_Areas').get();
   final List<Marker> markers = [];
 
@@ -18,7 +28,7 @@ Future<List<Marker>> getRoadMarkers() async {
         Marker(
           markerId: MarkerId(uniqeID),
           position: LatLng(coordinates.latitude, coordinates.longitude),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+          icon: customIcon,
           infoWindow: InfoWindow(
             title: 'Road Accident Prone Area',
             snippet: '$barangay, ' ' $street ',

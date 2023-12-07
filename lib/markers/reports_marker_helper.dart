@@ -3,7 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart' show ByteData, Uint8List, rootBundle;
 
 Future<BitmapDescriptor> getCustomMarkerIcon() async {
-  final ByteData data = await rootBundle.load('assets/reportIcon.png');
+  final ByteData data = await rootBundle.load('assets/Flood Report (1) 1.png');
   final Uint8List bytes = data.buffer.asUint8List();
   return BitmapDescriptor.fromBytes(bytes);
 }
