@@ -36,7 +36,7 @@ class _ReportsState extends State<Reports> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Reports',
+          'Flood Reports',
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
             fontSize: 25,
@@ -273,7 +273,6 @@ class _ReportsState extends State<Reports> {
         DataColumn(label: Text('Street')),
         DataColumn(label: Text('User')),
         DataColumn(label: Text('Report Description')),
-        DataColumn(label: Text('Report Hazard Type')),
         DataColumn(label: Text('Report Status')),
         DataColumn(label: Text('Verification Options')),
       ],
@@ -302,7 +301,6 @@ class _ReportsState extends State<Reports> {
               ),
             ),
             DataCell(Text(data['Report_Description'])),
-            DataCell(Text(data['Report_Hazard_Type'])),
             DataCell(Text(data['Hazard_Status'])),
             DataCell(
               DropdownCell(user_ID: data['Report_ID']),

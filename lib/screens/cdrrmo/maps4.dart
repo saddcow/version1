@@ -19,10 +19,8 @@ class _MappState extends State<Mapp> {
   // Google Map controller
   GoogleMapController? mapController;
 
-  // Dropdown menu options
-
   // Controllers for text fields
-  TextEditingController streetController = TextEditingController();
+  TextEditingController streetLandmarkController = TextEditingController();
   String? selectedBarangay;
 
   String? selectedRiskLevel;
@@ -55,7 +53,7 @@ class _MappState extends State<Mapp> {
             Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 25),
+                  padding: const EdgeInsets.only(left: 25),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
@@ -112,13 +110,13 @@ class _MappState extends State<Mapp> {
                 const Padding(
                     padding: EdgeInsets.only(top: 5.0)), // Adjusted padding
 
-                // Text Field for Street Name
+                // Text Field for Landmark or Street Name
                 Padding(
                   padding: const EdgeInsets.only(left: 25),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      'Street Name',
+                      'Name of Landmark or Street',
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w700
                       ),
@@ -129,9 +127,9 @@ class _MappState extends State<Mapp> {
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: TextField(
-                      controller: streetController,
+                      controller: streetLandmarkController,
                       decoration: const InputDecoration(
-                        labelText: 'Street',
+                        labelText: 'Landmark/Street',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -276,9 +274,9 @@ class _MappState extends State<Mapp> {
 
   // Save marker details to Firestore
   void _saveMarkerDetails() {
-    final String street = streetController.text;
+    final String streetLandmark = streetLandmarkController.text;
 
-    if (selectedBarangay == null || street.isEmpty) {
+    if (selectedBarangay == null || streetLandmark.isEmpty) {
       print('Please select a Barangay and enter Street');
       return;
     }
@@ -286,14 +284,14 @@ class _MappState extends State<Mapp> {
     for (final marker in myMarker) {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
-      final RiskLevel = selectedRiskLevel;
+      final riskLevel = selectedRiskLevel;
       _saveMarkerToFirestore(
-          selectedBarangay!, street, address, position, RiskLevel!);
+          selectedBarangay!, streetLandmark, address, position, riskLevel!);
     }
   }
 
   // Save marker details to Firestore
-  Future<void> _saveMarkerToFirestore(String barangay, String street,
+  Future<void> _saveMarkerToFirestore(String barangay, String streetLandmark,
       String address, LatLng coordinates, String selectedRiskLevel) async {
     String first = "HA";
     var rng = Random();
@@ -305,7 +303,7 @@ class _MappState extends State<Mapp> {
       await firestore.collection('markers').doc(uniqueID).set({
         'uniqueID': uniqueID,
         'barangay': barangay,
-        'street': street,
+        'street_landmark': streetLandmark,
         'address': address,
         'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
         'risk_level': selectedRiskLevel,

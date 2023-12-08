@@ -35,7 +35,7 @@ class _RoadRiskManageState extends State<RoadRiskManage> {
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: _firestore.collection('Road_Accident_Areas').snapshots(),
+              stream: _firestore.collection('Road_Accident_Areas').orderBy('timestamp', descending: true).snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return const Text('Something went wrong');
