@@ -22,7 +22,7 @@ class _MappUpdateState extends State<MappUpdate> {
   List<Marker> myMarker = [];
   GoogleMapController? mapController;
   String? selectedRiskLevel;
-  TextEditingController streetController = TextEditingController();
+  TextEditingController streetLandmarkController = TextEditingController();
   String? selectedBarangay;
   List<String> barangayOptions = []; // List to store barangay options
 
@@ -35,7 +35,7 @@ class _MappUpdateState extends State<MappUpdate> {
 
   @override
   void dispose() {
-    streetController.dispose();
+    streetLandmarkController.dispose();
     super.dispose();
   }
 
@@ -110,7 +110,7 @@ class _MappUpdateState extends State<MappUpdate> {
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Street Name',
+                        'Name of Landmark or Street',
                         style: GoogleFonts.roboto(
                           fontWeight: FontWeight.w700
                         ),
@@ -121,9 +121,9 @@ class _MappUpdateState extends State<MappUpdate> {
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: TextField(
-                        controller: streetController,
+                        controller: streetLandmarkController,
                         decoration: const InputDecoration(
-                          labelText: 'Street',
+                          labelText: 'Landmark/Street',
                           border: OutlineInputBorder(),
                         ),
                       ),
@@ -253,14 +253,14 @@ class _MappUpdateState extends State<MappUpdate> {
   }
 
   void _saveMarkerDetails(String id) {
-    final String street = streetController.text;
+    final String streetLandmark = streetLandmarkController.text;
 
     for (final marker in myMarker) {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
       final selectedOption = selectedRiskLevel;
       _saveMarkerToFirestore(
-          id, selectedBarangay!, street, address, position, selectedOption!);
+          id, selectedBarangay!, streetLandmark, address, position, selectedOption!);
     }
   }
 
@@ -284,13 +284,13 @@ class _MappUpdateState extends State<MappUpdate> {
     }
   }
 
-  Future<void> _saveMarkerToFirestore(String id, String barangay, String street,
+  Future<void> _saveMarkerToFirestore(String id, String barangay, String streetLandmark,
       String address, LatLng coordinates, String selectedOption) async {
     try {
       await FirebaseFirestore.instance.collection('markers').doc(id).update({
         'uniqueID': id,
         'barangay': barangay,
-        'street': street,
+        'street_landmark': streetLandmark,
         'address': address,
         'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
         'risk_level': selectedOption,

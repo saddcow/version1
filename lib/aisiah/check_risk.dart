@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
@@ -155,7 +154,6 @@ for (QueryDocumentSnapshot document in querySnapshot.docs) {
       ),
     );
   }
-}
 
 int getSearchString({
   required Map<String, dynamic> weatherData,
@@ -185,4 +183,5 @@ int getSearchString({
 
   searchString = 3;
   return searchString;
+}
 }

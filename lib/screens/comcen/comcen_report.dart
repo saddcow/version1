@@ -34,7 +34,7 @@ class _ReportsComState extends State<ReportsCom> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Reports',
+          'Road Accident Reports',
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
             fontSize: 25
@@ -218,7 +218,7 @@ class _ReportsComState extends State<ReportsCom> {
   List applyFilter(List data) {
     // Apply filter based on report hazard type and timestamp
     return data.where((item) {
-      bool hazardTypeFilter = item['Report_Hazard_Type'] == 'Flood';
+      bool hazardTypeFilter = item['Report_Hazard_Type'] == 'Road Accident';
 
       if (startDate != null && endDate != null) {
         // Apply date range filter
@@ -271,7 +271,7 @@ class _ReportsComState extends State<ReportsCom> {
         DataColumn(label: Text('Street')),
         DataColumn(label: Text('User')),
         DataColumn(label: Text('Report Description')),
-        DataColumn(label: Text('Report Hazard Type')),
+        DataColumn(label: Text('Type/s of Vehicle')),
         DataColumn(label: Text('Report Status')),
         DataColumn(label: Text('Verification Options')),
       ],
@@ -300,7 +300,7 @@ class _ReportsComState extends State<ReportsCom> {
               ),
             ),
             DataCell(Text(data['Report_Description'])),
-            DataCell(Text(data['Report_Hazard_Type'])),
+            DataCell(Text((data['TypesOfVehicleInvolved'] as List<dynamic>).join(', '))),
             DataCell(Text(data['Hazard_Status'])),
             DataCell(
               DropdownCell(user_ID: data['Report_ID']),

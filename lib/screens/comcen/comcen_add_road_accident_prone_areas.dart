@@ -291,6 +291,7 @@ class _MappComState extends State<MappCom> {
         'description' : description,
         'landmark' : landmark,
         'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
+        'timestamp': FieldValue.serverTimestamp(),
       });
       print('Marker details saved to Firestore');
     } catch (e) {

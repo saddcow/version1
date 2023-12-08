@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:try1/utils/color_utils.dart';
 
@@ -52,21 +53,51 @@ class _PrecipitationState extends State<Precipitation> {
         child: Card(
           color: hexStringToColor("#86BBD8"),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (weatherData.isNotEmpty && weatherData['city'] != null)
-                  Text('City: ${weatherData['city']['name']}'),
+                  Text(
+                    'City: ${weatherData['city']['name']}',
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Divider(
+                    thickness: 3,
+                    color: hexStringToColor('#2F4858'),
+                  ),
+                  
                 const SizedBox(height: 20),
                 if (weatherData.isNotEmpty &&
                     weatherData['list'] != null &&
                     weatherData['list'].length >= 3) ...[
-                  Text('Rain Volume [time: ${DateTime.now().hour}:${DateTime.now().minute}]: ${weatherData['list'][0]['rain']?['3h'] ?? 0} mm'),
+                  Text(
+                    'Rain Volume [time: ${DateTime.now().hour}:${DateTime.now().minute}]: ${weatherData['list'][0]['rain']?['3h'] ?? 0} mm',
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15,
+                    ),
+                  ),
                   const SizedBox(height: 10),
-                  Text('Rain Volume [time: ${DateTime.now().hour + 1}:${DateTime.now().minute}]: ${weatherData['list'][1]['rain']?['3h'] ?? 0} mm'),
+                  Text(
+                    'Rain Volume [time: ${DateTime.now().hour + 1}:${DateTime.now().minute}]: ${weatherData['list'][1]['rain']?['3h'] ?? 0} mm',
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15,
+                    ),
+                  ),
                   const SizedBox(height: 10),
-                  Text('Rain Volume [time: ${DateTime.now().hour + 2}:${DateTime.now().minute}]: ${weatherData['list'][2]['rain']?['3h'] ?? 0} mm'),
+                  Text(
+                    'Rain Volume [time: ${DateTime.now().hour + 2}:${DateTime.now().minute}]: ${weatherData['list'][2]['rain']?['3h'] ?? 0} mm',
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15,
+                    ),
+                  ),
                 ],
               ],
             ),

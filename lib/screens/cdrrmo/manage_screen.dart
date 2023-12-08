@@ -67,7 +67,7 @@ class _ManageState extends State<Manage> {
                         DataColumn(label: Text("Risk Level")),
                         DataColumn(label: Text("Address")),
                         DataColumn(label: Text("Barangay")),
-                        DataColumn(label: Text("Street")),
+                        DataColumn(label: Text("Landmark/Street")),
                         DataColumn(label: Text("Options")),
                       ],
                       rows: _dataList.where((document) => filterRiskLevel == 'All' || document['risk_level'] == filterRiskLevel).map(
@@ -77,6 +77,13 @@ class _ManageState extends State<Manage> {
                                 DataCell(Text(document["address"] ?? 'N/A')),
                                 DataCell(Text(document["barangay"])),
                                 DataCell(Text(document["street_landmark"])),
+                                // DataCell(
+                                //   TextButton(
+                                //       onPressed: () {
+                                //         deleteDocument(document["uniqueID"]);
+                                //       },
+                                //       child: const Text("Delete")),
+                                // ),
                                 DataCell(TextButton(
                                     onPressed: () {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => MappUpdate(myString: document['uniqueID'])));
