@@ -67,6 +67,7 @@ dependencies:
   sticky_headers: ^0.3.0+2
   google_fonts: ^4.0.4
   js: ^0.6.3
+  collection: ^1.17.2
 
 dev_dependencies:
   flutter_test:

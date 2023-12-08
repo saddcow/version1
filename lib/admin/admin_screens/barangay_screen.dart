@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:try1/admin/admin_screens/barangay_add_form.dart';
+import 'package:try1/admin/admin_screens/barangay_update_form.dart';
 
 class BarangayScreen extends StatefulWidget {
   const BarangayScreen({Key? key});
@@ -12,6 +13,7 @@ class BarangayScreen extends StatefulWidget {
 
 class _BarangayScreenState extends State<BarangayScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  String brgyName = '';
 
   @override
   Widget build(BuildContext context) {
@@ -58,23 +60,28 @@ class _BarangayScreenState extends State<BarangayScreen> {
                       dividerThickness: 3,
                       columns: const [
                         DataColumn(label: Text('Barangay')),
-                        //DataColumn(label: Text('Options')),
+                        DataColumn(label: Text('Options')),
                       ],
                       rows: dataList.map((data) {
                         return DataRow(
+                          
                           cells: [
                             DataCell(Text(data['name'])),
-                            // DataCell(
-                            //   TextButton(
-                            //     onPressed: () {
-                            //       deleteDocument(data.id);
-                            //     },
-                            //     child: const Text(
-                            //       'Delete',
-                            //       style: TextStyle(color: Colors.red),
-                            //     ),
-                            //   ),
-                            // ),
+                            DataCell(
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  updateBarangayForm(barangay: data['name'],id: data.id)));
+                                },
+                                child: const Text(
+                                  'Update',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ),
                           ],
                         );
                       }).toList(),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'package:try1/utils/color_utils.dart';
+import 'package:collection/collection.dart';
 
 class Warning extends StatefulWidget {
   const Warning({Key? key});
@@ -68,7 +69,7 @@ class FirestoreCheck extends StatelessWidget {
   final Map<String, dynamic> weatherData;
   final List<Map<String, dynamic>> floodRiskLevels;
 
-  FirestoreCheck({
+  const FirestoreCheck({
     Key? key,
     required this.weatherData,
     required this.floodRiskLevels,
@@ -90,44 +91,36 @@ class FirestoreCheck extends StatelessWidget {
               QuerySnapshot querySnapshot = snapshot.data as QuerySnapshot;
               List<String> matchingDocumentIds = [];
 
-              // Check if rain1 is within the range of any max_mm and min_mm pair
-              for (QueryDocumentSnapshot document in querySnapshot.docs) {
-                double minMm = 0.0;
-                double maxMm = 0.0;
-                String risk = '';
+for (QueryDocumentSnapshot document in querySnapshot.docs) {
+  double minMm = 0.0;
+  double maxMm = 0.0;
+  int risk = 1;
 
-                // Find the corresponding Flood_Risk_Level document
-                Map<String, dynamic>? floodRiskLevel = floodRiskLevels.firstWhere(
-                  (floodRiskLevel) =>
-                      floodRiskLevel['Hazard_level'] == document['risk_level']
-                );
+  Map<String, dynamic>? floodRiskLevel = floodRiskLevels
+      .firstWhereOrNull((floodRiskLevel) =>
+          floodRiskLevel['Hazard_level'] == document['risk_level']);
 
-                minMm = floodRiskLevel['Min_mm'] ?? 0.0;
-                maxMm = floodRiskLevel['Max_mm'] ?? 0.0;
-                risk = floodRiskLevel['Hazard_level'] ?? '';
+  minMm = floodRiskLevel?['Min_mm'] ?? 0.0;
+  maxMm = floodRiskLevel?['Max_mm'] ?? 0.0;
+  risk = floodRiskLevel?['Number'] ?? 0;
 
-                print('$minMm $maxMm $risk');
-              
-                String searchString = getSearchString(
-                  weatherData: weatherData,
-                  minMm: minMm,
-                  maxMm: maxMm,
-                  risk: risk,
-                );
+  int searchString = getSearchString(
+    weatherData: weatherData,
+    minMm: minMm,
+    maxMm: maxMm,
+    risk: risk,
+  );
 
-                for (QueryDocumentSnapshot document in querySnapshot.docs) {
-                String fieldValue = document['risk_level'];
-                String add = document['address'];
+  String add = document['address'];
+  int number = document['number'] ;
 
-                if (searchString == 'High' ) {
-                  matchingDocumentIds.add(add); 
-                } else if (searchString == 'Medium' && fieldValue == 'Medium') {
-                  matchingDocumentIds.add(add);
-                } else if (searchString == 'Low' && fieldValue == 'High') {
-                  matchingDocumentIds.add(add);
-                }
-              }
-              }
+    if (searchString != 0) {
+        // Add the address to matchingDocumentIds only if it's not already present
+        if (number <= searchString) {
+          matchingDocumentIds.add(add);
+        }
+      }
+}
 
               if (matchingDocumentIds.isNotEmpty) {
                 return SingleChildScrollView(
@@ -147,13 +140,14 @@ class FirestoreCheck extends StatelessWidget {
                 );
               } else {
                 return SizedBox(
-                    height: 270,
-                    width: 500,
-                    child: Card(
-                      color: hexStringToColor("#86BBD8"),
-                      child: const Center(
-                          child: Text('All Good! Nothing to worry!')),
-                    ));
+                  height: 270,
+                  width: 500,
+                  child: Card(
+                    color: hexStringToColor("#86BBD8"),
+                    child: const Center(
+                        child: Text('All Good! Nothing to worry!')),
+                  ),
+                );
               }
             }
           },
@@ -163,13 +157,13 @@ class FirestoreCheck extends StatelessWidget {
   }
 }
 
-String getSearchString({
+int getSearchString({
   required Map<String, dynamic> weatherData,
   required double minMm,
-  required double maxMm, 
-  required String risk,
+  required double maxMm,
+  required int risk,
 }) {
-  String searchString = '';
+  int searchString = 0;
 
   if (weatherData.containsKey('list') &&
       weatherData['list'] is List &&
@@ -178,22 +172,17 @@ String getSearchString({
 
     if (list.length > 2) {
       double rain1 = weatherData['list'][0]['rain']?['3h'] ?? 0;
-      double rain2 = weatherData['list'][0]['rain']?['3h'] ?? 0;
-      double rain3 = weatherData['list'][0]['rain']?['3h'] ?? 0;
+      double rain2 = weatherData['list'][1]['rain']?['3h'] ?? 0;
+      double rain3 = weatherData['list'][2]['rain']?['3h'] ?? 0;
 
-      if (rain1 >= minMm && rain1 <= maxMm){
-        if(rain2 >= minMm && rain2 <= maxMm){
-          if (rain3 >= minMm && rain3 <= maxMm) {
-            searchString =risk;
-          }        
-        }
-      }
-       else {
-        searchString = '';
+      if (rain1 >= minMm && rain1 <= maxMm &&
+          rain2 >= minMm && rain2 <= maxMm &&
+          rain3 >= minMm && rain3 <= maxMm) {
+        searchString = risk;
       }
     }
   }
 
-
+  searchString = 3;
   return searchString;
 }

@@ -22,13 +22,6 @@ class _ManageState extends State<Manage> {
   List<DocumentSnapshot> _dataList = [];
   String filterRiskLevel = 'All';
 
-  // Future<void> deleteDocument(String documentId) async {
-  //   await FirebaseFirestore.instance
-  //       .collection('markers')
-  //       .doc(documentId)
-  //       .delete();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,46 +70,21 @@ class _ManageState extends State<Manage> {
                         DataColumn(label: Text("Street")),
                         DataColumn(label: Text("Options")),
                       ],
-                      rows: _dataList
-                          .where((document) =>
-                              filterRiskLevel == 'All' ||
-                              document['risk_level'] == filterRiskLevel)
-                          .map(
+                      rows: _dataList.where((document) => filterRiskLevel == 'All' || document['risk_level'] == filterRiskLevel).map(
                             (DocumentSnapshot document) => DataRow(
                               cells: [
-                                DataCell(
-                                  Text(
-                                    document["risk_level"],
-                                    style: TextStyle(
-                                      color: getColorForRiskLevel(
-                                          document["risk_level"]),
-                                    ),
-                                  ),
-                                ),
+                                DataCell(Text(document["risk_level"])),
                                 DataCell(Text(document["address"] ?? 'N/A')),
                                 DataCell(Text(document["barangay"])),
-                                DataCell(Text(document["street"])),
-                                // DataCell(
-                                //   TextButton(
-                                //       onPressed: () {
-                                //         deleteDocument(document["uniqueID"]);
-                                //       },
-                                //       child: const Text("Delete")),
-                                // ),
+                                DataCell(Text(document["street_landmark"])),
                                 DataCell(TextButton(
                                     onPressed: () {
-                                      pass = document["uniqueID"];
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  MappUpdate(myString: pass)));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => MappUpdate(myString: document['uniqueID'])));
                                     },
                                     child: const Text("Edit"))),
                               ],
                             ),
-                          )
-                          .toList(),
+                          ).toList(),
                     ),
                   ),
                 );
@@ -129,8 +97,7 @@ class _ManageState extends State<Manage> {
               alignment: Alignment.bottomRight,
               child: FloatingActionButton.extended(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Mapp()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Mapp()));
                 },
                 label: const Text('Add Hazard Area'),
                 icon: const Icon(Icons.add),
@@ -140,19 +107,6 @@ class _ManageState extends State<Manage> {
         ],
       ),
     );
-  }
-
-  Color getColorForRiskLevel(String riskLevel) {
-    switch (riskLevel.toLowerCase()) {
-      case 'high':
-        return Colors.red;
-      case 'medium':
-        return Colors.orange;
-      case 'low':
-        return Colors.yellow;
-      default:
-        return Colors.black;
-    }
   }
 
   @override

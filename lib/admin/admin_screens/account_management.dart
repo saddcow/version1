@@ -35,7 +35,7 @@ class _AccountScreenState extends State<AccountScreen> {
             child: Column(
               children: [
                 CheckboxListTile(
-                  title: Text('All'),
+                  title: const Text('All'),
                   value: selectedUserTypes.contains('All'),
                   onChanged: (value) {
                     setState(() {
@@ -48,7 +48,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   },
                 ),
                 CheckboxListTile(
-                  title: Text('PUBLIC'),
+                  title: const Text('PUBLIC'),
                   value: selectedUserTypes.contains('PUBLIC'),
                   onChanged: (value) {
                     setState(() {
@@ -61,7 +61,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   },
                 ),
                 CheckboxListTile(
-                  title: Text('ADMIN'),
+                  title: const Text('ADMIN'),
                   value: selectedUserTypes.contains('ADMIN'),
                   onChanged: (value) {
                     setState(() {
@@ -74,7 +74,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   },
                 ),
                 CheckboxListTile(
-                  title: Text('COMCEN'),
+                  title: const Text('COMCEN'),
                   value: selectedUserTypes.contains('COMCEN'),
                   onChanged: (value) {
                     setState(() {
@@ -87,7 +87,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   },
                 ),
                 CheckboxListTile(
-                  title: Text('DRR'),
+                  title: const Text('DRR'),
                   value: selectedUserTypes.contains('DRR'),
                   onChanged: (value) {
                     setState(() {
@@ -154,7 +154,7 @@ class _AccountScreenState extends State<AccountScreen> {
                             DataCell(Text(data['User_Type'] ?? 'N/A')),
                             DataCell(Text(data['Email'] ?? 'N/A')),
                             DataCell(Text(data['Phone_Number'] ?? 'N/A')),
-                            DataCell(Text('Time Stamp here')),
+                            const DataCell(Text('Time Stamp here')),
                             DataCell(Text(isDuplicate ? 'Duplicate' : 'Unique')),
                             DataCell(TextButton(
                               onPressed: () {

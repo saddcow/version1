@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:try1/admin/admin_screens/risk_level_form.dart';
+import 'package:try1/admin/admin_screens/updateDoc.dart';
 
 class RiskLevelScreen extends StatefulWidget {
   const RiskLevelScreen({Key? key});
@@ -76,9 +77,9 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
                 List<DocumentSnapshot> dataList = snapshot.data!.docs;
                 //sort ascending order of minMm
                 dataList.sort((a, b) {
-                  double minMmA = a['Min_mm'] ?? 0.0;
-                  double minMmB = b['Min_mm'] ?? 0.0;
-                  return minMmA.compareTo(minMmB);
+                  double numberA = a['Number'] ?? 0.0;
+                  double numberB = b['Number'] ?? 0.0;
+                  return numberA.compareTo(numberB);
                 });
                 return SingleChildScrollView(
                   child: SizedBox(
@@ -95,13 +96,14 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
                       showBottomBorder: true,
                       dividerThickness: 3,
                       columns: const [
-                        DataColumn(label: Text('Risk Level')),
+                        DataColumn(label: Text('Number Rank')),
                         DataColumn(label: Text('Minnimum mm of rain')),
                         DataColumn(label: Text('Maximum mm of rain')),
                         DataColumn(label: Text('Color Level')),
-                        DataColumn(label: Text('Number Rank')),
+                        DataColumn(label: Text('Risk Level')),
                         DataColumn(label: Text('Description')),
                         DataColumn(label: Text('Options')),
+                        DataColumn(label: Text(' ')),
                       ],
                       rows: dataList.map((data) {
                         double minMm = data['Min_mm'] ?? 0.0;
@@ -109,11 +111,11 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
                         int numRank = data['Number'] ?? 0;
                         return DataRow(
                           cells: [
-                            DataCell(Text(data['Hazard_level'])),
+                            DataCell(Text(numRank.toString())),
                             DataCell(Text(minMm.toString())),
                             DataCell(Text(maxMm.toString())),
                             DataCell(Text(data['Risk_level_color'])),
-                            DataCell(Text(numRank.toString())),
+                            DataCell(Text(data['Hazard_level'])),
                             DataCell(Text(data['Description'])),
                             DataCell(
                               TextButton(
@@ -130,6 +132,21 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
                                 ),
                               ),
                             ),
+                            DataCell(
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  updateDoc(risk: data['Hazard_level'],documentID: data.id)));
+                                },
+                                child: const Text(
+                                  'Update',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ),
                           ],
                         );
                       }).toList(),
@@ -138,7 +155,7 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
                 );
               },
             ),
-          )
+          ),
         ],
       ),
       floatingActionButton: Padding(

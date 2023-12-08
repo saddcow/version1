@@ -274,47 +274,82 @@ class _MappState extends State<Mapp> {
     }
   }
 
-  // Save marker details to Firestore
-  void _saveMarkerDetails() {
-    final String street = streetController.text;
+ // Save marker details to Firestore
+void _saveMarkerDetails() {
+  final String street = streetController.text;
 
-    if (selectedBarangay == null || street.isEmpty) {
-      print('Please select a Barangay and enter Street');
-      return;
-    }
-
-    for (final marker in myMarker) {
-      final address = marker.infoWindow.snippet ?? '';
-      final position = marker.position;
-      final RiskLevel = selectedRiskLevel;
-      _saveMarkerToFirestore(
-          selectedBarangay!, street, address, position, RiskLevel!);
-    }
+  if (selectedBarangay == null || street.isEmpty || selectedRiskLevel == null) {
+    print('Please select a Barangay, enter Street, and select Risk Level');
+    return;
   }
 
-  // Save marker details to Firestore
-  Future<void> _saveMarkerToFirestore(String barangay, String street,
-      String address, LatLng coordinates, String selectedRiskLevel) async {
-    String first = "HA";
-    var rng = Random();
-    var code = rng.nextInt(90000) + 10000;
-    String uniqueID = first + code.toString();
-
-    try {
-      final FirebaseFirestore firestore = FirebaseFirestore.instance;
-      await firestore.collection('markers').doc(uniqueID).set({
-        'uniqueID': uniqueID,
-        'barangay': barangay,
-        'street': street,
-        'address': address,
-        'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
-        'risk_level': selectedRiskLevel,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-      print('$uniqueID - $selectedRiskLevel');
-      print('Marker details saved to Firestore');
-    } catch (e) {
-      print('Error saving marker details to Firestore: $e');
+  // Fetch 'number' from Flood Risk Level data based on the selected risk level
+  _getRiskLevelNumber(selectedRiskLevel!).then((int? riskNumber) {
+    if (riskNumber != null) {
+      for (final marker in myMarker) {
+        final address = marker.infoWindow.snippet ?? '';
+        final position = marker.position;
+        _saveMarkerToFirestore(
+          selectedBarangay!,
+          street,
+          address,
+          position,
+          selectedRiskLevel!,
+          riskNumber,
+        );
+      }
+    } else {
+      print('Error fetching Flood Risk Level number');
     }
+  });
+}
+
+// Fetch 'number' from Flood Risk Level data based on the selected risk level
+Future<int?> _getRiskLevelNumber(String riskLevel) async {
+  int number = 0;
+  try {
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Flood_Risk_Level')
+        .where('Hazard_level', isEqualTo: riskLevel)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      number = (querySnapshot.docs.first['Number'] as int?)!;
+      return number;
+    } else {
+      print('No data found for the selected risk level: $riskLevel');
+      return null;
+    }
+  } catch (e) {
+    print('Error fetching Flood Risk Level number: $e');
+    return null;
   }
+}
+
+// Save marker details to Firestore
+Future<void> _saveMarkerToFirestore(String barangay, String street, String address,
+    LatLng coordinates, String selectedRiskLevel, int riskNumber) async {
+  String first = "HA";
+  var rng = Random();
+  var code = rng.nextInt(90000) + 10000;
+  String uniqueID = first + code.toString();
+
+  try {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    await firestore.collection('markers').doc(uniqueID).set({
+      'uniqueID': uniqueID,
+      'barangay': barangay,
+      'street': street,
+      'address': address,
+      'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
+      'risk_level': selectedRiskLevel,
+      'number': riskNumber,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+    print('$uniqueID - $selectedRiskLevel');
+    print('Marker details saved to Firestore');
+  } catch (e) {
+    print('Error saving marker details to Firestore: $e');
+  }
+}
 }
