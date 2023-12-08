@@ -18,7 +18,7 @@ class _RisklevelState extends State<Risklevel>{
       home: Scaffold(
         body: SizedBox(
           width: 500,
-          height: 350,
+          height: 270,
           child: Card(
             color: Colors.lightBlueAccent,
             child: Column(

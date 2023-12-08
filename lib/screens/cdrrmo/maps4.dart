@@ -118,7 +118,7 @@ class _MappState extends State<Mapp> {
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      'Street Name',
+                      'Name of Street/Landmark',
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w700
                       ),
@@ -131,7 +131,7 @@ class _MappState extends State<Mapp> {
                     child: TextField(
                       controller: streetController,
                       decoration: const InputDecoration(
-                        labelText: 'Street',
+                        labelText: 'Street/Landmark',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -274,47 +274,80 @@ class _MappState extends State<Mapp> {
     }
   }
 
-  // Save marker details to Firestore
-  void _saveMarkerDetails() {
-    final String streetLandmark = streetLandmarkController.text;
+// Save marker details to Firestore
+void _saveMarkerDetails() {
+  final String street = streetController.text;
 
-    if (selectedBarangay == null || streetLandmark.isEmpty) {
-      print('Please select a Barangay and enter Street');
-      return;
-    }
-
-    for (final marker in myMarker) {
-      final address = marker.infoWindow.snippet ?? '';
-      final position = marker.position;
-      final riskLevel = selectedRiskLevel;
-      _saveMarkerToFirestore(
-          selectedBarangay!, streetLandmark, address, position, riskLevel!);
-    }
+  if (selectedBarangay == null || street.isEmpty || selectedRiskLevel == null) {
+    print('Please select a Barangay, enter Street, and select Risk Level');
+    return;
   }
 
-  // Save marker details to Firestore
-  Future<void> _saveMarkerToFirestore(String barangay, String streetLandmark,
-      String address, LatLng coordinates, String selectedRiskLevel) async {
-    String first = "HA";
-    var rng = Random();
-    var code = rng.nextInt(90000) + 10000;
-    String uniqueID = first + code.toString();
-
-    try {
-      final FirebaseFirestore firestore = FirebaseFirestore.instance;
-      await firestore.collection('markers').doc(uniqueID).set({
-        'uniqueID': uniqueID,
-        'barangay': barangay,
-        'street_landmark': streetLandmark,
-        'address': address,
-        'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
-        'risk_level': selectedRiskLevel,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-      print('$uniqueID - $selectedRiskLevel');
-      print('Marker details saved to Firestore');
-    } catch (e) {
-      print('Error saving marker details to Firestore: $e');
+  // Fetch 'number' from Flood Risk Level data based on the selected risk level
+  _getRiskLevelNumber(selectedRiskLevel!).then((int? riskNumber) {
+    if (riskNumber != null) {
+      for (final marker in myMarker) {
+        final address = marker.infoWindow.snippet ?? '';
+        final position = marker.position;
+        _saveMarkerToFirestore(
+          selectedBarangay!,
+          street,
+          address,
+          position,
+          selectedRiskLevel!,
+          riskNumber,
+        );
+      }
+    } else {
+      print('Error fetching Flood Risk Level number');
     }
+  });
+}
+
+// Fetch 'number' from Flood Risk Level data based on the selected risk level
+Future<int?> _getRiskLevelNumber(String riskLevel) async {
+  try {
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Flood_Risk_Level')
+        .where('Hazard_level', isEqualTo: riskLevel)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs.first['Number'] as int?;
+    } else {
+      print('No data found for the selected risk level: $riskLevel');
+      return null;
+    }
+  } catch (e) {
+    print('Error fetching Flood Risk Level number: $e');
+    return null;
   }
+}
+
+// Save marker details to Firestore
+Future<void> _saveMarkerToFirestore(String barangay, String street, String address,
+    LatLng coordinates, String selectedRiskLevel, int riskNumber) async {
+  String first = "HA";
+  var rng = Random();
+  var code = rng.nextInt(90000) + 10000;
+  String uniqueID = first + code.toString();
+
+  try {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    await firestore.collection('markers').doc(uniqueID).set({
+      'uniqueID': uniqueID,
+      'barangay': barangay,
+      'street_landmark': street,
+      'address': address,
+      'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
+      'risk_level': selectedRiskLevel,
+      'number': riskNumber,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+    print('$uniqueID - $selectedRiskLevel');
+    print('Marker details saved to Firestore');
+  } catch (e) {
+    print('Error saving marker details to Firestore: $e');
+  }
+}
 }

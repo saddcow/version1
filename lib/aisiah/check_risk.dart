@@ -90,42 +90,46 @@ class FirestoreCheck extends StatelessWidget {
               QuerySnapshot querySnapshot = snapshot.data as QuerySnapshot;
               List<String> matchingDocumentIds = [];
 
-for (QueryDocumentSnapshot document in querySnapshot.docs) {
-  double minMm = 0.0;
-  double maxMm = 0.0;
-  int risk = 1;
+            for (QueryDocumentSnapshot document in querySnapshot.docs) {
+              double minMm = 0.0;
+              double maxMm = 0.0;
+              int risk = 1;
 
-  Map<String, dynamic>? floodRiskLevel = floodRiskLevels
-      .firstWhereOrNull((floodRiskLevel) =>
-          floodRiskLevel['Hazard_level'] == document['risk_level']);
+              Map<String, dynamic>? floodRiskLevel = floodRiskLevels
+                  .firstWhereOrNull((floodRiskLevel) =>
+                      floodRiskLevel['Hazard_level'] == document['risk_level']);
 
-  minMm = floodRiskLevel?['Min_mm'] ?? 0.0;
-  maxMm = floodRiskLevel?['Max_mm'] ?? 0.0;
-  risk = floodRiskLevel?['Number'] ?? 0;
+              minMm = floodRiskLevel?['Min_mm'] ?? 0.0;
+              maxMm = floodRiskLevel?['Max_mm'] ?? 0.0;
+              risk = floodRiskLevel?['Number'] ?? 0;
 
-  int searchString = getSearchString(
-    weatherData: weatherData,
-    minMm: minMm,
-    maxMm: maxMm,
-    risk: risk,
-  );
+              int searchString = getSearchString(
+                weatherData: weatherData,
+                minMm: minMm,
+                maxMm: maxMm,
+                risk: risk,
+              );
 
-  String add = document['address'];
-  int number = document['number'] ;
+              String add = document['address'];
+              String hazard_level = document['risk_level'];
+              int number = document['number'] ;
 
-    if (searchString != 0) {
-        // Add the address to matchingDocumentIds only if it's not already present
-        if (number <= searchString) {
-          matchingDocumentIds.add(add);
-        }
-      }
-}
+                if (searchString != 0) {
+                    // Add the address to matchingDocumentIds only if it's not already present
+                    if (number <= searchString) {
+                      matchingDocumentIds.add('$add - $hazard_level');
+                    }
+                  }
+            }
 
               if (matchingDocumentIds.isNotEmpty) {
                 return SingleChildScrollView(
-                  child: Card(
-                    color: hexStringToColor("#86BBD8"),
-                    child: Column(
+                  child: SizedBox(
+                  height: 270,
+                  width: 500,
+                    child: Card(
+                      color: hexStringToColor("#86BBD8"),
+                      child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         for (String docInfo in matchingDocumentIds)
@@ -134,6 +138,7 @@ for (QueryDocumentSnapshot document in querySnapshot.docs) {
                             title: const Divider(),
                           ),
                       ],
+                    ),
                     ),
                   ),
                 );
@@ -155,33 +160,33 @@ for (QueryDocumentSnapshot document in querySnapshot.docs) {
     );
   }
 
-int getSearchString({
-  required Map<String, dynamic> weatherData,
-  required double minMm,
-  required double maxMm,
-  required int risk,
-}) {
-  int searchString = 0;
+  int getSearchString({
+    required Map<String, dynamic> weatherData,
+    required double minMm,
+    required double maxMm,
+    required int risk,
+  }) {
+    int searchString = 0;
 
-  if (weatherData.containsKey('list') &&
-      weatherData['list'] is List &&
-      (weatherData['list'] as List).isNotEmpty) {
-    final List<dynamic> list = weatherData['list'];
+    if (weatherData.containsKey('list') &&
+        weatherData['list'] is List &&
+        (weatherData['list'] as List).isNotEmpty) {
+      final List<dynamic> list = weatherData['list'];
 
-    if (list.length > 2) {
-      double rain1 = weatherData['list'][0]['rain']?['3h'] ?? 0;
-      double rain2 = weatherData['list'][1]['rain']?['3h'] ?? 0;
-      double rain3 = weatherData['list'][2]['rain']?['3h'] ?? 0;
+      if (list.length > 2) {
+        double rain1 = weatherData['list'][0]['rain']?['3h'] ?? 0;
+        double rain2 = weatherData['list'][1]['rain']?['3h'] ?? 0;
+        double rain3 = weatherData['list'][2]['rain']?['3h'] ?? 0;
 
-      if (rain1 >= minMm && rain1 <= maxMm &&
-          rain2 >= minMm && rain2 <= maxMm &&
-          rain3 >= minMm && rain3 <= maxMm) {
-        searchString = risk;
+        if (rain1 >= minMm && rain1 <= maxMm &&
+            rain2 >= minMm && rain2 >= maxMm &&
+            rain3 >= minMm && rain3 >= maxMm) {
+          searchString = risk;
+        }
       }
     }
-  }
 
-  searchString = 3;
-  return searchString;
-}
+    searchString = risk;
+    return searchString;
+  }
 }
