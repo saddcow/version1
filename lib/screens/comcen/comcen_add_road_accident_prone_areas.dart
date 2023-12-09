@@ -15,14 +15,13 @@ class MappCom extends StatefulWidget {
 class _MappComState extends State<MappCom> {
   List<Marker> myMarker = [];
   GoogleMapController? mapController;
-  TextEditingController streetController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController landmarkController = TextEditingController();
   String? selectedBarangay;
 
   @override
   void dispose() {
-    streetController.dispose();
+    landmarkController.dispose();
     super.dispose();
   }
 
@@ -109,40 +108,13 @@ class _MappComState extends State<MappCom> {
                 ),
                 const Padding(padding: EdgeInsets.only(top: 20.0)),
 
-                // Text Field for Street Name
+                //Field for Landmark or street name
                 Padding(
                   padding: EdgeInsets.only(left: 25),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      'Street Name',
-                      style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.w700
-                      ),
-                    ),
-                  ),
-                ),
-
-                SizedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: TextField(
-                      controller: streetController,
-                      decoration: const InputDecoration(
-                        labelText: 'Street',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.only(top: 20.0)),
-
-                Padding(
-                  padding: EdgeInsets.only(left: 25),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Landmark',
+                      'Landmark/Street Name',
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w700
                       ),
@@ -155,7 +127,7 @@ class _MappComState extends State<MappCom> {
                     child: TextField(
                       controller: landmarkController,
                       decoration: const InputDecoration(
-                        labelText: 'Landmark',
+                        labelText: 'Landmark/Street',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -252,25 +224,23 @@ class _MappComState extends State<MappCom> {
   }
 
   void _saveMarkerDetails() {
-    final String street = streetController.text;
     final String description = descriptionController.text;
     final String landmark = landmarkController.text;
 
-    if (selectedBarangay == null || street.isEmpty) {
-      print('Please select a Barangay and enter Street');
+    if (selectedBarangay == null || landmark.isEmpty) {
+      print('Please select a Barangay and enter Landmark/Street');
       return;
     }
 
     for (final marker in myMarker) {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
-      _saveMarkerToFirestore(selectedBarangay!, street, address, description, landmark, position);
+      _saveMarkerToFirestore(selectedBarangay!, address, description, landmark, position);
     }
   }
 
   Future<void> _saveMarkerToFirestore(
     String barangay,
-    String street,
     String address,
     String description,
     String landmark,
@@ -286,7 +256,6 @@ class _MappComState extends State<MappCom> {
       await firestore.collection('Road_Accident_Areas').doc(uniqueID).set({
         'uniqueID': uniqueID,
         'barangay': barangay,
-        'street': street,
         'address': address,
         'description' : description,
         'landmark' : landmark,

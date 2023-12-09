@@ -19,11 +19,11 @@ Future<List<Marker>> getRoadMarkers() async {
   for (final DocumentSnapshot document in snapshot.docs) {
     final data = document.data() as Map<String, dynamic>;
     final barangay = data['barangay'] as String?;
-    final street = data['street'] as String?;
+    final landmark = data['landmark'] as String?;
     final coordinates = data['coordinates'] as GeoPoint?;
     final uniqeID = data['uniqueID'] as String?;
 
-    if (barangay != null && street != null && coordinates != null && uniqeID != null) {
+    if (barangay != null && landmark != null && coordinates != null && uniqeID != null) {
       markers.add(
         Marker(
           markerId: MarkerId(uniqeID),
@@ -31,7 +31,7 @@ Future<List<Marker>> getRoadMarkers() async {
           icon: customIcon,
           infoWindow: InfoWindow(
             title: 'Road Accident Prone Area',
-            snippet: '$barangay, ' ' $street ',
+            snippet: '$barangay, ' ' $landmark ',
           )
         )
       );
