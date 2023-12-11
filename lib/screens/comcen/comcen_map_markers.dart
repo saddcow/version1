@@ -30,7 +30,7 @@ Future<List<Marker>> retrieveMarkersFromFirestoreRoad() async {
   for (final DocumentSnapshot document in snapshot.docs) {
     final data = document.data() as Map<String, dynamic>;
     final barangay = data['Barangay'] as String?;
-    final street = data['Street'] as String?;
+    final street = data['street_landmark'] as String?;
     final coordinates = data['Coordinates'] as GeoPoint?;
     final hazardStatus = data['Hazard_Status'] as String?;
     final reportID = data['Report_ID'] as String?;

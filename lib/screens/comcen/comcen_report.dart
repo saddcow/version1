@@ -269,7 +269,7 @@ class _ReportsComState extends State<ReportsCom> {
       columns: [
       _buildDataColumn('Date and Time', 120),
       _buildDataColumn('Barangay', 100),
-      _buildDataColumn('Street', 100),
+      _buildDataColumn('Landmark or Street', 100),
       _buildDataColumn('User', 120),
       _buildDataColumn('Report Description', 150),
       _buildDataColumn('No. of Persons Involved', 100),
@@ -289,7 +289,7 @@ class _ReportsComState extends State<ReportsCom> {
               ),
             ),
             DataCell(Text(data['Barangay'])),
-            DataCell(Text(data['Street'])),
+            DataCell(Text(data['street_landmark'])),
             DataCell(
               FutureBuilder<String>(
                 future: getUsername(data['User_ID']),
@@ -374,7 +374,7 @@ class _ReportsComState extends State<ReportsCom> {
               ),
               const Padding(padding: EdgeInsets.all(10)),
               Text(
-                'Location: ${data['Barangay'] + ', ' + data['Street']}',
+                'Location: ${data['Barangay'] + ', ' + data['street_landmark']}',
                 style: GoogleFonts.roboto(
                     fontWeight: FontWeight.w400, fontSize: 20),
               ),
