@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:try1/screens/comcen/DetailsPage.dart';
 import 'package:try1/utils/color_utils.dart';
 
 class ReportsCom extends StatefulWidget {
@@ -310,22 +309,7 @@ class _ReportsComState extends State<ReportsCom> {
             DataCell(
               ElevatedButton(
                 onPressed: () {
-                                Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailsPage(
-                    reportId: data['Report_ID'],
-                    timestamp: formatTimestamp(data['Timestamp']),
-                    barangay: data['Barangay'],
-                    street: data['Street'],
-                    userId: data['User_ID'],
-                    reportDescription: data['Report_Description'],
-                    numberOfPersonsInvolved: data['NumberOfPersonsInvolved'].toString(),
-                    typesOfVehicleInvolved: data['TypesOfVehicleInvolved'] as List<dynamic>,
-                    hazardStatus: data['Hazard_Status'],
-                  ),
-                ),
-              );
+                  showReportDetailsDialog(context, data);
                 },
                 child: const Text('Full Details'),
               ),

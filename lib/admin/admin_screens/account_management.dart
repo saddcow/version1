@@ -84,7 +84,6 @@ class _AccountScreenState extends State<AccountScreen> {
                         DataColumn(label: Text('User Type')),
                         DataColumn(label: Text('Email Address')),
                         DataColumn(label: Text('Phone Number')),
-                        DataColumn(label: Text('Last Sign In')),
                         DataColumn(label: Text('Duplicate Account')),
                         DataColumn(label: Text('Options')),
                       ],
@@ -96,7 +95,6 @@ class _AccountScreenState extends State<AccountScreen> {
                             DataCell(Text(data['User_Type'] ?? 'N/A')),
                             DataCell(Text(data['Email'] ?? 'N/A')),
                             DataCell(Text(data['Phone_Number'] ?? 'N/A')),
-                            const DataCell(Text('Time Stamp here')),
                             DataCell(Text(isDuplicate ? 'Duplicate' : 'Unique')),
                             DataCell(TextButton(
                               onPressed: () {
