@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:try1/utils/color_utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ReportsCom extends StatefulWidget {
   const ReportsCom({Key? key});
@@ -337,9 +338,8 @@ class _ReportsComState extends State<ReportsCom> {
           ),
         ),
         content: Container(
-          width: MediaQuery.of(context).size.width, // Set your desired width
-          height: MediaQuery.of(context).size.height, // Set your desired height
-          
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -352,7 +352,7 @@ class _ReportsComState extends State<ReportsCom> {
                 future: getUsername(data['User_ID']),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
@@ -360,7 +360,7 @@ class _ReportsComState extends State<ReportsCom> {
                       snapshot.data ?? 'N/A',
                       style: GoogleFonts.roboto(
                         fontSize: 20,
-                        fontWeight: FontWeight.w400
+                        fontWeight: FontWeight.w400,
                       ),
                     );
                   }
@@ -370,51 +370,65 @@ class _ReportsComState extends State<ReportsCom> {
               Text(
                 formatTimestamp(data['Timestamp']),
                 style: GoogleFonts.roboto(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400
-                ),
+                    fontSize: 15, fontWeight: FontWeight.w400),
               ),
               const Padding(padding: EdgeInsets.all(10)),
               Text(
                 'Location: ${data['Barangay'] + ', ' + data['Street']}',
                 style: GoogleFonts.roboto(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20
-                ),
+                    fontWeight: FontWeight.w400, fontSize: 20),
               ),
-              const Padding(padding: EdgeInsets.all(10)),           
+              const Padding(padding: EdgeInsets.all(10)),
               Text(
                 'Report Description: ${data['Report_Description']}',
                 style: GoogleFonts.roboto(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20
-                ),
+                    fontWeight: FontWeight.w400, fontSize: 20),
               ),
               const Padding(padding: EdgeInsets.all(10)),
               Text(
                 'Number of Persons Involved: ${data['NumberOfPersonsInvolved']}',
                 style: GoogleFonts.roboto(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20
-                ),
+                    fontWeight: FontWeight.w400, fontSize: 20),
               ),
               const Padding(padding: EdgeInsets.all(10)),
               Text(
                 'Type/s of Vehicle Involved: ${(data['TypesOfVehicleInvolved'] as List<dynamic>).join(', ')}',
                 style: GoogleFonts.roboto(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20
-                ),
+                    fontWeight: FontWeight.w400, fontSize: 20),
               ),
               const Padding(padding: EdgeInsets.all(10)),
-              const Text('Photos: '),
+              const Text('List of Photos: '),
+              // Display the URL of the image from Report_Image
+              FutureBuilder<String>(
+                future: getImageUrlFromReportImage(data['Report_ID']),
+                builder: (context, imageUrlSnapshot) {
+                  if (imageUrlSnapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (imageUrlSnapshot.hasError) {
+                    return Text('Error: ${imageUrlSnapshot.error}');
+                  } else {
+                    return GestureDetector(
+                      onTap: () {
+                        _launchURL(imageUrlSnapshot.data);
+                      },
+                      child: Text(
+                        'URL from Report_Image: ${imageUrlSnapshot.data ?? 'N/A'} (Click to Open)',
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue, // Add your preferred link color
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
               const Padding(padding: EdgeInsets.all(10)),
               Text(
                 'Change Hazard Status:',
                 style: GoogleFonts.roboto(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20
-                ),
+                    fontWeight: FontWeight.w400, fontSize: 20),
               ),
               const Padding(padding: EdgeInsets.all(5)),
               DropdownCell(user_ID: data['Report_ID']),
@@ -432,6 +446,33 @@ class _ReportsComState extends State<ReportsCom> {
       );
     },
   );
+}
+
+Future<String> getImageUrlFromReportImage(String reportId) async {
+  try {
+    // Query the 'Report_Image' collection to find documents with matching 'Report_ID'
+    var querySnapshot = await FirebaseFirestore.instance
+        .collection('Report_Image')
+        .where('Report_ID', isEqualTo: reportId)
+        .get();
+
+    // If there are matching documents, return the 'Url_from_storage' from the first one
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs[0]['Url_from_storage'];
+    } else {
+      return 'N/A'; // No matching documents found
+    }
+  } catch (e) {
+    return 'Error: $e';
+  }
+}
+
+void _launchURL(String? url) async {
+  if (url != null && await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
 }
 
   String formatTimestamp(Timestamp timestamp) {
