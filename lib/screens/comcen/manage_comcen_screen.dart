@@ -61,8 +61,7 @@ class _RoadRiskManageState extends State<RoadRiskManage> {
                       columns: const [
                         DataColumn(label: Text("Address")),
                         DataColumn(label: Text("Barangay")),
-                        DataColumn(label: Text("Street")),
-                        DataColumn(label: Text("Landmark")),
+                        DataColumn(label: Text("Landmark or Street")),
                         DataColumn(label: Text("Coordinates")),
                         DataColumn(label: Text("Description")),
                         DataColumn(label: Text("Options")),
@@ -72,8 +71,7 @@ class _RoadRiskManageState extends State<RoadRiskManage> {
                           cells: [
                             DataCell(Text(document["address"] ?? 'N/A')),
                             DataCell(Text(document["barangay"])),
-                            DataCell(Text(document["street"])),
-                            DataCell(Text(document["landmark"])),
+                            DataCell(Text(document["street_landmark"])),
                             DataCell(Text(
                               "${document["coordinates"].latitude}, ${document["coordinates"].longitude}"
                             )

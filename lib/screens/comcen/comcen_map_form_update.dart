@@ -18,8 +18,7 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
   String id = "";
 
   List<Marker> myMarker = [];
-  TextEditingController streetController = TextEditingController();
-  TextEditingController landmarkController = TextEditingController();
+  TextEditingController street_landmarkController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   String? selectedBarangay;
 
@@ -31,7 +30,7 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
 
   @override
   void dispose() {
-    streetController.dispose();
+    street_landmarkController.dispose();
     super.dispose();
   }
 
@@ -119,33 +118,6 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
                   const Padding(padding: EdgeInsets.only(top: 20.0)),
 
                   Padding(
-                    padding: const EdgeInsets.only(left: 25),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Street Name',
-                        style: GoogleFonts.roboto(
-                          fontWeight: FontWeight.w700
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: TextField(
-                        controller: streetController,
-                        decoration: const InputDecoration(
-                          labelText: 'Street',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Padding(padding: EdgeInsets.only(top: 20.0)),
-
-                  Padding(
                   padding: EdgeInsets.only(left: 25),
                   child: Align(
                     alignment: Alignment.topLeft,
@@ -161,7 +133,7 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: TextField(
-                      controller: landmarkController,
+                      controller: street_landmarkController,
                       decoration: const InputDecoration(
                         labelText: 'Landmark',
                         border: OutlineInputBorder(),
@@ -265,11 +237,10 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
   }
 
   void _saveMarkerDetails(String id) {
-    final String street = streetController.text;
     final String description = descriptionController.text;
-    final String landmark = landmarkController.text;
+    final String street_landmark = street_landmarkController.text;
 
-    if (selectedBarangay == null || street.isEmpty) {
+    if (selectedBarangay == null || street_landmark.isEmpty) {
       print('Please select a Barangay and enter Street');
       return;
     }
@@ -277,26 +248,24 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
     for (final marker in myMarker) {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
-      _saveMarkerToFirestore(id, selectedBarangay!, street, address, description, landmark, position);
+      _saveMarkerToFirestore(id, selectedBarangay!, address, description, street_landmark, position);
     }
   }
 
   Future<void> _saveMarkerToFirestore(
     String id,
     String barangay,
-    String street,
     String address,
     String description,
-    String landmark,
+    String street_landmark,
     LatLng coordinates,
   ) async {
     try {
       await FirebaseFirestore.instance.collection('Road_Accident_Areas').doc(id).update({
         'uniqueID': id,
         'barangay': barangay,
-        'street': street,
         'address': address,
-        'landmark': landmark,
+        'street_landmark': street_landmark,
         'description' : description,
         'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
       });
