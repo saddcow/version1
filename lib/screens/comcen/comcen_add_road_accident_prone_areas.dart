@@ -16,12 +16,12 @@ class _MappComState extends State<MappCom> {
   List<Marker> myMarker = [];
   GoogleMapController? mapController;
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController landmarkController = TextEditingController();
+  TextEditingController street_landmarkController = TextEditingController();
   String? selectedBarangay;
 
   @override
   void dispose() {
-    landmarkController.dispose();
+    street_landmarkController.dispose();
     super.dispose();
   }
 
@@ -125,7 +125,7 @@ class _MappComState extends State<MappCom> {
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: TextField(
-                      controller: landmarkController,
+                      controller: street_landmarkController,
                       decoration: const InputDecoration(
                         labelText: 'Landmark/Street',
                         border: OutlineInputBorder(),
@@ -225,9 +225,9 @@ class _MappComState extends State<MappCom> {
 
   void _saveMarkerDetails() {
     final String description = descriptionController.text;
-    final String landmark = landmarkController.text;
+    final String street_landmark = street_landmarkController.text;
 
-    if (selectedBarangay == null || landmark.isEmpty) {
+    if (selectedBarangay == null || street_landmark.isEmpty) {
       print('Please select a Barangay and enter Landmark/Street');
       return;
     }
@@ -235,7 +235,7 @@ class _MappComState extends State<MappCom> {
     for (final marker in myMarker) {
       final address = marker.infoWindow.snippet ?? '';
       final position = marker.position;
-      _saveMarkerToFirestore(selectedBarangay!, address, description, landmark, position);
+      _saveMarkerToFirestore(selectedBarangay!, address, description, street_landmark, position);
     }
   }
 
@@ -258,7 +258,7 @@ class _MappComState extends State<MappCom> {
         'barangay': barangay,
         'address': address,
         'description' : description,
-        'landmark' : landmark,
+        'street_landmark' : landmark,
         'coordinates': GeoPoint(coordinates.latitude, coordinates.longitude),
         'timestamp': FieldValue.serverTimestamp(),
       });
