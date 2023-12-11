@@ -267,15 +267,15 @@ class _ReportsState extends State<Reports> {
       ),
       showBottomBorder: true,
       dividerThickness: 3,
-      columns: const [
-        DataColumn(label: Text('Date and Time')),
-        DataColumn(label: Text('Barangay')),
-        DataColumn(label: Text('Street')),
-        DataColumn(label: Text('User')),
-        DataColumn(label: Text('Report Description')),
-        DataColumn(label: Text('Full Details')),
-        DataColumn(label: Text('Report Status')),
-        DataColumn(label: Text('Verification Options')),
+      columns: [
+        _buildDataColumn('Date and Time', 120),
+        _buildDataColumn('Barangay', 100),
+        _buildDataColumn('Street', 100),
+        _buildDataColumn('User', 120),
+        _buildDataColumn('Report Description', 150),
+        _buildDataColumn('Full Details', 150),
+        _buildDataColumn('Report Status', 120),
+        _buildDataColumn('Verification Options', 150),
       ],
       rows: dataList.map((data) {
         return DataRow(
@@ -373,11 +373,10 @@ Future<void> _showDetailsDialog(QueryDocumentSnapshot document) async {
                   const Padding(padding: EdgeInsets.only(top: 10)),
                   Row(
                     children: [
-                    const Icon(Icons.location_pin),
                     Text(
                       'Location: ${data['Barangay'] + ', ' + data['Street']}',
                       style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w400,
                         fontSize: 20
                       ),
                     ),
@@ -421,6 +420,14 @@ Future<void> _showDetailsDialog(QueryDocumentSnapshot document) async {
                 ],
               ),
             ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Close'),
+              ),
+            ],
           );
         },
       );
@@ -510,4 +517,13 @@ class _DropdownCellState extends State<DropdownCell> {
       print('Error updating document: $error');
     }
   }
+}
+
+DataColumn _buildDataColumn(String label, double width) {
+  return DataColumn(
+    label: SizedBox(
+      width: width,
+      child: Text(label),
+    ),
+  );
 }
