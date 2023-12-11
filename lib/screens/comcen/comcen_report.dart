@@ -254,7 +254,8 @@ class _ReportsComState extends State<ReportsCom> {
   }
 
   Widget buildDataTable(List dataList) {
-    return DataTable(
+    return 
+    DataTable(
       columnSpacing: 10,
       headingTextStyle: const TextStyle(
         fontWeight: FontWeight.bold,
@@ -282,6 +283,8 @@ class _ReportsComState extends State<ReportsCom> {
             DataCell(
               Text(
                 formatTimestamp(data['Timestamp']),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             DataCell(Text(data['Barangay'])),
