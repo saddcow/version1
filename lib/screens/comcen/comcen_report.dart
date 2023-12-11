@@ -273,6 +273,7 @@ class _ReportsComState extends State<ReportsCom> {
         DataColumn(label: Text('Report Description')),
         DataColumn(label: Text('No. of Persons Involved')),
         DataColumn(label: Text('Type/s of Vehicle')),
+        DataColumn(label: Text('View All Report Details')),
         DataColumn(label: Text('Report Status')),
         DataColumn(label: Text('Verification Options')),
       ],
@@ -303,6 +304,14 @@ class _ReportsComState extends State<ReportsCom> {
             DataCell(Text(data['Report_Description'])),
             DataCell(Text(data['NumberOfPersonsInvolved'.toString()]?? '0')),
             DataCell(Text((data['TypesOfVehicleInvolved'] as List<dynamic>).join(', '))),
+            DataCell(
+              ElevatedButton(
+                onPressed: () {
+                  showReportDetailsDialog(context, data);
+                },
+                child: const Text('Full Details'),
+              ),
+            ),
             DataCell(Text(data['Hazard_Status'])),
             DataCell(
               DropdownCell(user_ID: data['Report_ID']),
@@ -312,6 +321,50 @@ class _ReportsComState extends State<ReportsCom> {
       }).toList(),
     );
   }
+
+  void showReportDetailsDialog(BuildContext context, QueryDocumentSnapshot data) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Report Details'),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Date and Time: ${formatTimestamp(data['Timestamp'])}'),
+            Text('Barangay: ${data['Barangay']}'),
+            Text('Street: ${data['Street']}'),
+            FutureBuilder<String>(
+              future: getUsername(data['User_ID']),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Text('Username: ${snapshot.data ?? 'N/A'}');
+                }
+              },
+            ),
+            Text('Report Description: ${data['Report_Description']}'),
+            Text('Number of Persons Involved: ${data['NumberOfPersonsInvolved']}'),
+            Text('Type/s of Vehicle Involved: ${(data['TypesOfVehicleInvolved'] as List<dynamic>).join(', ')}'),
+            Text('Report Status: ${data['Hazard_Status']}'),
+            // Add more details based on your data structure
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Close'),
+          ),
+        ],
+      );
+    },
+  );
+}
 
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();

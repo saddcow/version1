@@ -329,8 +329,8 @@ Future<void> _showDetailsDialog(QueryDocumentSnapshot document) async {
           return AlertDialog(
             title: Text('Report Details - Status: ${data['Hazard_Status']}'),
             content: Container(
-              width: 500, // Set your desired width
-              height: 500, // Set your desired height
+              width: 500,
+              height: 500, 
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
