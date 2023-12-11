@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AccountScreen extends StatefulWidget {
-  const AccountScreen({super.key});
+  const AccountScreen({Key? key}) : super(key: key);
 
   @override
   State<AccountScreen> createState() => _AccountScreenState();
@@ -13,7 +13,13 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<String> selectedUserTypes = [];
+  List<String> selectedUserTypes = ['All']; // Initialize with 'All'
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch any additional data or perform initializations here
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,81 +33,17 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
         ),
         automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            onPressed: () {
+              _showFilterModal(context);
+            },
+            icon: Icon(Icons.filter_list),
+          ),
+        ],
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                CheckboxListTile(
-                  title: const Text('All'),
-                  value: selectedUserTypes.contains('All'),
-                  onChanged: (value) {
-                    setState(() {
-                      if (value!) {
-                        selectedUserTypes = ['All'];
-                      } else {
-                        selectedUserTypes = [];
-                      }
-                    });
-                  },
-                ),
-                CheckboxListTile(
-                  title: const Text('PUBLIC'),
-                  value: selectedUserTypes.contains('PUBLIC'),
-                  onChanged: (value) {
-                    setState(() {
-                      if (value!) {
-                        selectedUserTypes.add('PUBLIC');
-                      } else {
-                        selectedUserTypes.remove('PUBLIC');
-                      }
-                    });
-                  },
-                ),
-                CheckboxListTile(
-                  title: const Text('ADMIN'),
-                  value: selectedUserTypes.contains('ADMIN'),
-                  onChanged: (value) {
-                    setState(() {
-                      if (value!) {
-                        selectedUserTypes.add('ADMIN');
-                      } else {
-                        selectedUserTypes.remove('ADMIN');
-                      }
-                    });
-                  },
-                ),
-                CheckboxListTile(
-                  title: const Text('COMCEN'),
-                  value: selectedUserTypes.contains('COMCEN'),
-                  onChanged: (value) {
-                    setState(() {
-                      if (value!) {
-                        selectedUserTypes.add('COMCEN');
-                      } else {
-                        selectedUserTypes.remove('COMCEN');
-                      }
-                    });
-                  },
-                ),
-                CheckboxListTile(
-                  title: const Text('DRR'),
-                  value: selectedUserTypes.contains('DRR'),
-                  onChanged: (value) {
-                    setState(() {
-                      if (value!) {
-                        selectedUserTypes.add('DRR');
-                      } else {
-                        selectedUserTypes.remove('DRR');
-                      }
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: _firestore.collection('User').snapshots(),
@@ -179,6 +121,90 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
+  void _showFilterModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          child: Wrap(
+            children: [
+              CheckboxListTile(
+                title: const Text('All'),
+                value: selectedUserTypes.contains('All'),
+                onChanged: (value) {
+                  setState(() {
+                    if (value!) {
+                      selectedUserTypes = ['All'];
+                    } else {
+                      selectedUserTypes = [];
+                    }
+                  });
+                  Navigator.pop(context); // Close the modal
+                },
+              ),
+              CheckboxListTile(
+                title: const Text('PUBLIC'),
+                value: selectedUserTypes.contains('PUBLIC'),
+                onChanged: (value) {
+                  setState(() {
+                    if (value!) {
+                      selectedUserTypes.add('PUBLIC');
+                    } else {
+                      selectedUserTypes.remove('PUBLIC');
+                    }
+                  });
+                  Navigator.pop(context); // Close the modal
+                },
+              ),
+              CheckboxListTile(
+                title: const Text('ADMIN'),
+                value: selectedUserTypes.contains('ADMIN'),
+                onChanged: (value) {
+                  setState(() {
+                    if (value!) {
+                      selectedUserTypes.add('ADMIN');
+                    } else {
+                      selectedUserTypes.remove('ADMIN');
+                    }
+                  });
+                  Navigator.pop(context); // Close the modal
+                },
+              ),
+              CheckboxListTile(
+                title: const Text('COMCEN'),
+                value: selectedUserTypes.contains('COMCEN'),
+                onChanged: (value) {
+                  setState(() {
+                    if (value!) {
+                      selectedUserTypes.add('COMCEN');
+                    } else {
+                      selectedUserTypes.remove('COMCEN');
+                    }
+                  });
+                  Navigator.pop(context); // Close the modal
+                },
+              ),
+              CheckboxListTile(
+                title: const Text('DRR'),
+                value: selectedUserTypes.contains('DRR'),
+                onChanged: (value) {
+                  setState(() {
+                    if (value!) {
+                      selectedUserTypes.add('DRR');
+                    } else {
+                      selectedUserTypes.remove('DRR');
+                    }
+                  });
+                  Navigator.pop(context); // Close the modal
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   bool checkForDuplicates(List<DocumentSnapshot> dataList, DocumentSnapshot data) {
     return dataList.any((item) =>
         item.id != data.id &&
@@ -188,6 +214,6 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Future<void> deleteDocument(String documentId) async {
-    await _firestore.collection('Barangay').doc(documentId).delete();
+    await _firestore.collection('User').doc(documentId).delete();
   }
 }

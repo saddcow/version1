@@ -273,6 +273,7 @@ class _ReportsState extends State<Reports> {
         DataColumn(label: Text('Street')),
         DataColumn(label: Text('User')),
         DataColumn(label: Text('Report Description')),
+        DataColumn(label: Text('Full Details')),
         DataColumn(label: Text('Report Status')),
         DataColumn(label: Text('Verification Options')),
       ],
@@ -301,6 +302,12 @@ class _ReportsState extends State<Reports> {
               ),
             ),
             DataCell(Text(data['Report_Description'])),
+            DataCell( ElevatedButton(
+                onPressed: () {
+                  _showDetailsDialog(data);
+                },
+                child: const Text('View all details here'),
+              ),),
             DataCell(Text(data['Hazard_Status'])),
             DataCell(
               DropdownCell(user_ID: data['Report_ID']),
@@ -310,6 +317,69 @@ class _ReportsState extends State<Reports> {
       }).toList(),
     );
   }
+
+Future<void> _showDetailsDialog(QueryDocumentSnapshot document) async {
+  Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StreamBuilder<String>(
+        stream: getUsername(data['User_ID']).asStream(),
+        builder: (context, snapshot) {
+          return AlertDialog(
+            title: Text('Report Details - Status: ${data['Hazard_Status']}'),
+            content: Container(
+              width: 500, // Set your desired width
+              height: 500, // Set your desired height
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FutureBuilder<String>(
+                future: getUsername(data['User_ID']),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('User: Error - ${snapshot.error}');
+                  } else {
+                    return Text('${snapshot.data ?? 'N/A'}');
+                  }
+                },
+              ),
+                  Text(formatTimestamp(data['Timestamp']),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w100,
+                  ),
+                  ),
+                  Row(
+                    children: [
+                    const Icon(Icons.location_pin),
+                    Text('Location: ${data['Barangay'] + ', ' + data['Street']}'),
+                    const Padding(padding: EdgeInsets.all(10)),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Hazard Status: ${data['Hazard_Status']}'),
+                    ],
+                  ),
+                  Text('Report Description: ${data['Report_Description']}'),
+                  Text('Hazard Status: ${data['Hazard_Status']}'),
+                  const Text('Photos: '),
+                  const Padding(padding: EdgeInsets.all(10)),
+                  const Text('Change Hazard Status:'),
+                  DropdownCell(user_ID: data['Report_ID']),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
 
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
