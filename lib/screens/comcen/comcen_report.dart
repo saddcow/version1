@@ -271,6 +271,7 @@ class _ReportsComState extends State<ReportsCom> {
         DataColumn(label: Text('Street')),
         DataColumn(label: Text('User')),
         DataColumn(label: Text('Report Description')),
+        DataColumn(label: Text('No. of Persons Involved')),
         DataColumn(label: Text('Type/s of Vehicle')),
         DataColumn(label: Text('Report Status')),
         DataColumn(label: Text('Verification Options')),
@@ -300,6 +301,7 @@ class _ReportsComState extends State<ReportsCom> {
               ),
             ),
             DataCell(Text(data['Report_Description'])),
+            DataCell(Text(data['NumberOfPersonsInvolved'.toString()]?? '0')),
             DataCell(Text((data['TypesOfVehicleInvolved'] as List<dynamic>).join(', '))),
             DataCell(Text(data['Hazard_Status'])),
             DataCell(
