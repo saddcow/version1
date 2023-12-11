@@ -19,7 +19,7 @@ Future<List<Marker>> getRoadMarkers() async {
   for (final DocumentSnapshot document in snapshot.docs) {
     final data = document.data() as Map<String, dynamic>;
     final barangay = data['barangay'] as String?;
-    final landmark = data['landmark'] as String?;
+    final landmark = data['street_landmark'] as String?;
     final coordinates = data['coordinates'] as GeoPoint?;
     final uniqeID = data['uniqueID'] as String?;
 

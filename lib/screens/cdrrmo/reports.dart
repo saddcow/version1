@@ -267,15 +267,15 @@ class _ReportsState extends State<Reports> {
       ),
       showBottomBorder: true,
       dividerThickness: 3,
-      columns: const [
-        DataColumn(label: Text('Date and Time')),
-        DataColumn(label: Text('Barangay')),
-        DataColumn(label: Text('Street')),
-        DataColumn(label: Text('User')),
-        DataColumn(label: Text('Report Description')),
-        DataColumn(label: Text('Full Details')),
-        DataColumn(label: Text('Report Status')),
-        DataColumn(label: Text('Verification Options')),
+      columns: [
+        _buildDataColumn('Date and Time', 120),
+        _buildDataColumn('Barangay', 100),
+        _buildDataColumn('Street', 100),
+        _buildDataColumn('User', 120),
+        _buildDataColumn('Report Description', 150),
+        _buildDataColumn('Full Details', 150),
+        _buildDataColumn('Report Status', 120),
+        _buildDataColumn('Verification Options', 150),
       ],
       rows: dataList.map((data) {
         return DataRow(
@@ -327,52 +327,107 @@ Future<void> _showDetailsDialog(QueryDocumentSnapshot document) async {
         stream: getUsername(data['User_ID']).asStream(),
         builder: (context, snapshot) {
           return AlertDialog(
-            title: Text('Report Details - Status: ${data['Hazard_Status']}'),
+            title: Text(
+              'Report Details - Status: ${data['Hazard_Status']}',
+              style: GoogleFonts.roboto(
+                fontWeight: FontWeight.w600,
+                fontSize: 25,
+              ),
+            ),
             content: Container(
-              width: 500,
-              height: 500, 
+              width: MediaQuery.of(context).size.width, // Set your desired width
+              height: MediaQuery.of(context).size.height, // Set your desired height
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Divider(
+                    thickness: 3,
+                    color: Colors.black,
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 5)),
                   FutureBuilder<String>(
-                future: getUsername(data['User_ID']),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('User: Error - ${snapshot.error}');
-                  } else {
-                    return Text('${snapshot.data ?? 'N/A'}');
-                  }
-                },
-              ),
+                    future: getUsername(data['User_ID']),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('User: Error - ${snapshot.error}');
+                      } else {
+                        return Text(
+                          snapshot.data ?? 'N/A', 
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 10)),
                   Text(formatTimestamp(data['Timestamp']),
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w100,
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15
+                    ),
                   ),
-                  ),
+                  const Padding(padding: EdgeInsets.only(top: 10)),
                   Row(
                     children: [
-                    const Icon(Icons.location_pin),
-                    Text('Location: ${data['Barangay'] + ', ' + data['Street']}'),
+                    Text(
+                      'Location: ${data['Barangay'] + ', ' + data['Street']}',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 20
+                      ),
+                    ),
                     const Padding(padding: EdgeInsets.all(10)),
                     ],
                   ),
+                  const Padding(padding: EdgeInsets.all(10)),
                   Row(
                     children: [
-                      Text('Hazard Status: ${data['Hazard_Status']}'),
+                      Text(
+                        'Hazard Status: ${data['Hazard_Status']}',
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20
+                        ),
+                      ),
                     ],
                   ),
-                  Text('Report Description: ${data['Report_Description']}'),
-                  Text('Hazard Status: ${data['Hazard_Status']}'),
+                  const Padding(padding: EdgeInsets.all(10)),
+                  Text(
+                    'Report Description: ${data['Report_Description']}',
+                    style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 20
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.all(10)),
+                  Text(
+                    'Hazard Status: ${data['Hazard_Status']}',
+                    style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 20
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.all(10)),
                   const Text('Photos: '),
                   const Padding(padding: EdgeInsets.all(10)),
                   const Text('Change Hazard Status:'),
+                  const Padding(padding: EdgeInsets.all(5)),
                   DropdownCell(user_ID: data['Report_ID']),
                 ],
               ),
             ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Close'),
+              ),
+            ],
           );
         },
       );
@@ -462,4 +517,13 @@ class _DropdownCellState extends State<DropdownCell> {
       print('Error updating document: $error');
     }
   }
+}
+
+DataColumn _buildDataColumn(String label, double width) {
+  return DataColumn(
+    label: SizedBox(
+      width: width,
+      child: Text(label),
+    ),
+  );
 }
