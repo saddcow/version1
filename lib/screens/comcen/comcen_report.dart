@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:try1/screens/comcen/DetailsPage.dart';
 import 'package:try1/utils/color_utils.dart';
 
 class ReportsCom extends StatefulWidget {
@@ -307,7 +308,22 @@ class _ReportsComState extends State<ReportsCom> {
             DataCell(
               ElevatedButton(
                 onPressed: () {
-                  showReportDetailsDialog(context, data);
+                                Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailsPage(
+                    reportId: data['Report_ID'],
+                    timestamp: formatTimestamp(data['Timestamp']),
+                    barangay: data['Barangay'],
+                    street: data['Street'],
+                    userId: data['User_ID'],
+                    reportDescription: data['Report_Description'],
+                    numberOfPersonsInvolved: data['NumberOfPersonsInvolved'].toString(),
+                    typesOfVehicleInvolved: data['TypesOfVehicleInvolved'] as List<dynamic>,
+                    hazardStatus: data['Hazard_Status'],
+                  ),
+                ),
+              );
                 },
                 child: const Text('Full Details'),
               ),
@@ -321,50 +337,6 @@ class _ReportsComState extends State<ReportsCom> {
       }).toList(),
     );
   }
-
-  void showReportDetailsDialog(BuildContext context, QueryDocumentSnapshot data) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Report Details'),
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Date and Time: ${formatTimestamp(data['Timestamp'])}'),
-            Text('Barangay: ${data['Barangay']}'),
-            Text('Street: ${data['Street']}'),
-            FutureBuilder<String>(
-              future: getUsername(data['User_ID']),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return Text('Username: ${snapshot.data ?? 'N/A'}');
-                }
-              },
-            ),
-            Text('Report Description: ${data['Report_Description']}'),
-            Text('Number of Persons Involved: ${data['NumberOfPersonsInvolved']}'),
-            Text('Type/s of Vehicle Involved: ${(data['TypesOfVehicleInvolved'] as List<dynamic>).join(', ')}'),
-            Text('Report Status: ${data['Hazard_Status']}'),
-            // Add more details based on your data structure
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('Close'),
-          ),
-        ],
-      );
-    },
-  );
-}
 
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
