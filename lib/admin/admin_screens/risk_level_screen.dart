@@ -103,7 +103,7 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
                         DataColumn(label: Text('Risk Level')),
                         DataColumn(label: Text('Description')),
                         DataColumn(label: Text('Options')),
-                        DataColumn(label: Text(' ')),
+                        // DataColumn(label: Text(' ')),
                       ],
                       rows: dataList.map((data) {
                         double minMm = data['Min_mm'] ?? 0.0;
@@ -117,21 +117,21 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
                             DataCell(Text(data['Risk_level_color'])),
                             DataCell(Text(data['Hazard_level'])),
                             DataCell(Text(data['Description'])),
-                            DataCell(
-                              TextButton(
-                                onPressed: () {
-                                  FloodAreaID = data['Hazard_level'];
+                            // DataCell(
+                            //   TextButton(
+                            //     onPressed: () {
+                            //       FloodAreaID = data['Hazard_level'];
 
-                                  deleteFloodHazardAreas(FloodAreaID);
+                            //       deleteFloodHazardAreas(FloodAreaID);
 
-                                  deleteDocument(data.id);
-                                },
-                                child: const Text(
-                                  'Delete',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              ),
-                            ),
+                            //       deleteDocument(data.id);
+                            //     },
+                            //     child: const Text(
+                            //       'Delete',
+                            //       style: TextStyle(color: Colors.red),
+                            //     ),
+                            //   ),
+                            // ),
                             DataCell(
                               TextButton(
                                 onPressed: () {
