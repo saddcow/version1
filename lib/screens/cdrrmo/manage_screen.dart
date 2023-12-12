@@ -40,7 +40,7 @@ class _ManageState extends State<Manage> {
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: _firestore.collection('markers').snapshots(),
+              stream: _firestore.collection('Flood_Hazard_Area').snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return const Text('Something went wrong');
@@ -116,23 +116,23 @@ class _ManageState extends State<Manage> {
   }
 
   // Function to delete a document from the Firestore collection
-  Future<void> deleteDocument(String documentID) async {
-    try {
-      await _firestore.collection('markers').doc(documentID).delete();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Document deleted successfully'),
-        ),
-      );
-    } catch (e) {
-      print('Error deleting document: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to delete document'),
-        ),
-      );
-    }
-  }
+  // Future<void> deleteDocument(String documentID) async {
+  //   try {
+  //     await _firestore.collection('Flood_Hazard_Area').doc(documentID).delete();
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('Document deleted successfully'),
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     print('Error deleting document: $e');
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('Failed to delete document'),
+  //       ),
+  //     );
+  //   }
+  // }
 
 
   @override
@@ -142,7 +142,7 @@ class _ManageState extends State<Manage> {
   }
 
   Future<void> _fetchDataFromFirestore() async {
-    QuerySnapshot querySnapshot = await _firestore.collection('markers').orderBy('timestamp', descending: true).get();
+    QuerySnapshot querySnapshot = await _firestore.collection('Flood_Hazard_Area').orderBy('timestamp', descending: true).get();
 
     setState(() {
       _dataList = querySnapshot.docs;

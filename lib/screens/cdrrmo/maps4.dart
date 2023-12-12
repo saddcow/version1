@@ -334,7 +334,7 @@ Future<void> _saveMarkerToFirestore(String barangay, String street, String addre
 
   try {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    await firestore.collection('markers').doc(uniqueID).set({
+    await firestore.collection('Flood_Hazard_Area').doc(uniqueID).set({
       'uniqueID': uniqueID,
       'barangay': barangay,
       'street_landmark': street,
