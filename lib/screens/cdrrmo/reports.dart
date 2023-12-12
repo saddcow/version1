@@ -286,7 +286,7 @@ class _ReportsState extends State<Reports> {
               ),
             ),
             DataCell(Text(data['Barangay'])),
-            DataCell(Text(data['Street'])),
+            DataCell(Text(data['street_landmark'])),
             DataCell(
               FutureBuilder<String>(
                 future: getUsername(data['User_ID']),
