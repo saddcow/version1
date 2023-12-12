@@ -31,14 +31,14 @@ Future<List<Marker>> retrieveMarkersFromFirestore() async {
   for (final DocumentSnapshot document in snapshot.docs) {
     final data = document.data() as Map<String, dynamic>;
     final barangay = data['Barangay'] as String?;
-    final street = data['Street'] as String?;
+    final street_landmark = data['street_landmark'] as String?;
     final coordinates = data['Coordinates'] as GeoPoint?;
     final hazardStatus = data['Hazard_Status'] as String?;
     final reportID = data['Report_ID'] as String?;
     final type = data['Report_Hazard_Type'] as String;
 
      if (barangay != null &&
-        street != null &&
+        street_landmark != null &&
         coordinates != null &&
         hazardStatus != null &&
         reportID != null &&
@@ -50,7 +50,7 @@ Future<List<Marker>> retrieveMarkersFromFirestore() async {
           icon: customIcon, // Set the custom icon
           infoWindow: InfoWindow(
             title: 'Report location status: $hazardStatus',
-            snippet: 'Location: $barangay, ' ' $street',
+            snippet: 'Location: $barangay, ' ' $street_landmark',
           ),
         ),
       );

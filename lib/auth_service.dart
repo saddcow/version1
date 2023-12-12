@@ -15,14 +15,14 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
-  
-  //Handle Authentication
 
-  Widget handleAuth(){
+  // Handle Authentication
+
+  Widget handleAuth() {
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot){
-        if (snapshot.connectionState == ConnectionState.active){
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
           User? user = FirebaseAuth.instance.currentUser;
           if (user != null) {
             return checkUserType(context, user);
@@ -35,63 +35,85 @@ class AuthService {
           );
         }
       },
-    );    
+    );
   }
 
-Widget checkUserType(BuildContext context, User user) {
-  FirebaseFirestore.instance.collection('User').doc(user.uid).get().then((doc) {
-    String userType = doc['User_Type'];
-    if (userType == 'ADMIN') {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const AdminHome()));
-    } else if (userType == 'CDRRMO') {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
-    } else if (userType == 'COMCEN') {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ComcenHome()));
-    } else if (userType == 'PUBLIC') {
-      // Show an error message instead of signing out
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text('You are not authorized to access this app.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () async {
-                  await AuthService().signout();
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()),
-                  );
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  });
+  Widget checkUserType(BuildContext context, User user) {
+    FirebaseFirestore.instance.collection('User').doc(user.uid).get().then((doc) {
+      String userType = doc['User_Type'];
+      if (userType == 'ADMIN') {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const AdminHome()));
+      } else if (userType == 'CDRRMO') {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+      } else if (userType == 'COMCEN') {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ComcenHome()));
+      } else if (userType == 'PUBLIC') {
+        // Show an error message instead of signing out
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('You are not authorized to access this app.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () async {
+                    await AuthService().signout();
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    });
 
-  return Scaffold(
-    body: Center(child: CircularProgressIndicator()),
-  );
-}
-
+    return Scaffold(
+      body: Center(child: CircularProgressIndicator()),
+    );
+  }
 
   //signout
   Future<void> signout() async {
     try {
       await FirebaseAuth.instance.signOut();
       print('Signed out');
-    } catch (err){
+    } catch (err) {
       print('Error signing out: $err');
     }
-  } 
+  }
 
-  signIn(email, password) {
-    FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password).then((user) {
+  Future<void> signIn(String email, String password, BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
       print('Signed in');
-    }).catchError((e) {
-      print(e);
-    });
+    } on FirebaseAuthException catch (e) {
+      // specific FirebaseAuthException instances
+      String errorMessage = 'Error signing in';
+      if (e.code == 'user-not-found') {
+        errorMessage = 'User not found';
+      } else if (e.code == 'wrong-password') {
+        errorMessage = 'Incorrect password';
+      }
+      // Displays error in the SnackBar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          duration: Duration(seconds: 3),
+        ),
+      );
+    } catch (e) {
+      // other errors
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          duration: Duration(seconds: 3),
+        ),
+      );
+    }
   }
 }

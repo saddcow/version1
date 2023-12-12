@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:try1/utils/color_utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Reports extends StatefulWidget {
   const Reports({Key? key});
@@ -20,11 +21,9 @@ class _ReportsState extends State<Reports> {
   @override
   void initState() {
     super.initState();
-    // Initialize date range to null (no filter)
     startDate = null;
     endDate = null;
 
-    // Retrieve all reports initially
     reportsStream = FirebaseFirestore.instance
         .collection('Report')
         .orderBy('Timestamp', descending: true)
@@ -270,7 +269,7 @@ class _ReportsState extends State<Reports> {
       columns: [
         _buildDataColumn('Date and Time', 120),
         _buildDataColumn('Barangay', 100),
-        _buildDataColumn('Street', 100),
+        _buildDataColumn('Landmark or Street', 100),
         _buildDataColumn('User', 120),
         _buildDataColumn('Report Description', 150),
         _buildDataColumn('Full Details', 150),
@@ -304,7 +303,7 @@ class _ReportsState extends State<Reports> {
             DataCell(Text(data['Report_Description'])),
             DataCell( ElevatedButton(
                 onPressed: () {
-                  _showDetailsDialog(data);
+                  _showDetailsDialog(context, data);
                 },
                 child: const Text('View all details here'),
               ),),
@@ -318,92 +317,79 @@ class _ReportsState extends State<Reports> {
     );
   }
 
-Future<void> _showDetailsDialog(QueryDocumentSnapshot document) async {
-  Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-  await showDialog(
+  void _showDetailsDialog(BuildContext context, QueryDocumentSnapshot data){
+  showDialog(
     context: context,
     builder: (BuildContext context) {
-      return StreamBuilder<String>(
-        stream: getUsername(data['User_ID']).asStream(),
-        builder: (context, snapshot) {
-          return AlertDialog(
-            title: Text(
-              'Report Details - Status: ${data['Hazard_Status']}',
-              style: GoogleFonts.roboto(
-                fontWeight: FontWeight.w600,
-                fontSize: 25,
+      return AlertDialog(
+        title: Text(
+          'Report Details - Status: ${data['Hazard_Status']}',
+          style: GoogleFonts.roboto(
+            fontWeight: FontWeight.w600,
+            fontSize: 25,
+          ),
+        ),
+        content: Container(
+          width: MediaQuery.of(context).size.width, 
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Divider(
+                thickness: 3,
+                color: Colors.black,
               ),
-            ),
-            content: Container(
-              width: MediaQuery.of(context).size.width, // Set your desired width
-              height: MediaQuery.of(context).size.height, // Set your desired height
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Divider(
-                    thickness: 3,
-                    color: Colors.black,
-                  ),
-                  const Padding(padding: EdgeInsets.only(top: 5)),
-                  FutureBuilder<String>(
-                    future: getUsername(data['User_ID']),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('User: Error - ${snapshot.error}');
-                      } else {
-                        return Text(
-                          snapshot.data ?? 'N/A', 
-                          style: GoogleFonts.roboto(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                  const Padding(padding: EdgeInsets.only(top: 10)),
-                  Text(formatTimestamp(data['Timestamp']),
-                    style: GoogleFonts.roboto(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 15
-                    ),
-                  ),
-                  const Padding(padding: EdgeInsets.only(top: 10)),
-                  Row(
-                    children: [
-                    Text(
-                      'Location: ${data['Barangay'] + ', ' + data['Street']}',
+              const Padding(padding: EdgeInsets.only(top: 5)),
+              FutureBuilder<String>(
+                future: getUsername(data['User_ID']),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('User: Error - ${snapshot.error}');
+                  } else {
+                    return Text(
+                      snapshot.data ?? 'N/A', 
                       style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400
                       ),
-                    ),
-                    const Padding(padding: EdgeInsets.all(10)),
-                    ],
-                  ),
-                  const Padding(padding: EdgeInsets.all(10)),
-                  Row(
-                    children: [
-                      Text(
-                        'Hazard Status: ${data['Hazard_Status']}',
-                        style: GoogleFonts.roboto(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 20
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Padding(padding: EdgeInsets.all(10)),
-                  Text(
-                    'Report Description: ${data['Report_Description']}',
-                    style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20
-                    ),
-                  ),
-                  const Padding(padding: EdgeInsets.all(10)),
+                    );
+                  }
+                },
+              ),
+              const Padding(padding: EdgeInsets.only(top: 10)),
+              Text(formatTimestamp(data['Timestamp']),
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15
+                ),
+              ),
+              const Padding(padding: EdgeInsets.only(top: 10)),
+              Text(
+                'Location: ${data['Barangay'] + ', ' + data['street_landmark']}',
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 20
+                ),
+              ),
+              const Padding(padding: EdgeInsets.all(10)),
+              Text(
+                'Hazard Status: ${data['Hazard_Status']}',
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 20
+                ),
+              ),
+              const Padding(padding: EdgeInsets.all(10)),
+              Text(
+                'Report Description: ${data['Report_Description']}',
+                style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20
+                ),
+              ),
+              const Padding(padding: EdgeInsets.all(10)),
                   Text(
                     'Hazard Status: ${data['Hazard_Status']}',
                     style: GoogleFonts.roboto(
@@ -411,29 +397,80 @@ Future<void> _showDetailsDialog(QueryDocumentSnapshot document) async {
                         fontSize: 20
                     ),
                   ),
-                  const Padding(padding: EdgeInsets.all(10)),
-                  const Text('Photos: '),
-                  const Padding(padding: EdgeInsets.all(10)),
-                  const Text('Change Hazard Status:'),
-                  const Padding(padding: EdgeInsets.all(5)),
-                  DropdownCell(user_ID: data['Report_ID']),
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
+              const Padding(padding: EdgeInsets.all(10)),
+              const Text('List of Photos: '),
+              FutureBuilder<String>(
+                future: getImageUrlFromReportImage(data['Report_ID']),
+                builder: (context, imageUrlSnapshot) {
+                  if (imageUrlSnapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (imageUrlSnapshot.hasError) {
+                    return Text('Error: ${imageUrlSnapshot.error}');
+                  } else {
+                    return GestureDetector(
+                      onTap: () {
+                        _launchURL(imageUrlSnapshot.data);
+                      },
+                      child: Text(
+                        'URL from Report_Image: ${imageUrlSnapshot.data ?? 'N/A'} (Click to Open)',
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue, // Add your preferred link color
+                        ),
+                      ),
+                    );
+                  }
                 },
-                child: Text('Close'),
               ),
+            
+              const Text('Change Hazard Status:'),
+              const Padding(padding: EdgeInsets.all(5)),
+              DropdownCell(user_ID: data['Report_ID']),
             ],
-          );
-        },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Close'),
+          ),
+        ],
       );
     },
   );
 }
+
+Future<String> getImageUrlFromReportImage(String reportId) async {
+  try {
+    // Query the 'Report_Image' collection to find documents with matching 'Report_ID'
+    var querySnapshot = await FirebaseFirestore.instance
+        .collection('Report_Image')
+        .where('Report_ID', isEqualTo: reportId)
+        .get();
+
+    // If there are matching documents, return the 'Url_from_storage' from the first one
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs[0]['Url_from_storage'];
+    } else {
+      return 'N/A'; // No matching documents found
+    }
+  } catch (e) {
+    return 'Error: $e';
+  }
+}
+
+void _launchURL(String? url) async {
+  if (url != null && await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
 
 
   String formatTimestamp(Timestamp timestamp) {

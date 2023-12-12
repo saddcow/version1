@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: ElevatedButton(
                               onPressed: () {
                                 if (checkFields()) {
-                                  AuthService().signIn(email, password);
+                                  AuthService().signIn(email, password, context);
                                 }
                               },
                               style: ElevatedButton.styleFrom(
