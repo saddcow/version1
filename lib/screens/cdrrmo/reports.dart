@@ -317,7 +317,7 @@ class _ReportsState extends State<Reports> {
     );
   }
 
-  void _showDetailsDialog(BuildContext context, QueryDocumentSnapshot data){
+void _showDetailsDialog(BuildContext context, QueryDocumentSnapshot data){
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -368,14 +368,6 @@ class _ReportsState extends State<Reports> {
               const Padding(padding: EdgeInsets.only(top: 10)),
               Text(
                 'Location: ${data['Barangay'] + ', ' + data['street_landmark']}',
-                style: GoogleFonts.roboto(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20
-                ),
-              ),
-              const Padding(padding: EdgeInsets.all(10)),
-              Text(
-                'Hazard Status: ${data['Hazard_Status']}',
                 style: GoogleFonts.roboto(
                   fontWeight: FontWeight.w400,
                   fontSize: 20
@@ -526,7 +518,9 @@ class _DropdownCellState extends State<DropdownCell> {
                 setState(() {
                   selectedValue = newValue;
                 });
+
                 updateUser(selectedValue);
+                
               }
             },
             items: ['Ongoing', 'Resolved', 'Spam']
@@ -544,6 +538,7 @@ class _DropdownCellState extends State<DropdownCell> {
 
   Future<void> updateUser(String selectedValue) async {
     String user = widget.user_ID;
+
     try {
       FirebaseFirestore.instance
           .collection('Report')

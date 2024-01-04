@@ -17,7 +17,15 @@ class _MainMapComcenState extends State<MainMapComcen> {
   void initState() {
     super.initState();
     loadRoadMarkers();
+    loadMarker();
     _loadMarkers();
+  }
+
+  Future<void> loadMarker() async {
+    List<Marker> markers = await comcenauthoritymarker();
+    setState(() {
+      markersCombined.addAll(markers);
+    });
   }
 
   Future<void> _loadMarkers() async {

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'package:try1/auth_service.dart';
+import 'package:try1/screens/comcen/comcen_mark.dart';
 import 'package:try1/screens/comcen/comcen_report.dart';
 import 'package:try1/screens/comcen/main_map_comcen.dart';
 import 'package:try1/screens/comcen/manage_comcen_screen.dart';
@@ -96,7 +97,20 @@ class _ComcenHomeState extends State<ComcenHome> {
                       ),
                     )
                   ],
-                )
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: FloatingActionButton.extended(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const comcenMark()));
+                      },
+                      label: const Text('Add Road Accident Area'),
+                      icon: const Icon(Icons.add),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

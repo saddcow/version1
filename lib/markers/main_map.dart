@@ -18,7 +18,23 @@ class _MainMapState extends State<MainMap> {
   void initState() {
     super.initState();
     loadFloodMarkers();
+    loadAuthorityMarkers();
     _loadFloodMarkers(); // Load markers when the app starts
+  }
+
+    Future<void> loadAuthorityMarkers() async {
+    try {
+      List<Marker> markers = await floodauthoritymarker();
+
+      print(markers);
+
+      setState(() {
+        combinedMarkers.addAll(markers);
+      });
+    } catch (error) {
+      print('Error loading flood markers: $error');
+      // Handle the error appropriately (e.g., show a message to the user)
+    }
   }
 
   Future<void> _loadFloodMarkers() async {

@@ -3,6 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({Key? key}) : super(key: key);
@@ -210,9 +212,175 @@ class _AccountScreenState extends State<AccountScreen> {
             item['Phone_Number'] == data['Phone_Number'] ||
             ((item['First_Name'] + item['Last_Name']) == (data['First_Name'] + data['Last_Name']))));
   }
-
-Future<void> deleteDocument(String documentId, String userEmail) async {
-    await _firestore.collection('User').doc(documentId).delete();
+  
+  void _showDetailsDialog(BuildContext context, QueryDocumentSnapshot data){
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          'Report Details - Status: ${data['Hazard_Status']}',
+          style: GoogleFonts.roboto(
+            fontWeight: FontWeight.w600,
+            fontSize: 25,
+          ),
+        ),
+        content: Container(
+          width: MediaQuery.of(context).size.width, 
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Divider(
+                thickness: 3,
+                color: Colors.black,
+              ),
+              const Padding(padding: EdgeInsets.only(top: 5)),
+              FutureBuilder<String>(
+                future: getUsername(data['User_ID']),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('User: Error - ${snapshot.error}');
+                  } else {
+                    return Text(
+                      snapshot.data ?? 'N/A', 
+                      style: GoogleFonts.roboto(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400
+                      ),
+                    );
+                  }
+                },
+              ),
+              const Padding(padding: EdgeInsets.only(top: 10)),
+              Text(formatTimestamp(data['Timestamp']),
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15
+                ),
+              ),
+              const Padding(padding: EdgeInsets.only(top: 10)),
+              Text(
+                'Location: ${data['Barangay'] + ', ' + data['street_landmark']}',
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 20
+                ),
+              ),
+              const Padding(padding: EdgeInsets.all(10)),
+              Text(
+                'Report Description: ${data['Report_Description']}',
+                style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20
+                ),
+              ),
+              const Padding(padding: EdgeInsets.all(10)),
+                  Text(
+                    'Hazard Status: ${data['Hazard_Status']}',
+                    style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 20
+                    ),
+                  ),
+              const Padding(padding: EdgeInsets.all(10)),
+              const Text('List of Photos: '),
+              FutureBuilder<String>(
+                future: getImageUrlFromReportImage(data['Report_ID']),
+                builder: (context, imageUrlSnapshot) {
+                  if (imageUrlSnapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (imageUrlSnapshot.hasError) {
+                    return Text('Error: ${imageUrlSnapshot.error}');
+                  } else {
+                    return GestureDetector(
+                      onTap: () {
+                        _launchURL(imageUrlSnapshot.data);
+                      },
+                      child: Text(
+                        'URL from Report_Image: ${imageUrlSnapshot.data ?? 'N/A'} (Click to Open)',
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue, // Add your preferred link color
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Close'),
+          ),
+        ],
+      );
+    },
+  );
 }
 
+  Future<String> getUsername(String userId) async {
+    String first = '';
+    String last = '';
+    try {
+      var userSnapshot =
+          await FirebaseFirestore.instance.collection('User').doc(userId).get();
+
+      if (userSnapshot.exists) {
+        first = userSnapshot['First_Name'];
+        last = userSnapshot['Last_Name'];
+        return "$first " " $last";
+      } else {
+        return 'User not found';
+      }
+    } catch (error) {
+      print('Error fetching username: $error');
+      return 'Error';
+    }
+  }
+
+  String formatTimestamp(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    return DateFormat('MM-dd-yyyy HH:mm').format(dateTime);
+  }
+
+  Future<String> getImageUrlFromReportImage(String reportId) async {
+  try {
+    // Query the 'Report_Image' collection to find documents with matching 'Report_ID'
+    var querySnapshot = await FirebaseFirestore.instance
+        .collection('Report_Image')
+        .where('Report_ID', isEqualTo: reportId)
+        .get();
+
+    // If there are matching documents, return the 'Url_from_storage' from the first one
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs[0]['Url_from_storage'];
+    } else {
+      return 'N/A'; // No matching documents found
+    }
+  } catch (e) {
+    return 'Error: $e';
+  }
+}
+
+  void _launchURL(String? url) async {
+  if (url != null && await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
+  Future<void> deleteDocument(String documentId, String userEmail) async {
+    await _firestore.collection('User').doc(documentId).delete();
+}
 }
