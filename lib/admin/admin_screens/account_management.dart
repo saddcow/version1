@@ -98,7 +98,7 @@ class _AccountScreenState extends State<AccountScreen> {
                             DataCell(Text(isDuplicate ? 'Duplicate' : 'Unique')),
                             DataCell(TextButton(
                               onPressed: () {
-                                deleteDocument(data.id);
+                                deleteDocument(data.id, data['Email']);
                               },
                               child: const Text(
                                 'Delete',
@@ -211,7 +211,8 @@ class _AccountScreenState extends State<AccountScreen> {
             ((item['First_Name'] + item['Last_Name']) == (data['First_Name'] + data['Last_Name']))));
   }
 
-  Future<void> deleteDocument(String documentId) async {
+Future<void> deleteDocument(String documentId, String userEmail) async {
     await _firestore.collection('User').doc(documentId).delete();
-  }
+}
+
 }
