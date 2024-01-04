@@ -7,6 +7,7 @@ import 'package:try1/aisiah/check_risk.dart';
 import 'package:try1/aisiah/precipitation.dart';
 import 'package:try1/auth_service.dart';
 import 'package:try1/markers/main_map.dart';
+import 'package:try1/screens/cdrrmo/cdrrmo_mark.dart';
 import 'package:try1/screens/weather_src/current_weather.dart';
 import 'package:try1/screens/login_screen.dart';
 import 'package:try1/screens/cdrrmo/manage_screen.dart';
@@ -212,8 +213,20 @@ class _HomeState extends State<Home> {
                       ),
                     )
                   ],
+                ),                
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: FloatingActionButton.extended(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const AuthorityMark()));
+                      },
+                      label: const Text('Add Road Accident Area'),
+                      icon: const Icon(Icons.add),
+                    ),
+                  ),
                 ),
-                const Padding(padding: EdgeInsets.only(bottom: 50))
               ],
             ),
           ),

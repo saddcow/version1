@@ -58,3 +58,50 @@ Future<List<Marker>> retrieveMarkersFromFirestoreRoad() async {
 
   return markers;
 }
+
+
+
+Future<List<Marker>> comcenauthoritymarker() async {
+  
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  
+  // Calculate start and end timestamps for current day
+  DateTime now = DateTime.now();
+  DateTime startOfDay = DateTime(now.year, now.month, now.day, 0, 0, 0);
+  DateTime endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
+
+  // Retrieve reports within the current day
+  final QuerySnapshot snapshot = await firestore
+      .collection('COMCEN_Marker')
+      .where('timestamp', isGreaterThanOrEqualTo: startOfDay)
+      .where('timestamp', isLessThanOrEqualTo: endOfDay)
+      .get();
+
+  final List<Marker> markers = [];
+
+  for (final DocumentSnapshot document in snapshot.docs) {
+    final data = document.data() as Map<String, dynamic>;
+    final barangay = data['barangay'] as String?;
+    final street_landmark = data['street_landmark'] as String?;
+    final coordinates = data['coordinates'] as GeoPoint?;
+    final reportID = data['uniqueID'] as String?;
+
+     if (barangay != null &&
+        street_landmark != null &&
+        coordinates != null &&
+        reportID != null) {
+      markers.add(
+        Marker(
+          markerId: MarkerId(reportID),
+          position: LatLng(coordinates.latitude, coordinates.longitude),
+          infoWindow: InfoWindow(
+            title: 'Report location status: Road Accident',
+            snippet: 'Location: $barangay, ' ' $street_landmark',
+          ),
+        ),
+      );
+    }
+  }
+
+  return markers;
+}
