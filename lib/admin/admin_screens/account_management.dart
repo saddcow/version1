@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<String> selectedUserTypes = ['All']; // Initialize with 'All'
+  late List<DocumentSnapshot> dataList; // Added dataList
 
   @override
   void initState() {
@@ -54,7 +56,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                List<DocumentSnapshot> dataList = snapshot.data!.docs;
+                dataList = snapshot.data!.docs;
 
                 // Apply user type filter
                 if (!selectedUserTypes.contains('All')) {
@@ -85,6 +87,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         DataColumn(label: Text('Email Address')),
                         DataColumn(label: Text('Phone Number')),
                         DataColumn(label: Text('Duplicate Account')),
+                        DataColumn(label: Text('Full Details')),
                         DataColumn(label: Text('Options')),
                       ],
                       rows: dataList.map((data) {
@@ -96,6 +99,12 @@ class _AccountScreenState extends State<AccountScreen> {
                             DataCell(Text(data['Email'] ?? 'N/A')),
                             DataCell(Text(data['Phone_Number'] ?? 'N/A')),
                             DataCell(Text(isDuplicate ? 'Duplicate' : 'Unique')),
+                            DataCell(ElevatedButton(
+                              onPressed: () {
+                                _showDetailsDialog(context, data);
+                              },
+                              child: const Text('View all details here'),
+                            )),
                             DataCell(TextButton(
                               onPressed: () {
                                 deleteDocument(data.id, data['Email']);
@@ -211,8 +220,128 @@ class _AccountScreenState extends State<AccountScreen> {
             ((item['First_Name'] + item['Last_Name']) == (data['First_Name'] + data['Last_Name']))));
   }
 
-Future<void> deleteDocument(String documentId, String userEmail) async {
+  Future<void> deleteDocument(String documentId, String userEmail) async {
     await _firestore.collection('User').doc(documentId).delete();
+  }
+
+  void _showDetailsDialog(BuildContext context, DocumentSnapshot data) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Account Details",
+            style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w600,
+              fontSize: 25,
+            ),
+          ),
+          content: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Divider(
+                  thickness: 3,
+                  color: Colors.black,
+                ),
+                const Padding(padding: EdgeInsets.only(top: 5)),
+                Text(
+                  "FullName: ${data['First_Name']} ${data['Last_Name'] ?? 'N/A'}",
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                Text(
+                  "User Type: ${data['User_Type'] ?? 'N/A'}",
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                Text(
+                  "Email Address: ${data['Email'] ?? 'N/A'}",
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                Text(
+                  "Phone Number: ${data['Phone_Number'] ?? 'N/A'}",
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                const Text('ID Photo:'),
+                FutureBuilder<String>(
+                  future: getImageUrlFromIdImage(data['User_ID']),
+                  builder: (context, imageUrlSnapshot) {
+                    if (imageUrlSnapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (imageUrlSnapshot.hasError) {
+                      return Text('Error: ${imageUrlSnapshot.error}');
+                    } else {
+                      return GestureDetector(
+                        onTap: () {
+                          _launchURL(imageUrlSnapshot.data);
+                        },
+                        child: Text(
+                          'URL of ID Image: ${imageUrlSnapshot.data ?? 'N/A'} (Click to Open)',
+                          style: GoogleFonts.roboto(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 20,
+                            decoration: TextDecoration.underline,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+                Text(
+                  "Duplicate Account: ${checkForDuplicates(dataList, data) ? 'Yes' : 'No'}",
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
+Future<String> getImageUrlFromIdImage(String userId) async {
+  try {
+    var querySnapshot = await FirebaseFirestore.instance
+        .collection('UploadedID')
+        .where('User_ID', isEqualTo: userId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs[0]['Url_from_storage'];
+    } else {
+      return 'N/A';
+    }
+  } catch (e) {
+    return 'Error: $e';
+  }
+}
+
+void _launchURL(String? url) async {
+  if (url != null && await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
 }

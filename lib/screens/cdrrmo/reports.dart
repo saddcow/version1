@@ -417,7 +417,7 @@ class _ReportsState extends State<Reports> {
                           fontWeight: FontWeight.w400,
                           fontSize: 20,
                           decoration: TextDecoration.underline,
-                          color: Colors.blue, // Add your preferred link color
+                          color: Colors.blue,
                         ),
                       ),
                     );
