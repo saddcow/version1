@@ -80,7 +80,7 @@ class FirestoreCheck extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('markers').snapshots(),
+          stream: FirebaseFirestore.instance.collection('Flood_Hazard_Area').snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
