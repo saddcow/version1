@@ -280,7 +280,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
                 const Padding(padding: EdgeInsets.all(10)),
                 const Text('ID Photo:'),
-                FutureBuilder<String>(
+                FutureBuilder<List<String>>(
                   future: getImageUrlFromIdImage(data['User_ID']),
                   builder: (context, imageUrlSnapshot) {
                     if (imageUrlSnapshot.connectionState == ConnectionState.waiting) {
@@ -288,12 +288,13 @@ class _AccountScreenState extends State<AccountScreen> {
                     } else if (imageUrlSnapshot.hasError) {
                       return Text('Error: ${imageUrlSnapshot.error}');
                     } else {
+                      List<String> urls = imageUrlSnapshot.data ?? [];
                       return GestureDetector(
                         onTap: () {
-                          _launchURL(imageUrlSnapshot.data);
+                          _launchURL(urls);
                         },
                         child: Text(
-                          'URL of ID Image: ${imageUrlSnapshot.data ?? 'N/A'} (Click to Open)',
+                          'URL of ID Image: ${urls.isNotEmpty ? urls.first : 'N/A'} (Click to Open)',
                           style: GoogleFonts.roboto(
                             fontWeight: FontWeight.w400,
                             fontSize: 20,
@@ -321,27 +322,40 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 }
 
-Future<String> getImageUrlFromIdImage(String userId) async {
+Future<List<String>> getImageUrlFromIdImage(String userId) async {
+  print("User ID: $userId");
   try {
     var querySnapshot = await FirebaseFirestore.instance
         .collection('UploadedID')
         .where('User_ID', isEqualTo: userId)
         .get();
 
+    List<String> urls = [];
+
     if (querySnapshot.docs.isNotEmpty) {
-      return querySnapshot.docs[0]['Url_from_storage'];
+      for (var doc in querySnapshot.docs) {
+        var url = doc['Url_from_storage'];
+        urls.add(url);
+        
+      }
+  
+      return urls;
     } else {
-      return 'N/A';
+      return ['N/A'];
     }
   } catch (e) {
-    return 'Error: $e';
+    return ['Error: $e'];
   }
 }
 
-void _launchURL(String? url) async {
-  if (url != null && await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
+
+void _launchURL(List<String> urls) async {
+  if (urls.isNotEmpty) {
+    String url = urls.first; // Assuming you want to launch the first URL in the list
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
