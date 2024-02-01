@@ -7,6 +7,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:try1/utils/color_utils.dart';
+
 class AuthorityMark extends StatefulWidget {
   const AuthorityMark({Key? key}) : super(key: key);
   _AuthorityMarkState createState() => _AuthorityMarkState();
@@ -32,7 +34,15 @@ class _AuthorityMarkState extends State<AuthorityMark> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Currently Flooding Area'),
+        backgroundColor: hexStringToColor("#3c7f96"),
+        title: Text(
+          'Add Currently Flooding Area',
+          style: GoogleFonts.roboto(
+            fontWeight: FontWeight.w400,
+            fontSize: 25,
+            color: Colors.white
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(

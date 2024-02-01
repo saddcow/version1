@@ -215,7 +215,20 @@ class _HomeState extends State<Home> {
                       ),
                     )
                   ],
-                ),                
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: FloatingActionButton.extended(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const AuthorityMark()));
+                      },
+                      label: const Text('Add Current Flood Area'),
+                      icon: const Icon(Icons.add),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
