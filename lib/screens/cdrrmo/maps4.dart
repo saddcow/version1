@@ -7,6 +7,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:try1/utils/color_utils.dart';
+
 class Mapp extends StatefulWidget {
   const Mapp({Key? key}) : super(key: key);
   _MappState createState() => _MappState();
@@ -31,7 +33,15 @@ class _MappState extends State<Mapp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Flood Risk Area'),
+        backgroundColor: hexStringToColor("#3c7f96"),
+        title: Text(
+          'Add Flood Risk Area',
+          style: GoogleFonts.roboto(
+            fontWeight: FontWeight.w400,
+            fontSize: 25,
+            color: Colors.white
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(

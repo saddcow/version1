@@ -7,6 +7,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:try1/utils/color_utils.dart';
+
 class comcenMark extends StatefulWidget {
   const comcenMark({Key? key}) : super(key: key);
   _comcenMarkState createState() => _comcenMarkState();
@@ -32,7 +34,15 @@ class _comcenMarkState extends State<comcenMark> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Road Accident Area'),
+        backgroundColor: hexStringToColor("#3c7f9"),
+        title: Text(
+          'Add Road Accident Area',
+          style: GoogleFonts.roboto(
+            fontWeight: FontWeight.w400,
+            fontSize: 25,
+            color: Colors.white
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(

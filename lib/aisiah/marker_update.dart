@@ -7,6 +7,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:try1/utils/color_utils.dart';
+
 class MappUpdate extends StatefulWidget {
   final String myString;
 
@@ -43,9 +45,16 @@ class _MappUpdateState extends State<MappUpdate> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Flood Risk Area',
-            style:
-                GoogleFonts.roboto(fontWeight: FontWeight.w400, fontSize: 25)),
+        backgroundColor: hexStringToColor("#3c7f9"),
+        title: Text(
+          'Edit Flood Risk Area',
+          style:
+            GoogleFonts.roboto(
+              fontWeight: FontWeight.w400, 
+              fontSize: 25,
+              color: Colors.white
+            )
+        ),
       ),
       body: SizedBox(
         child: SingleChildScrollView(

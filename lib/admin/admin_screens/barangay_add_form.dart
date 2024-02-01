@@ -49,11 +49,13 @@ class _BarangayFormState extends State<BarangayForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: Text(
           'Add Barangay',
           style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w400,
-              fontSize: 25
+            fontWeight: FontWeight.w400,
+            fontSize: 25,
+            color: Colors.white
           )
         ),
       ),

@@ -19,11 +19,13 @@ class _BarangayScreenState extends State<BarangayScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: Text(
           'List of Barangay in Naga City',
           style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w400,
-              fontSize: 25
+            fontWeight: FontWeight.w400,
+            fontSize: 25,
+            color: Colors.white
           )
         ),
         automaticallyImplyLeading: false,

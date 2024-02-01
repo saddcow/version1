@@ -50,7 +50,7 @@ class _PrecipitationState extends State<Precipitation> {
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: Card(
+        child: Container(
           color: hexStringToColor("#86BBD8"),
           child: Padding(
             padding: const EdgeInsets.all(10.0),

@@ -59,7 +59,7 @@ class _RiskLvlCardState extends State<RiskLvlCard> {
           }).toList();
 
           return SingleChildScrollView(
-            child: Card(
+            child: Container(
               color: hexStringToColor("#86BBD8"), // Set the card color
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

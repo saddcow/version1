@@ -59,11 +59,13 @@ class _HomeState extends State<Home> {
       // Monitoring View
       Scaffold(
         appBar: AppBar(
+          backgroundColor: hexStringToColor("#3c7f96"),
           title: Text(
             "CDRRMO Flood Monitoring",
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w400,
-              fontSize: 25
+              fontSize: 25,
+              color: Colors.white
             )
           ),
         ),
@@ -124,7 +126,7 @@ class _HomeState extends State<Home> {
                             children: [
                               SizedBox(
                                 width: 500,
-                                height: 350,
+                                height: 400,
                                 child: Card(
                                   color: hexStringToColor("#86BBD8"),
                                   elevation: 4,
@@ -152,7 +154,7 @@ class _HomeState extends State<Home> {
                               ),
                               SizedBox(
                                 width: 500,
-                                height: 350,
+                                height: 400,
                                 child: Card(
                                   elevation: 4,
                                   color: hexStringToColor("#86BBD8"),
@@ -180,7 +182,7 @@ class _HomeState extends State<Home> {
                               ),
                               SizedBox(
                                 width: 500,
-                                height: 350,
+                                height: 400,
                                 child: Card(
                                   elevation: 4,
                                   color: hexStringToColor("#86BBD8"),
@@ -214,19 +216,6 @@ class _HomeState extends State<Home> {
                     )
                   ],
                 ),                
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: FloatingActionButton.extended(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const AuthorityMark()));
-                      },
-                      label: const Text('Add Road Accident Area'),
-                      icon: const Icon(Icons.add),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

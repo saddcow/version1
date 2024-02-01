@@ -90,11 +90,13 @@ class _updateBarangayFormState extends State<updateBarangayForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: Text(
           'Update Barangay $barangayName',
           style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w400,
-              fontSize: 25
+            fontWeight: FontWeight.w400,
+            fontSize: 25,
+            color: Colors.white
           )
         ),
       ),

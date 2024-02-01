@@ -125,11 +125,13 @@ class _updateDocState extends State<updateDoc> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: Text(
           'Update Risk Level: $risk_name',
           style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w400,
-              fontSize: 25
+            fontWeight: FontWeight.w400,
+            fontSize: 25,
+            color: Colors.white
           )
         ),
       ),

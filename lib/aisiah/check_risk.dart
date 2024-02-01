@@ -126,7 +126,7 @@ class FirestoreCheck extends StatelessWidget {
                 child: SizedBox(
                   height: 270,
                   width: 500,
-                  child: Card(
+                  child: Container(
                     color: hexStringToColor("#86BBD8"),
                     child: SingleChildScrollView(
                       child: Column(
@@ -147,7 +147,7 @@ class FirestoreCheck extends StatelessWidget {
               return SizedBox(
                 height: 270,
                 width: 500,
-                child: Card(
+                child: Container(
                   color: hexStringToColor("#86BBD8"),
                   child: const Center(
                     child: Text('All Good! Nothing to worry!'),

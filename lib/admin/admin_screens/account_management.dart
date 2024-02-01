@@ -27,11 +27,13 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: Text(
           'List of User Accounts',
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
             fontSize: 25,
+            color: Colors.white
           ),
         ),
         automaticallyImplyLeading: false,

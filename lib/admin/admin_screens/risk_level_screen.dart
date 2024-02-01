@@ -57,9 +57,15 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('List of Risk Level',
-            style:
-                GoogleFonts.roboto(fontWeight: FontWeight.w400, fontSize: 25)),
+        backgroundColor: Colors.black,
+        title: Text(
+          'List of Risk Level',
+          style:GoogleFonts.roboto(
+            fontWeight: FontWeight.w400, 
+            fontSize: 25,
+            color: Colors.white
+          )
+        ),
         automaticallyImplyLeading: false,
       ),
       body: Column(

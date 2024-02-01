@@ -34,11 +34,13 @@ class _ReportsState extends State<Reports> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: hexStringToColor("#3c7f96"),
         title: Text(
           'Flood Reports',
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
             fontSize: 25,
+            color: Colors.white
           ),
         ),
         actions: [

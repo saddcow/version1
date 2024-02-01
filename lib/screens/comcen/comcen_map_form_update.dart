@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:try1/utils/color_utils.dart';
 
 class ComcenMarkerUpdate extends StatefulWidget {
   final String myString;
@@ -38,11 +39,13 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: hexStringToColor("#3c7f9"),
         title: Text(
           'Edit Road Risk Area',
           style: GoogleFonts.roboto(
               fontWeight: FontWeight.w400,
-              fontSize: 25
+              fontSize: 25,
+              color: Colors.white
           )
         ),
       ),

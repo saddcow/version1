@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:try1/aisiah/marker_update.dart';
 import 'package:try1/screens/cdrrmo/maps4.dart';
+import 'package:try1/utils/color_utils.dart';
 
 class Manage extends StatefulWidget {
   const Manage({super.key});
@@ -24,9 +25,16 @@ class _ManageState extends State<Manage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Managing Flood Risk Area',
-            style:
-                GoogleFonts.roboto(fontWeight: FontWeight.w400, fontSize: 25)),
+        backgroundColor: hexStringToColor("#3c7f96"),
+        title: Text(
+          'Managing Flood Risk Area',
+          style:
+            GoogleFonts.roboto(
+              fontWeight: FontWeight.w400, 
+              fontSize: 25,
+              color: Colors.white
+          )
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
