@@ -81,13 +81,15 @@ class _AccountScreenState extends State<AccountScreen> {
                       ),
                       showBottomBorder: true,
                       dividerThickness: 3,
-                      columns: const [
+                      columns: [
                         DataColumn(label: Text('Full Name')),
                         DataColumn(label: Text('User Type')),
                         DataColumn(label: Text('Email Address')),
                         DataColumn(label: Text('Phone Number')),
                         DataColumn(label: Text('Duplicate Account')),
                         DataColumn(label: Text('Full Details')),
+                        DataColumn(label: Text('Verification Status')),
+                        DataColumn(label: Text('Verification Options')),
                         DataColumn(label: Text('Options')),
                       ],
                       rows: dataList.map((data) {
@@ -105,6 +107,8 @@ class _AccountScreenState extends State<AccountScreen> {
                               },
                               child: const Text('View all details here'),
                             )),
+                            DataCell(Text(data['Verification_Status'])),
+                            DataCell(DropdownCell(user_ID: data.id)),
                             DataCell(TextButton(
                               onPressed: () {
                                 deleteDocument(data.id, data['Email']);
@@ -248,6 +252,14 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
                 const Padding(padding: EdgeInsets.only(top: 5)),
                 Text(
+                  "Verification Status: ${data['Verification_Status']}",
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                Text(
                   "FullName: ${data['First_Name']} ${data['Last_Name'] ?? 'N/A'}",
                   style: GoogleFonts.roboto(
                     fontWeight: FontWeight.w400,
@@ -279,7 +291,13 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                 ),
                 const Padding(padding: EdgeInsets.all(10)),
-                const Text('ID Photo:'),
+                Text(
+                  'ID Photo:',
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                  ),
+                ),
                 FutureBuilder<List<String>>(
                   future: getImageUrlFromIdImage(data['User_ID']),
                   builder: (context, imageUrlSnapshot) {
@@ -289,19 +307,33 @@ class _AccountScreenState extends State<AccountScreen> {
                       return Text('Error: ${imageUrlSnapshot.error}');
                     } else {
                       List<String> urls = imageUrlSnapshot.data ?? [];
-                      return GestureDetector(
-                        onTap: () {
-                          _launchURL(urls);
-                        },
-                        child: Text(
-                          'URL of ID Image: ${urls.isNotEmpty ? urls.first : 'N/A'} (Click to Open)',
-                          style: GoogleFonts.roboto(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20,
-                            decoration: TextDecoration.underline,
-                            color: Colors.blue,
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(padding: EdgeInsets.all(5)),
+                          Text(
+                            'URLs of ID Image:',
+                            style: GoogleFonts.roboto(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20,
+                            ),
                           ),
-                        ),
+                          for (String url in urls)
+                            GestureDetector(
+                              onTap: () {
+                                _launchURL(url);
+                              },
+                              child: Text(
+                                '- $url (Click to Open)',
+                                style: GoogleFonts.roboto(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 20,
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ),
+                        ],
                       );
                     }
                   },
@@ -313,9 +345,27 @@ class _AccountScreenState extends State<AccountScreen> {
                     fontSize: 20,
                   ),
                 ),
+                const Padding(padding: EdgeInsets.all(10)),
+                Text(
+                  'Change Account Status:',
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.all(5)),
+                DropdownCell(user_ID: data.id),
               ],
             ),
           ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
         );
       },
     );
@@ -336,9 +386,8 @@ Future<List<String>> getImageUrlFromIdImage(String userId) async {
       for (var doc in querySnapshot.docs) {
         var url = doc['Url_from_storage'];
         urls.add(url);
-        
       }
-  
+
       return urls;
     } else {
       return ['N/A'];
@@ -348,14 +397,69 @@ Future<List<String>> getImageUrlFromIdImage(String userId) async {
   }
 }
 
+void _launchURL(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
 
-void _launchURL(List<String> urls) async {
-  if (urls.isNotEmpty) {
-    String url = urls.first; // Assuming you want to launch the first URL in the list
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
+class DropdownCell extends StatefulWidget {
+  const DropdownCell({Key? key, required this.user_ID}) : super(key: key);
+
+  final String user_ID;
+
+  @override
+  _DropdownCellState createState() => _DropdownCellState();
+}
+
+class _DropdownCellState extends State<DropdownCell> {
+  String selectedValue = 'Pending';
+  final CollectionReference users =
+      FirebaseFirestore.instance.collection('User');
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          DropdownButtonFormField<String>(
+            value: selectedValue,
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                setState(() {
+                  selectedValue = newValue;
+                });
+
+                updateUser(selectedValue);
+              }
+            },
+            items: ['Pending', 'Verified', 'Not Verified']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> updateUser(String selectedValue) async {
+    String user = widget.user_ID;
+
+    try {
+      FirebaseFirestore.instance
+          .collection('User')
+          .doc(user)
+          .update({'Verification_Status': selectedValue});
+      print('Document updated successfully.');
+    } catch (error) {
+      print('Error updating document: $error');
     }
   }
 }

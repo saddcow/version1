@@ -121,38 +121,40 @@ class FirestoreCheck extends StatelessWidget {
                     }
                   }
             }
-
-              if (matchingDocumentIds.isNotEmpty) {
-                return SingleChildScrollView(
-                  child: SizedBox(
-                  height: 270,
-                  width: 500,
-                    child: Card(
-                      color: hexStringToColor("#86BBD8"),
-                      child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        for (String docInfo in matchingDocumentIds)
-                          ListTile(
-                            subtitle: Text(docInfo),
-                            title: const Divider(),
-                          ),
-                      ],
-                    ),
-                    ),
-                  ),
-                );
-              } else {
-                return SizedBox(
+            if (matchingDocumentIds.isNotEmpty) {
+              return SingleChildScrollView(
+                child: SizedBox(
                   height: 270,
                   width: 500,
                   child: Card(
                     color: hexStringToColor("#86BBD8"),
-                    child: const Center(
-                        child: Text('All Good! Nothing to worry!')),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (String docInfo in matchingDocumentIds)
+                            ListTile(
+                              subtitle: Text(docInfo),
+                              title: const Divider(),
+                            ),
+                        ],
+                      ),
+                    ),
                   ),
-                );
-              }
+                ),
+              );
+            } else {
+              return SizedBox(
+                height: 270,
+                width: 500,
+                child: Card(
+                  color: hexStringToColor("#86BBD8"),
+                  child: const Center(
+                    child: Text('All Good! Nothing to worry!'),
+                  ),
+                ),
+              );
+            }
             }
           },
         ),
@@ -185,8 +187,6 @@ class FirestoreCheck extends StatelessWidget {
         }
       }
     }
-
-    searchString = risk;
     return searchString;
   }
 }
