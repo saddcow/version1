@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:try1/admin/admin_screens/risk_level_form.dart';
 import 'package:try1/admin/admin_screens/updateDoc.dart';
+import 'package:try1/utils/color_utils.dart';
 
 class RiskLevelScreen extends StatefulWidget {
   const RiskLevelScreen({Key? key});
@@ -57,7 +58,7 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: hexStringToColor("#3c7f9"),
         title: Text(
           'List of Risk Level',
           style:GoogleFonts.roboto(

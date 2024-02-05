@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:try1/utils/color_utils.dart';
 
 class RiskLevelForm extends StatefulWidget {
   const RiskLevelForm({super.key});
@@ -87,7 +88,7 @@ class _RiskLevelFormState extends State<RiskLevelForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: hexStringToColor("#3c7f9"),
         title: Text(
           'Add Risk Level',
           style: GoogleFonts.roboto(

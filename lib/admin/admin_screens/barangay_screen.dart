@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:try1/admin/admin_screens/barangay_add_form.dart';
 import 'package:try1/admin/admin_screens/barangay_update_form.dart';
+import 'package:try1/utils/color_utils.dart';
 
 class BarangayScreen extends StatefulWidget {
   const BarangayScreen({Key? key});
@@ -19,7 +20,7 @@ class _BarangayScreenState extends State<BarangayScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: hexStringToColor("#3c7f9"),
         title: Text(
           'List of Barangay in Naga City',
           style: GoogleFonts.roboto(

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:try1/utils/color_utils.dart';
 
 class BarangayForm extends StatefulWidget{
   const BarangayForm({Key? key}) : super(key: key);
@@ -49,7 +50,7 @@ class _BarangayFormState extends State<BarangayForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: hexStringToColor("#3c7f9"),
         title: Text(
           'Add Barangay',
           style: GoogleFonts.roboto(
