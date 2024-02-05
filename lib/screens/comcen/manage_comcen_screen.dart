@@ -24,7 +24,7 @@ class _RoadRiskManageState extends State<RoadRiskManage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: hexStringToColor("#3c7f9"),
+        backgroundColor:  Colors.blueGrey,
         title: Text(
           'Managing Road Risk Area',
           style: GoogleFonts.roboto(

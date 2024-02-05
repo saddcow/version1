@@ -126,7 +126,7 @@ class _updateDocState extends State<updateDoc> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: hexStringToColor("#3c7f9"),
+        backgroundColor: Colors.blueGrey,
         title: Text(
           'Update Risk Level: $risk_name',
           style: GoogleFonts.roboto(

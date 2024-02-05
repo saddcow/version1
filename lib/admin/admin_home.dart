@@ -6,6 +6,7 @@ import 'package:try1/admin/admin_screens/barangay_screen.dart';
 import 'package:try1/admin/admin_screens/risk_level_screen.dart';
 import 'package:try1/auth_service.dart';
 import 'package:try1/screens/login_screen.dart';
+import 'package:try1/utils/color_utils.dart';
 
 class AdminHome extends StatefulWidget {
   const AdminHome({super.key});
@@ -29,7 +30,7 @@ class _AdminHomeState extends State<AdminHome> {
       ),
       Scaffold(
         body: Container(
-          color: Colors.white,
+          color: Colors.blueGrey,
           child: Center(
             child: Card(
               elevation: 50,

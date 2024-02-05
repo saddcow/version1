@@ -39,7 +39,7 @@ class _ComcenMarkerUpdate extends State<ComcenMarkerUpdate> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: hexStringToColor("#3c7f9"),
+        backgroundColor:  Colors.blueGrey,
         title: Text(
           'Edit Road Risk Area',
           style: GoogleFonts.roboto(
