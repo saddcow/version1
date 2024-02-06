@@ -31,7 +31,7 @@ class _MappComState extends State<MappCom> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: hexStringToColor("#3c7f9"),
+        backgroundColor: Colors.blueGrey,
         title: Text(
           'Add Road Accident Prone Area',
           style: GoogleFonts.roboto(

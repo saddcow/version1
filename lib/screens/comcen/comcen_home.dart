@@ -36,7 +36,7 @@ class _ComcenHomeState extends State<ComcenHome> {
       //Monitoring view
       Scaffold(
         appBar: AppBar(
-          backgroundColor: hexStringToColor("#3c7f9"),
+          backgroundColor:  Colors.blueGrey,
           title: Text(
             "COMCEN Road Risk Monitoring",
             style: GoogleFonts.roboto(

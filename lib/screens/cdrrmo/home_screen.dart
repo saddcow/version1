@@ -243,6 +243,7 @@ class _HomeState extends State<Home> {
       const Scaffold(
         body: Reports(),
       ),
+      
       // Settings View
       Scaffold(
         body: Container(

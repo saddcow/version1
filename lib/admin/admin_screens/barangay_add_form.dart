@@ -50,7 +50,7 @@ class _BarangayFormState extends State<BarangayForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: hexStringToColor("#3c7f9"),
+        backgroundColor: Colors.blueGrey,
         title: Text(
           'Add Barangay',
           style: GoogleFonts.roboto(

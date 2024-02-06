@@ -34,7 +34,7 @@ class _ReportsComState extends State<ReportsCom> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: hexStringToColor("#3c7f9"),
+        backgroundColor:  Colors.blueGrey,
         title: Text(
           'Road Accident Reports',
           style: GoogleFonts.roboto(

@@ -20,7 +20,7 @@ class _BarangayScreenState extends State<BarangayScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: hexStringToColor("#3c7f9"),
+        backgroundColor: Colors.blueGrey,
         title: Text(
           'List of Barangay in Naga City',
           style: GoogleFonts.roboto(

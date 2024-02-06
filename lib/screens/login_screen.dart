@@ -139,11 +139,12 @@ class _LoginPageState extends State<LoginPage> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
+                                backgroundColor: hexStringToColor('#2b6484'),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16)
                                 )
                               ),
-                              child: const Center(child: Text('Sign in')),
+                              child: const Center(child: Text('Sign in', style: TextStyle(color: Colors.white),)),
                             ),
                           ),
                         ],

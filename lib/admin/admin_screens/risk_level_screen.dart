@@ -58,7 +58,7 @@ class _RiskLevelScreenState extends State<RiskLevelScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: hexStringToColor("#3c7f9"),
+        backgroundColor: Colors.blueGrey,
         title: Text(
           'List of Risk Level',
           style:GoogleFonts.roboto(
