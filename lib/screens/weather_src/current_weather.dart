@@ -5,30 +5,31 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class CurrentWeatherApi {
-  static Future<Map<String, dynamic>> fetchCurrentWeather(String apiKey, String city) async {
-    try {
-      final String currentWeatherUrl =
-          'https://api.openweathermap.org/data/2.5/forecast?q=$city&appid=$apiKey';
-      final response = await http.get(Uri.parse(currentWeatherUrl));
+  static Future<Map<String, dynamic>> fetchCurrentWeather(
+    String apiKey, String city) async {
+  try {
+    final String currentWeatherUrl =
+    'https://api.openweathermap.org/data/2.5/forecast?q=$city&appid=$apiKey';
+    final response = await http.get(Uri.parse(currentWeatherUrl));
 
-      if (response.statusCode == 200) {
-        final List<dynamic> forecastData = json.decode(response.body)['list'];
+    if (response.statusCode == 200) {
+      final List<dynamic> forecastData = json.decode(response.body)['list'];
 
-        // Find the forecast data for 12 PM
-        final Map<String, dynamic> currentWeatherData =
-            forecastData.firstWhere((data) {
-          final DateTime dateTime =
-              DateTime.parse(data['dt_txt']);
-          return dateTime.hour == 12 && dateTime.minute == 0;
-        });
+      // Find the forecast data for 12 PM
+      final Map<String, dynamic> currentWeatherData =
+          forecastData.firstWhere((data) {
+        final DateTime dateTime =
+            DateTime.parse(data['dt_txt']);
+        return dateTime.hour == 12 && dateTime.minute == 0;
+      });
 
-        return currentWeatherData;
-      } else {
-        throw Exception('Failed to load current weather data');
-      }
-    } catch (error) {
-      throw Exception('Failed to load current weather data: $error');
+      return currentWeatherData;
+    } else {
+      throw Exception('Failed to load current weather data');
     }
+  } catch (error) {
+    throw Exception('Failed to load current weather data: $error');
+  }
   }
 }
 
@@ -51,9 +52,10 @@ class _CurrentWeatherCardState extends State<CurrentWeatherCard> {
 
   Future<void> fetchCurrentWeatherData() async {
     try {
-      final apiKey = '6378430bc45061aaccd4a566a86c25df'; // Replace with your OpenWeatherMap API key
-      final city = 'Naga'; // Replace with your desired city
-      final Map<String, dynamic> data = await CurrentWeatherApi.fetchCurrentWeather(apiKey, city);
+      final apiKey = '6378430bc45061aaccd4a566a86c25df'; 
+      final city = 'Naga';
+      final Map<String, dynamic> data = await 
+        CurrentWeatherApi.fetchCurrentWeather(apiKey, city);
       setState(() {
         currentWeather = CurrentWeatherData.fromJson(data);
       });
@@ -135,14 +137,15 @@ class CurrentWeatherData {
   });
 
   factory CurrentWeatherData.fromJson(Map<String, dynamic> json) {
-    final DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(json['dt'] * 1000);
+    final DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(
+      json['dt'] * 1000);
     final String date = DateFormat('dd').format(dateTime);
     final String day = DateFormat('EEEE').format(dateTime);
     final String month = DateFormat('MMMM').format(dateTime);
     final String year = DateFormat('yyyy').format(dateTime);
     final int temperature = (json['main']['temp'] - 273.15).toInt();
     final String weatherDescription = json['weather'][0]['description'];
-    final String iconCode = json['weather'][0]['icon'] ?? ''; // Handle missing 'icon' field
+    final String iconCode = json['weather'][0]['icon'] ?? '';
     final String iconUrl = 'https://openweathermap.org/img/w/$iconCode.png';
 
     return CurrentWeatherData(

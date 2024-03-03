@@ -3,7 +3,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart' show ByteData, Uint8List, rootBundle;
 
 Future<BitmapDescriptor> getCustomMarkerIcon() async {
-  final ByteData data = await rootBundle.load('assets/Road Accident Hazard Area 1 (1).png');
+  final ByteData data = await rootBundle.load(
+      'assets/Road Accident Hazard Area 1 (1).png');
   final Uint8List bytes = data.buffer.asUint8List();
   return BitmapDescriptor.fromBytes(bytes);
 }
@@ -13,7 +14,8 @@ Future<List<Marker>> getRoadMarkers() async {
 
   final BitmapDescriptor customIcon = await getCustomMarkerIcon();
 
-  final QuerySnapshot snapshot = await firestore.collection('Road_Accident_Areas').get();
+  final QuerySnapshot snapshot = await firestore.
+    collection('Road_Accident_Areas').get();
   final List<Marker> markers = [];
 
   for (final DocumentSnapshot document in snapshot.docs) {
@@ -23,7 +25,8 @@ Future<List<Marker>> getRoadMarkers() async {
     final coordinates = data['coordinates'] as GeoPoint?;
     final uniqeID = data['uniqueID'] as String?;
 
-    if (barangay != null && landmark != null && coordinates != null && uniqeID != null) {
+    if (barangay != null && landmark != null && coordinates
+       != null && uniqeID != null) {
       markers.add(
         Marker(
           markerId: MarkerId(uniqeID),

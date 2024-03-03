@@ -1,10 +1,5 @@
-// ignore_for_file: prefer_const_constructors, unused_import, use_build_context_synchronously
-
-import 'dart:js';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:try1/admin/admin_home.dart';
 import 'package:try1/screens/cdrrmo/home_screen.dart';

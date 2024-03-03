@@ -6,7 +6,8 @@ Future<List<Marker>> hazardMarkers() async {
   List<Marker> markers = [];
 
   final QuerySnapshot querySnapshot =
-      await FirebaseFirestore.instance.collection('Flood_Hazard_Area').get();
+      await FirebaseFirestore.instance.
+        collection('Flood_Hazard_Area').get();
 
   final List<Marker> matchingMarkers = [];
 

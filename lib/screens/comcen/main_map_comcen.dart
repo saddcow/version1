@@ -44,7 +44,8 @@ class _MainMapComcenState extends State<MainMapComcen> {
   }
 
   List<DropdownMenuItem<String>> buildDropdownMenuItems() {
-    return ['All', 'Road Accident Prone Area', 'Road Accident Report Markers'].map((String value) {
+    return ['All', 'Road Accident Prone Area',
+       'Road Accident Report Markers'].map((String value) {
       return DropdownMenuItem<String>(
         value: value,
         child: Text(value),

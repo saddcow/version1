@@ -43,7 +43,7 @@ class _AccountScreenState extends State<AccountScreen> {
             onPressed: () {
               _showFilterModal(context);
             },
-            icon: Icon(Icons.filter_list),
+            icon: const Icon(Icons.filter_list),
           ),
         ],
       ),
@@ -84,7 +84,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       ),
                       showBottomBorder: true,
                       dividerThickness: 3,
-                      columns: [
+                      columns: const [
                         DataColumn(label: Text('Full Name')),
                         DataColumn(label: Text('User Type')),
                         DataColumn(label: Text('Email Address')),
@@ -366,7 +366,7 @@ class _AccountScreenState extends State<AccountScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );

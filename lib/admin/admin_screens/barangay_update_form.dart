@@ -9,7 +9,8 @@ class updateBarangayForm extends StatefulWidget{
   final id;
   final barangay;
 
-  const updateBarangayForm({Key? key, required this.id, required this.barangay}) : super(key: key);
+  const updateBarangayForm({Key? key, required this.id, 
+    required this.barangay}) : super(key: key);
   @override
   _updateBarangayFormState createState() => _updateBarangayFormState();
 }
@@ -63,7 +64,8 @@ class _updateBarangayFormState extends State<updateBarangayForm> {
 
   Future<void> updateBarangay(String updateBarangayName) async {
     try {
-      // Query the 'markers' collection for documents where 'risk_level' field is equal to updatedRiskLevel
+      // Query the 'markers' collection for documents where 
+      // 'risk_level' field is equal to updatedRiskLevel
       QuerySnapshot querySnapshot = await _firestore
           .collection('markers')
           .where('barangay', isEqualTo: barangayName)
@@ -77,9 +79,9 @@ class _updateBarangayFormState extends State<updateBarangayForm> {
         }
 
         // Print a message or perform additional actions if needed
-        print('Documents with risk_level $barangayName updated successfully in markers collection');
+        print('Documents with risk_level $barangayName updated successfully');
       } else {
-        print('No documents found with risk_level $barangayName in markers collection');
+        print('No documents found with risk_level $barangayName');
       }
     } catch (e) {
       // Handle errors here

@@ -77,7 +77,8 @@ class _BarangayScreenState extends State<BarangayScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  updateBarangayForm(barangay: data['name'],id: data.id)));
+                                                  updateBarangayForm(barangay: 
+                                                    data['name'],id: data.id)));
                                 },
                                 child: const Text(
                                   'Update',

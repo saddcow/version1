@@ -15,13 +15,10 @@ class AuthorityMark extends StatefulWidget {
 }
 
 class _AuthorityMarkState extends State<AuthorityMark> {
-  // List to store markers on the map
   List<Marker> myMarker = [];
 
   // Google Map controller
   GoogleMapController? mapController;
-
-  // Dropdown menu options
 
   // Controllers for text fields
   TextEditingController streetController = TextEditingController();
@@ -81,8 +78,7 @@ class _AuthorityMarkState extends State<AuthorityMark> {
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: FutureBuilder(
-                      future:
-                          _getBarangays(), // Fetch barangays from Firestore
+                      future: _getBarangays(),
                       builder:
                           (context, AsyncSnapshot<List<String>> snapshot) {
                         if (snapshot.connectionState ==
@@ -95,10 +91,8 @@ class _AuthorityMarkState extends State<AuthorityMark> {
                           barangays.sort();
                           return DropdownButtonFormField<String>(
                             value: selectedBarangay,
-                            isDense:
-                                true, // Reduces the vertical size of the dropdown
-                            menuMaxHeight:
-                                200, // Set the maximum height of the dropdown menu
+                            isDense: true,
+                            menuMaxHeight: 200,
                             items: barangays.map((String barangay) {
                               return DropdownMenuItem<String>(
                                 value: barangay,
@@ -121,7 +115,7 @@ class _AuthorityMarkState extends State<AuthorityMark> {
                 ),
 
                 const Padding(
-                    padding: EdgeInsets.only(top: 5.0)), // Adjusted padding
+                    padding: EdgeInsets.only(top: 5.0)),
 
                 // Text Field for Street Name
                 Padding(

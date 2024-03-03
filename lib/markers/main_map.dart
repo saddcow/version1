@@ -65,7 +65,8 @@ class _MainMapState extends State<MainMap> {
   }
 
   List<DropdownMenuItem<String>> buildDropdownMenuItems() {
-    return ['All', 'Flood Prone Areas', 'Flood Report Markers'].map((String value) {
+    return ['All', 'Flood Prone Areas', 'Flood Report Markers'].
+      map((String value) {
       return DropdownMenuItem<String>(
         value: value,
         child: Text(value),

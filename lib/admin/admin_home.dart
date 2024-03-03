@@ -17,66 +17,68 @@ class AdminHome extends StatefulWidget {
 
 class _AdminHomeState extends State<AdminHome> {
   
-  List<Widget> buildViews(BuildContext context) {
-    return [
-      const Scaffold(
-        body: BarangayScreen()
-      ),
-      const Scaffold(
-        body: RiskLevelScreen()
-      ),
-      const Scaffold(
-        body: AccountScreen()
-      ),
-      Scaffold(
-        body: Container(
-          color: Colors.blueGrey,
-          child: Center(
-            child: Card(
-              elevation: 50,
-              shadowColor: Colors.black26,
-              color: Colors.white,
-              child: SizedBox(
-                width: 500,
-                height: 250,
-                child: Column(
-                  children: [
-                    const Padding(padding: EdgeInsets.all(8.0)),
-                    Text(
-                      'Settings',
-                      style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 25
-                      )
-                    ),
-                    const Divider(),
-                    const Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0)),
-                    SizedBox(
-                      width: 200,
-                      child: Center(
-                        child: 
-                          ElevatedButton(onPressed: () {
-                            AuthService().signout();
-                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginPage()));
-                          }, 
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16)
-                            )
-                          ),
-                          child: const Center(child: Text('Sign Out'),),
-                        ),
-                      ),
-                    ),
-                  ],
+List<Widget> buildViews(BuildContext context) {
+return [
+  const Scaffold(
+    body: BarangayScreen()
+  ),
+  const Scaffold(
+    body: RiskLevelScreen()
+  ),
+  const Scaffold(
+    body: AccountScreen()
+  ),
+  Scaffold(
+    body: Container(
+      color: Colors.blueGrey,
+      child: Center(
+        child: Card(
+          elevation: 50,
+          shadowColor: Colors.black26,
+          color: Colors.white,
+          child: SizedBox(
+            width: 500,
+            height: 250,
+            child: Column(
+              children: [
+                const Padding(padding: EdgeInsets.all(8.0)),
+                Text(
+                  'Settings',
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 25
+                  )
                 ),
-              ),
+                const Divider(),
+                const Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0)),
+                SizedBox(
+                  width: 200,
+                  child: Center(
+                    child: 
+                      ElevatedButton(onPressed: () {
+                        AuthService().signout();
+                        Navigator.of(context).pushReplacement( 
+                          MaterialPageRoute( 
+                          builder: (context) => const LoginPage()));
+                      }, 
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)
+                        )
+                      ),
+                      child: const Center(child: Text('Sign Out'),),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-      )
-    ];
-  }
+      ),
+    ),
+  )
+];
+}
 
   int selectedIndex = 0;
   @override

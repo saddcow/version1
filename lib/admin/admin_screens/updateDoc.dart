@@ -8,7 +8,8 @@ class updateDoc extends StatefulWidget {
   final documentID;
   final risk;
 
-  const updateDoc({Key? key, required this.documentID, required this.risk}) : super(key: key);
+  const updateDoc({Key? key, required this.documentID, 
+    required this.risk}) : super(key: key);
 
   @override
   State<updateDoc> createState() => _updateDocState();
@@ -98,7 +99,7 @@ class _updateDocState extends State<updateDoc> {
   Future<void> updateMarkersCollection(String updatedRiskLevel) async {
     String riskUpdate = _riskLevelController.text.trim();
     try {
-      // Query the 'markers' collection for documents where 'risk_level' field is equal to updatedRiskLevel
+      // Query the 'markers' collection for documents equal to 'risk_level'
       QuerySnapshot querySnapshot = await _firestore
           .collection('markers')
           .where('risk_level', isEqualTo: updatedRiskLevel)
@@ -112,9 +113,9 @@ class _updateDocState extends State<updateDoc> {
         }
 
         // Print a message or perform additional actions if needed
-        print('Documents with risk_level $updatedRiskLevel updated successfully in markers collection');
+        print('Documents with risk_level $updatedRiskLevel updated');
       } else {
-        print('No documents found with risk_level $updatedRiskLevel in markers collection');
+        print('No documents found with risk_level $updatedRiskLevel');
       }
     } catch (e) {
       // Handle errors here

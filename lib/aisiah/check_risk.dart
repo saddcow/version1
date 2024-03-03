@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'package:try1/utils/color_utils.dart';
 import 'package:collection/collection.dart';
+import 'package:try1/globals.dart' as globals;
 
 class Warning extends StatefulWidget {
   const Warning({Key? key});
@@ -110,14 +111,17 @@ class FirestoreCheck extends StatelessWidget {
                 risk: risk,
               );
 
+              print('$searchString');
+
               String add = document['address'];
               String hazard_level = document['risk_level'];
               int number = document['number'] ;
+              final uniqeID = document['uniqueID'] as String;
 
                 if (searchString != 0) {
-                    // Add the address to matchingDocumentIds only if it's not already present
                     if (number <= searchString) {
                       matchingDocumentIds.add('$add - $hazard_level');
+                      globals.matchingDocumentIds.add('$uniqeID');
                     }
                   }
             }

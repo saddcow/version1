@@ -24,20 +24,20 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
 
   Future<List<WeatherData>> fetchWeatherData() async {
     const String apiKey = '6378430bc45061aaccd4a566a86c25df';
-    const String baseUrl = 'https://api.openweathermap.org/data/2.5/forecast';
+    const String baseUrl = 
+      'https://api.openweathermap.org/data/2.5/forecast';
     const String city = 'Naga';
 
 
-    final response = await http.get(Uri.parse('$baseUrl?q=$city&appid=$apiKey'));
+    final response = await http.get(Uri.parse(
+      '$baseUrl?q=$city&appid=$apiKey'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       final List<dynamic> forecastList = data['list'];
 
-      // Filter data to get only one record per day (assuming daily forecasts)
       final filteredList = forecastList.where((item) {
         final DateTime dateTime = DateTime.parse(item['dt_txt']);
-        // Consider only records at 12:00 PM each day
         return dateTime.hour == 12 && dateTime.minute == 0;
       }).toList();
 
@@ -60,7 +60,8 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('No forecast weather data available'));
+              return Center(child: 
+                Text('No forecast weather data available'));
             } else {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -133,8 +134,8 @@ class WeatherData {
   // Factory method to create a WeatherData instance from JSON
   factory WeatherData.fromJson(Map<String, dynamic> json) {
     final DateTime dateTime = DateTime.parse(json['dt_txt']);
-    final String date = DateFormat('dd').format(dateTime); // Day as number
-    final String day = DateFormat('EEEE').format(dateTime); // Extract day from date
+    final String date = DateFormat('dd').format(dateTime);
+    final String day = DateFormat('EEEE').format(dateTime);
     final String month = DateFormat('MMMM').format(dateTime);
     final String year = DateFormat('yyyy').format(dateTime);
     final int temperature = (json['main']['temp'] - 273.15).toInt();
